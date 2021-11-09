@@ -14,7 +14,8 @@ export const updateMintButton = () => {
 }
 
 const getMintQuantity = () => {
-    return document.querySelector('#quantity-select')?.value;
+    const quantity = document.querySelector('#quantity-select')?.value
+    return quantity !== '' ? quantity : undefined;
 }
 
 const getMintReferral = () => {
