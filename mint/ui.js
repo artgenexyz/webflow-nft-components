@@ -1,4 +1,5 @@
 import { mint } from "./web3.js";
+import {renderSuccessAlert} from "../ui/alerts.js";
 
 export const updateMintButton = () => {
     const mintButton = document.querySelector('#mint-button');
@@ -6,8 +7,10 @@ export const updateMintButton = () => {
         mintButton.onclick = async () => {
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
-            mint(getMintQuantity(), getMintReferral()).then((r) => {
+            const quantity = getMintQuantity()
+            mint(quantity, getMintReferral()).then((r) => {
                 setButtonText(mintButton, initialBtnText);
+                renderSuccessAlert(`Successfully minted ${quantity} NFTs`)
             })
         }
     }
