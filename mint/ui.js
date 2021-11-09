@@ -1,5 +1,6 @@
 import { mint } from "./web3.js";
-import {renderSuccessAlert} from "../ui/alerts.js";
+import { showAlert } from "../ui/alerts.js";
+import { parseTxError } from "../utils.js";
 
 export const updateMintButton = () => {
     const mintButton = document.querySelector('#mint-button');
@@ -7,10 +8,18 @@ export const updateMintButton = () => {
         mintButton.onclick = async () => {
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
-            const quantity = getMintQuantity()
+            const quantity = getMintQuantity();
+
             mint(quantity, getMintReferral()).then((r) => {
                 setButtonText(mintButton, initialBtnText);
-                renderSuccessAlert(`Successfully minted ${quantity} NFTs`)
+                console.log(r);
+                showAlert(`Successfully minted ${quantity} NFTs`, "success")
+            }).catch((e) => {
+                const { code, message } = parseTxError(e);
+                if (code !== 4001) {
+                    showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                    console.log(e)
+                }
             })
         }
     }

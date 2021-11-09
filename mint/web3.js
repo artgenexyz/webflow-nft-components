@@ -35,12 +35,4 @@ export const mint = async (nTokens, ref, tier) => {
 
     return await getMintTx({ numberOfTokens, ref, tier })
         .send({...txParams, gasLimit: estimatedGas + 5000 })
-        .catch((e) => {
-            const { code, message } = parseTxError(e);
-            // User didn't reject the transaction
-            if (code !== 4001) {
-                alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
-                console.log(e);
-            }
-        });
 }
