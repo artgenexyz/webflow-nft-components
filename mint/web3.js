@@ -1,5 +1,6 @@
 import { getWalletAddress } from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
+import { NFTContract } from "../contract"
 
 const getMintTx = ({ numberOfTokens, ref, tier }) => {
     if (tier !== undefined) {
