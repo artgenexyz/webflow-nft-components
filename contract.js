@@ -1,12 +1,11 @@
 import { getCurrentNetwork, switchNetwork, web3 } from './wallet.js';
-import { normalizeURL } from "./utils.js";
 
 export let NFTContract;
 
 const initContract = async (contract) => {
-    const URL = normalizeURL(window.location.href);
-    const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
-    if (!allowedURLs?.some(v => v.includes(URL))) {
+    const host = new URL(window.location.href).host;
+    const allowedURLs = contract?.allowedURLs?.map(u => (new URL(u).host));
+    if (!allowedURLs?.some(v => v.includes(host))) {
         return undefined;
     }
     let currentNetwork = await getCurrentNetwork();
