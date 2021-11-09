@@ -1,6 +1,28 @@
 import { NETWORKS } from "./constants.js";
 
-export const web3 = window.ethereum ? new Web3(ethereum) : undefined;
+const initWeb3 = () => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+        return new Web3(ethereum);
+    }
+
+    if (!WalletConnectProvider) {
+        return undefined;
+    }
+
+    const provider = new WalletConnectProvider({
+        infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
+        qrcodeModalOptions: {
+            mobileLinks: [
+                "metamask",
+                "rainbow",
+                "trust"
+            ],
+        },
+    });
+    return new Web3(provider);
+}
+
+export const web3 = initWeb3();
 
 const isMetamaskConnected = async () => {
     if (!web3) {
