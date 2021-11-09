@@ -1,12 +1,12 @@
 import { updateMintButton } from "./ui.js";
-import { updateConnectButton, updateMetamaskStatus } from "../wallet.js";
+import { updateConnectButton, updateWalletStatus } from "../wallet.js";
 import { setContracts } from "../contract.js";
 import { renderAlertContainer } from "../ui/alerts.js";
 
 const init = async () => {
     renderAlertContainer();
+    await updateWalletStatus();
     await setContracts();
-    await updateMetamaskStatus();
     updateConnectButton();
     updateMintButton();
 }

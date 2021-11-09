@@ -1,37 +1,45 @@
 import { NETWORKS } from "./constants.js";
+import {isMobile, objectMap} from "./utils.js";
+import {setContracts} from "./contract.js";
 
-const initWeb3 = () => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-        return [new Web3(ethereum), ethereum];
-    }
+export let [web3, provider] = [];
 
-    if (!WalletConnectProvider) {
-        return [undefined, undefined];
-    }
-
-    const provider = new WalletConnectProvider.default({
-        infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
+const initWeb3 = async (forceConnect = false) => {
+    if (web3 && provider) return
+    const walletConnectOptions = {
+        rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
         qrcodeModalOptions: {
             mobileLinks: [
                 "metamask",
                 "rainbow",
                 "trust",
-                "gnosissafe"
             ],
-        },
-    });
-    return [new Web3(provider), provider];
+        }
+    }
+    if (isMobile()) {
+        provider = new WalletConnectProvider.default(walletConnectOptions)
+    } else {
+        const web3Modal = new Web3Modal.default({
+            cacheProvider: true,
+            providerOptions: {
+                walletconnect: {
+                    package: WalletConnectProvider.default,
+                    options: walletConnectOptions
+                }
+            }
+        });
+        if (web3Modal.cachedProvider || forceConnect) {
+            provider = await web3Modal.connect();
+        }
+    }
+    web3 = provider ? new Web3(provider) : undefined;
 }
-
-export const [web3, provider] = initWeb3();
-window.web3 = web3;
-window.provider = provider;
 
 export const isWeb3Initialized = () => {
     return web3 && provider && (window?.ethereum || provider?.connected !== false);
 }
 
-export const isMetamaskConnected = async () => {
+export const isWalletConnected = async () => {
     if (!isWeb3Initialized()) {
         return false
     }
@@ -44,10 +52,10 @@ export const getWalletAddress = async (refresh=false) => {
         if (!provider) {
             return undefined;
         }
-        return window.ethereum?.selectedAddress ?? await provider.request({ method: 'eth_requestAccounts' })[0];
+        return window.ethereum?.selectedAddress ?? await provider?.request({ method: 'eth_requestAccounts' })[0];
     }
     if (!window.ethereum?.selectedAddress) {
-        await connectMetamask();
+        await connectWallet();
         if (refresh) {
             window.location.reload();
         }
@@ -56,7 +64,7 @@ export const getWalletAddress = async (refresh=false) => {
 }
 
 export const getCurrentNetwork = async () => {
-    return Number(await provider.request({ method: 'net_version' }));
+    return Number(await provider?.request({ method: 'net_version' }));
 }
 
 export const switchNetwork = async (chainID) => {
@@ -95,17 +103,18 @@ export const switchNetwork = async (chainID) => {
     }
 }
 
-const getIsMobile = () => /Mobi/i.test(window.navigator.userAgent)
-    || /iPhone|iPod|iPad/i.test(navigator.userAgent);
-
-export const connectMetamask = async () => {
-    const isMobile = getIsMobile();
-    if (window.ethereum) {
-        await ethereum.request({ method: 'eth_requestAccounts' });
-    } else {
-        await provider.enable();
-        await updateMetamaskStatus();
+export const connectWallet = async () => {
+    console.log("Connecting Wallet")
+    await initWeb3(true);
+    if (isMobile() && provider?.connected) {
+        const link = window.location.href
+            .replace("https://", "")
+            .replace("www.", "");
+        window.open(`https://metamask.app.link/dapp/${link}`);
     }
+    await setContracts();
+    await updateWalletStatus();
+    console.log("Connected Wallet");
 }
 
 const getConnectButton = () => {
@@ -114,15 +123,16 @@ const getConnectButton = () => {
         ?? document.querySelector(`a[href='${btnID}']`);
 }
 
-export const updateMetamaskStatus = async () => {
-    const connected = await isMetamaskConnected();
+export const updateWalletStatus = async () => {
+    await initWeb3();
+    const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
-        button.textContent = "Metamask connected";
+        button.textContent = "Wallet connected";
     }
 }
 
 export const updateConnectButton = () => {
     const walletBtn = getConnectButton();
-    walletBtn?.addEventListener('click', connectMetamask);
+    walletBtn?.addEventListener('click', connectWallet);
 }

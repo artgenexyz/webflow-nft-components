@@ -16,6 +16,7 @@ export const updateMintButton = () => {
                 showAlert(`Successfully minted ${quantity} NFTs`, "success")
             }).catch((e) => {
                 console.log(e)
+                setButtonText(mintButton, initialBtnText);
                 const { code, message } = parseTxError(e);
                 if (code !== 4001) {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
