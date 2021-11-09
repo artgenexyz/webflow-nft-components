@@ -3,9 +3,12 @@ import {isMobile, objectMap} from "./utils.js";
 import {setContracts} from "./contract.js";
 
 export let [web3, provider] = [];
+export const isWeb3Initialized = () => {
+    return web3 && provider && provider?.connected !== false;
+}
 
 const initWeb3 = async (forceConnect = false) => {
-    if (web3 && provider) return
+    if (isWeb3Initialized()) return
     const walletConnectOptions = {
         rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
         qrcodeModalOptions: {
@@ -16,27 +19,23 @@ const initWeb3 = async (forceConnect = false) => {
             ],
         }
     }
-    if (isMobile()) {
-        provider = new WalletConnectProvider.default(walletConnectOptions)
-    } else {
-        const web3Modal = new Web3Modal.default({
-            cacheProvider: true,
-            providerOptions: {
-                walletconnect: {
-                    package: WalletConnectProvider.default,
-                    options: walletConnectOptions
-                }
+    const disableInjectedProvider = isMobile() && !window.ethereum;
+    const onlyInjectedProvider = isMobile() && window.ethereum;
+    const web3Modal = new Web3Modal.default({
+        disableInjectedProvider,
+        cacheProvider: true,
+        providerOptions: !onlyInjectedProvider ? {
+            walletconnect: {
+                package: WalletConnectProvider.default,
+                options: walletConnectOptions
             }
-        });
-        if (web3Modal.cachedProvider || forceConnect) {
-            provider = await web3Modal.connect();
-        }
+        } : {}
+    });
+    if (web3Modal.cachedProvider || forceConnect) {
+        provider = await web3Modal.connect();
+        window.provider = provider;
     }
     web3 = provider ? new Web3(provider) : undefined;
-}
-
-export const isWeb3Initialized = () => {
-    return web3 && provider && (window?.ethereum || provider?.connected !== false);
 }
 
 export const isWalletConnected = async () => {
@@ -106,7 +105,7 @@ export const switchNetwork = async (chainID) => {
 export const connectWallet = async () => {
     console.log("Connecting Wallet")
     await initWeb3(true);
-    if (isMobile() && provider?.connected) {
+    if (isMobile()) {
         const link = window.location.href
             .replace("https://", "")
             .replace("www.", "");
