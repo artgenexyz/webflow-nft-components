@@ -30,7 +30,7 @@ const AutoHideAlert = (props, ref) => {
     }, text)
     return React.createElement(Snackbar, {
             open: isOpen,
-            autoHideDuration: 6000,
+            autoHideDuration: 10000,
             onClose: (event, reason) => {
                 if (reason === 'clickaway') {
                     return;
