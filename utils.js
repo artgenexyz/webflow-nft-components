@@ -1,3 +1,9 @@
+export const normalizeURL = (url) => (
+    url.replace('http://', '')
+    .replace('https://', '')
+    .replace('www.', '')
+);
+
 export const parseTxError = (error) => {
     return {
         code: error.code ?? JSON.parse(`{${error.message.split("{")[1]}`).code,
