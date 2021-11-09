@@ -1,0 +1,46 @@
+import { getWalletAddress } from "../wallet.js";
+import { formatValue, parseTxError } from "../utils.js";
+
+const getMintTx = ({ numberOfTokens, ref, tier }) => {
+    if (tier !== undefined) {
+        return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
+    }
+    return NFTContract.methods.mint(numberOfTokens);
+}
+
+const getMintPrice = async (tier) => {
+    return tier ?
+        await NFTContract.methods.getPrice(tier).call() :
+        await NFTContract.methods.getPrice().call();
+}
+
+export const mint = async (nTokens, ref, tier) => {
+    const wallet = await getWalletAddress();
+    const numberOfTokens = nTokens ?? 1;
+    const mintPrice = await getMintPrice();
+
+    const txParams = {
+        from: wallet,
+        value: formatValue(Number(mintPrice) * numberOfTokens),
+    }
+    const estimatedGas = await getMintTx({ numberOfTokens, ref, tier })
+        .estimateGas(txParams).catch((e) => {
+            const { code, message } = parseTxError(e);
+            if (code === -32000) {
+                return 300000;
+            }
+            alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
+            console.log(e);
+        })
+
+    return await getMintTx({ numberOfTokens, ref, tier })
+        .send({...txParams, gasLimit: estimatedGas + 5000 })
+        .catch((e) => {
+            const { code, message } = parseTxError(e);
+            // User didn't reject the transaction
+            if (code !== 4001) {
+                alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
+                console.log(e);
+            }
+        });
+}
