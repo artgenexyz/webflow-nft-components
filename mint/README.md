@@ -11,12 +11,13 @@ No coding skills required! Check out our ready-to-use template: https://textapes
 ```html
 <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 <script>
-window.CONTRACT_ADDRESS = "<your contract address here>"
-window.CONTRACT_ABI = "<your contract ABI here>"
-window.WEBSITE_URL = "<your mint website URL here>"
-// Optional (for Rinkeby testnet)
-// window.IS_TESTNET = true
+    window.CONTRACT_ADDRESS = "<your contract address here>"
+    window.CONTRACT_ABI = "<your contract ABI here>"
+    window.WEBSITE_URL = "<your mint website URL here>"
 </script>
+<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/@mui/material@5.1.0/umd/material-ui.production.min.js"></script>
 <script type="module" src="https://buildship-dev.github.io/webflow-nft-components/mint/index.js"></script>
 ```
 4. If you don't have a deployed Ethereum contract, [contact us](https://buildship.dev) to deploy it
