@@ -1,4 +1,4 @@
-import { getCurrentNetwork, switchNetwork, web3 } from './wallet.js';
+import {getCurrentNetwork, switchNetwork, web3, provider, isWeb3Initialized} from './wallet.js';
 
 export let NFTContract;
 
@@ -35,6 +35,9 @@ const initContractGlobalObject = () => {
 }
 
 export const setContracts = async () => {
+    if (!isWeb3Initialized()) {
+        return
+    }
     initContractGlobalObject()
     NFTContract = await initContract(window.CONTRACT.nft);
     // for debug purposes

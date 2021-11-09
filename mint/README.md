@@ -10,6 +10,7 @@ No coding skills required! Check out our ready-to-use template: https://textapes
 3. Copy & paste this code in the created block. If you already have a deployed Ethereum contract, insert your address, ABI and website link
 ```html
 <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider"></script>
 <script>
     window.CONTRACT_ADDRESS = "<your contract address here>"
     window.CONTRACT_ABI = "<your contract ABI here>"

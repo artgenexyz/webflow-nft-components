@@ -2,44 +2,51 @@ import { NETWORKS } from "./constants.js";
 
 const initWeb3 = () => {
     if (window.ethereum && window.ethereum.isMetaMask) {
-        return new Web3(ethereum);
+        return [new Web3(ethereum), ethereum];
     }
 
     if (!WalletConnectProvider) {
-        return undefined;
+        return [undefined, undefined];
     }
 
-    const provider = new WalletConnectProvider({
+    const provider = new WalletConnectProvider.default({
         infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
         qrcodeModalOptions: {
             mobileLinks: [
                 "metamask",
                 "rainbow",
-                "trust"
+                "trust",
+                "gnosissafe"
             ],
         },
     });
-    return new Web3(provider);
+    return [new Web3(provider), provider];
 }
 
-export const web3 = initWeb3();
+export const [web3, provider] = initWeb3();
+window.web3 = web3;
+window.provider = provider;
 
-const isMetamaskConnected = async () => {
-    if (!web3) {
+export const isWeb3Initialized = () => {
+    return web3 && provider && (window?.ethereum || provider?.connected !== false);
+}
+
+export const isMetamaskConnected = async () => {
+    if (!isWeb3Initialized()) {
         return false
     }
     const accounts = await web3.eth.getAccounts();
-    return accounts.length > 0;
+    return accounts?.length > 0;
 }
 
 export const getWalletAddress = async (refresh=false) => {
     const currentAddress = async () => {
-        if (!window.ethereum) {
+        if (!provider) {
             return undefined;
         }
-        return ethereum?.selectedAddress ?? await ethereum.request({ method: 'eth_requestAccounts' })[0];
+        return window.ethereum?.selectedAddress ?? await provider.request({ method: 'eth_requestAccounts' })[0];
     }
-    if (!ethereum?.selectedAddress) {
+    if (!window.ethereum?.selectedAddress) {
         await connectMetamask();
         if (refresh) {
             window.location.reload();
@@ -49,16 +56,16 @@ export const getWalletAddress = async (refresh=false) => {
 }
 
 export const getCurrentNetwork = async () => {
-    return Number(await ethereum.request({ method: 'net_version' }));
+    return Number(await provider.request({ method: 'net_version' }));
 }
 
 export const switchNetwork = async (chainID) => {
-    if (!window.ethereum) {
+    if (!provider) {
         return
     }
     const chainIDHex = `0x${chainID.toString(16)}`;
     try {
-        await ethereum.request({
+        await provider.request({
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: chainIDHex }],
         });
@@ -67,7 +74,7 @@ export const switchNetwork = async (chainID) => {
         // if it is not, then install it into the user MetaMask
         if (error.code === 4902) {
             try {
-                await ethereum.request({
+                await provider.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                         {
@@ -95,12 +102,9 @@ export const connectMetamask = async () => {
     const isMobile = getIsMobile();
     if (window.ethereum) {
         await ethereum.request({ method: 'eth_requestAccounts' });
+    } else {
+        await provider.enable();
         await updateMetamaskStatus();
-    } else if (isMobile) {
-        const link = window.location.href
-            .replace("https://", "")
-            .replace("www.", "");
-        window.open(`https://metamask.app.link/dapp/${link}`);
     }
 }
 
