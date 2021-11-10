@@ -8,6 +8,8 @@ export const objectMap = (object, mapFn) => {
     }, {})
 }
 
+export const normalizeURL = (u) => ((new URL(u).host).replace('www.', ''))
+
 export const parseTxError = (error) => {
     return {
         code: error.code ?? JSON.parse(`{${error.message.split("{")[1]}`).code,
