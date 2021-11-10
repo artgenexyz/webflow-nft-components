@@ -20,7 +20,7 @@ export const parseTxError = (error) => {
         console.log("Failed to parse error code and message")
         console.log("Original error:", error)
         return {
-            code: undefined, message: error.toString()
+            code: undefined, message: error?.toString()
         }
     }
 }
