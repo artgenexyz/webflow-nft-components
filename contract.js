@@ -36,13 +36,13 @@ const initContractGlobalObject = () => {
 }
 
 export const setContracts = async () => {
+    initContractGlobalObject();
     if (!isWeb3Initialized()) {
         return
     }
     if (NFTContract) {
         return
     }
-    initContractGlobalObject()
     NFTContract = await initContract(window.CONTRACT.nft);
     // for debug purposes
     window.NFTContract = NFTContract;
