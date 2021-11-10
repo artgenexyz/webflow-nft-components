@@ -4,7 +4,7 @@ import {setContracts} from "./contract.js";
 
 export let [web3, provider] = [];
 export const isWeb3Initialized = () => {
-    return web3 && provider && provider?.connected !== false;
+    return web3 && provider;
 }
 
 const initWeb3 = async (forceConnect = false) => {
