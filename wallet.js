@@ -3,6 +3,7 @@ import {isMobile, objectMap} from "./utils.js";
 import {setContracts} from "./contract.js";
 
 export let [web3, provider] = [];
+
 export const isWeb3Initialized = () => {
     return web3 && provider;
 }
@@ -55,12 +56,12 @@ export const isWalletConnected = async () => {
 
 export const getWalletAddress = async (refresh=false) => {
     const currentAddress = async () => {
-        if (!provider) {
+        if (!isWeb3Initialized()) {
             return undefined;
         }
-        return window.ethereum?.selectedAddress ?? await provider?.request({ method: 'eth_requestAccounts' })[0];
+        return await provider?.request({ method: 'eth_requestAccounts' })[0];
     }
-    if (!window.ethereum?.selectedAddress) {
+    if (!isWeb3Initialized()) {
         await connectWallet();
         if (refresh) {
             window.location.reload();
