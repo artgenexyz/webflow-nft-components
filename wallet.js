@@ -59,7 +59,7 @@ export const getWalletAddress = async (refresh=false) => {
         if (!isWeb3Initialized()) {
             return undefined;
         }
-        return await provider?.request({ method: 'eth_requestAccounts' })[0];
+        return (await web3.eth.getAccounts())[0];
     }
     if (!isWeb3Initialized()) {
         await connectWallet();
