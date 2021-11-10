@@ -33,7 +33,14 @@ const initWeb3 = async (forceConnect = false) => {
     });
     if (web3Modal.cachedProvider || forceConnect) {
         provider = await web3Modal.connect();
-        window.provider = provider;
+        provider.on("accountsChanged", async (accounts) => {
+            if (accounts.length === 0) {
+                if (provider.close) {
+                    await provider.close();
+                }
+                await web3Modal.clearCachedProvider();
+            }
+        });
     }
     web3 = provider ? new Web3(provider) : undefined;
 }
