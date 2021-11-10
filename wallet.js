@@ -118,12 +118,12 @@ export const switchNetwork = async (chainID) => {
 export const connectWallet = async () => {
     console.log("Connecting Wallet")
     await initWeb3(true);
-    if (isMobile()) {
-        const link = window.location.href
-            .replace("https://", "")
-            .replace("www.", "");
-        window.open(`https://metamask.app.link/dapp/${link}`);
-    }
+    // if (isMobile()) {
+    //     const link = window.location.href
+    //         .replace("https://", "")
+    //         .replace("www.", "");
+    //     window.open(`https://metamask.app.link/dapp/${link}`);
+    // }
     await setContracts();
     await updateWalletStatus();
     console.log("Connected Wallet");
