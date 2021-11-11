@@ -1,4 +1,4 @@
-import { getWalletAddress } from "../wallet.js";
+import {getWalletAddress, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import { NFTContract } from "../contract.js"
 
@@ -33,7 +33,9 @@ export const mint = async (nTokens, ref, tier) => {
             alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
         })
+    const gasPrice = await web3.eth.getGasPrice();
+    const maxGasPrice = formatValue(Math.round(Number(gasPrice) * 1.2));
 
     return await getMintTx({ numberOfTokens, ref, tier })
-        .send({...txParams, gasLimit: estimatedGas + 5000 })
+        .send({...txParams, gasLimit: estimatedGas + 5000, maxFeePerGas: maxGasPrice })
 }
