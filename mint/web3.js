@@ -36,6 +36,6 @@ export const mint = async (nTokens, ref, tier) => {
     const gasPrice = await web3.eth.getGasPrice();
     const maxGasPrice = formatValue(Math.round(Number(gasPrice) * 1.2));
 
-    return await getMintTx({ numberOfTokens, ref, tier })
+    return getMintTx({ numberOfTokens, ref, tier })
         .send({...txParams, gasLimit: estimatedGas + 5000, maxFeePerGas: maxGasPrice })
 }

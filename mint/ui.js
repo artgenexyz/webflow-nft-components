@@ -10,7 +10,7 @@ export const updateMintButton = () => {
             setButtonText(mintButton, "Loading...")
             const quantity = getMintQuantity();
 
-            mint(quantity, getMintReferral()).then((r) => {
+            await mint(quantity, getMintReferral()).then((r) => {
                 setButtonText(mintButton, "Mint more");
                 console.log(r);
                 showAlert(`Successfully minted ${quantity} NFTs`, "success")
