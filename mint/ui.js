@@ -26,6 +26,31 @@ export const updateMintButton = () => {
     }
 }
 
+export const updateMintByTierButtons = () => {
+    const tierButtons = document.querySelectorAll('[tier]')
+    if (!tierButtons.length)
+        return
+    tierButtons.forEach((element) => {
+        element.setAttribute('href', '#');
+        element.onclick = async () => {
+            const initialBtnText = element.textContent;
+            const tierID = Number(element.getAttribute("tier"));
+            await mint(1, getMintReferral(), tierID).then((r) => {
+                setButtonText(element, initialBtnText);
+                console.log(r);
+                showAlert(`Successfully minted 1 NFTs`, "success")
+            }).catch((e) => {
+                console.log(e)
+                setButtonText(element, initialBtnText);
+                const { code, message } = parseTxError(e);
+                if (code !== 4001) {
+                    showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                }
+            })
+        }
+    })
+}
+
 const getMintQuantity = () => {
     const quantity = document.querySelector('#quantity-select')?.value
     return quantity !== '' ? quantity : undefined;
