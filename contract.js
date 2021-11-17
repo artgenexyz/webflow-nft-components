@@ -1,5 +1,6 @@
 import {getCurrentNetwork, switchNetwork, web3, isWeb3Initialized} from './wallet.js';
 import {normalizeURL} from "./utils.js";
+import {NETWORKS} from "./constants.js";
 
 export let NFTContract;
 
@@ -20,7 +21,9 @@ const initContract = async (contract) => {
 }
 
 const initContractGlobalObject = () => {
-    const chainID = window.IS_TESTNET ? 4 : 1;
+    // Default to Ethereum
+    const networkID = window.NETWORK_ID ?? 1;
+    const chainID = window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
     window.CONTRACT = {
         nft: {
             address: {

@@ -7,6 +7,7 @@ export const NETWORKS = {
             symbol: "ETH",
             decimals: 18
         },
+        testnetID: 4,
         blockExplorerURL: "https://etherscan.io"
     },
     4: {
@@ -17,6 +18,7 @@ export const NETWORKS = {
             symbol: "ETH",
             decimals: 18
         },
+        testnetID: 4,
         blockExplorerURL: "https://rinkeby.etherscan.io"
     },
     137: {
@@ -27,6 +29,7 @@ export const NETWORKS = {
             symbol: "MATIC",
             decimals: 18
         },
+        testnetID: 80001,
         blockExplorerURL: "https://polygonscan.com"
     },
     80001: {
@@ -37,6 +40,7 @@ export const NETWORKS = {
             symbol: "MATIC",
             decimals: 18
         },
+        testnetID: 80001,
         blockExplorerURL: "https://mumbai.polygonscan.com"
     },
     56: {
@@ -47,6 +51,7 @@ export const NETWORKS = {
             symbol: "BNB",
             decimals: 18,
         },
+        testnetID: 97,
         blockExplorerURL: "https://bscscan.com",
     },
     97: {
@@ -57,6 +62,7 @@ export const NETWORKS = {
             symbol: "tBNB",
             decimals: 18,
         },
+        testnetID: 97,
         blockExplorerURL: "https://testnet.bscscan.com",
     },
 }
