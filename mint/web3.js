@@ -18,7 +18,7 @@ const getMintPrice = async (tier) => {
 export const mint = async (nTokens, ref, tier) => {
     const wallet = await getWalletAddress();
     const numberOfTokens = nTokens ?? 1;
-    const mintPrice = await getMintPrice();
+    const mintPrice = await getMintPrice(tier);
 
     const txParams = {
         from: wallet,
