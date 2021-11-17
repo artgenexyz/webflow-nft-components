@@ -2,7 +2,7 @@ import {getWalletAddress, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import { NFTContract } from "../contract.js"
 
-const getMintTx = ({ numberOfTokens, ref, tier }) => {
+const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     if (tier !== undefined) {
         return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
     }
@@ -24,7 +24,7 @@ export const mint = async (nTokens, ref, tier) => {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const estimatedGas = await getMintTx({ numberOfTokens, ref, tier })
+    const estimatedGas = await getMintTx({ numberOfTokens, ref, tier, wallet })
         .estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
@@ -37,6 +37,6 @@ export const mint = async (nTokens, ref, tier) => {
     // Math.max is for Rinkeby (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2.5e9);
 
-    return getMintTx({ numberOfTokens, ref, tier })
+    return getMintTx({ numberOfTokens, ref, tier, wallet })
         .send({...txParams, gasLimit: estimatedGas + 5000, maxFeePerGas: formatValue(maxGasPrice) })
 }
