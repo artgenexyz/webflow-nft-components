@@ -3,7 +3,7 @@ import { updateConnectButton, updateWalletStatus } from "../wallet.js";
 import { setContracts } from "../contract.js";
 import { renderAlertContainer } from "../ui/alerts.js";
 
-const init = async () => {
+export const init = async () => {
     renderAlertContainer();
     await updateWalletStatus();
     await setContracts();
