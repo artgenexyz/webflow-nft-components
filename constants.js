@@ -65,4 +65,15 @@ export const NETWORKS = {
         testnetID: 97,
         blockExplorerURL: "https://testnet.bscscan.com",
     },
+    1285: {
+        name: "Moonriver",
+        rpcURL: "https://rpc.moonriver.moonbeam.network",
+        currency: {
+            name: "MOVR",
+            symbol: "MOVR",
+            decimals: 18,
+        },
+        testnetID: 1285,
+        blockExplorerURL: "https://blockscout.moonriver.moonbeam.network"
+    }
 }
