@@ -1,5 +1,5 @@
 import { mint } from "./web3.js";
-import { showAlert } from "../ui/alerts.js";
+import { showAlert } from "../ui/src/components/AutoHideAlert.js";
 import { parseTxError } from "../utils.js";
 
 export const updateMintButton = () => {
