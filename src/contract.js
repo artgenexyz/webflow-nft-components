@@ -4,19 +4,21 @@ import {NETWORKS} from "./constants.js";
 
 export let NFTContract;
 
-const initContract = async (contract) => {
+export const initContract = async (contract, shouldSwitchNetwork=true) => {
     const host = normalizeURL(window.location.href);
     const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
-    if (!allowedURLs?.some(v => v.includes(host))) {
+    if (allowedURLs && !allowedURLs?.some(v => v.includes(host))) {
+        console.log("HAHA")
         return undefined;
     }
     let currentNetwork = await getCurrentNetwork();
-    if (!contract.allowedNetworks.includes(currentNetwork)) {
+    if (shouldSwitchNetwork && !contract.allowedNetworks.includes(currentNetwork)) {
         await switchNetwork(contract.allowedNetworks[0])
         currentNetwork = await getCurrentNetwork();
     }
-    const address = contract.address[currentNetwork];
+    const address = contract.address[contract.allowedNetworks[0]];
     const abi = contract.abi;
+    console.log((new web3.eth.Contract(abi, address)))
     return new web3.eth.Contract(abi, address);
 }
 
@@ -38,7 +40,7 @@ const initContractGlobalObject = () => {
     }
 }
 
-export const setContracts = async () => {
+export const setContracts = async (shouldSwitchNetwork=true) => {
     initContractGlobalObject();
     if (!isWeb3Initialized()) {
         return
@@ -46,7 +48,6 @@ export const setContracts = async () => {
     if (NFTContract) {
         return
     }
-    NFTContract = await initContract(window.CONTRACT.nft);
-    // for debug purposes
-    window.NFTContract = NFTContract;
+    NFTContract = await initContract(window.CONTRACT.nft, shouldSwitchNetwork);
+    console.log("NFTContract", NFTContract)
 }

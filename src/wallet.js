@@ -59,7 +59,7 @@ export const isWalletConnected = async () => {
     return accounts?.length > 0;
 }
 
-export const getWalletAddress = async (refresh=false) => {
+export const getWalletAddressOrConnect = async (shouldSwitchNetwork, refresh) => {
     const currentAddress = async () => {
         if (!isWeb3Initialized()) {
             return undefined;
@@ -72,7 +72,7 @@ export const getWalletAddress = async (refresh=false) => {
         }
     }
     if (!isWeb3Initialized()) {
-        await connectWallet();
+        await connectWallet(shouldSwitchNetwork ?? true);
         if (refresh) {
             window.location.reload();
         }
@@ -120,7 +120,7 @@ export const switchNetwork = async (chainID) => {
     }
 }
 
-export const connectWallet = async () => {
+export const connectWallet = async (shouldSwitchNetwork=true) => {
     console.log("Connecting Wallet")
     await initWeb3(true);
     // if (isMobile()) {
@@ -129,7 +129,7 @@ export const connectWallet = async () => {
     //         .replace("www.", "");
     //     window.open(`https://metamask.app.link/dapp/${link}`);
     // }
-    await setContracts();
+    await setContracts(shouldSwitchNetwork);
     await updateWalletStatus();
     console.log("Connected Wallet");
 }

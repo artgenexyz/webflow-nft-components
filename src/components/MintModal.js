@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { parseTxError } from "../utils.js";
 import { showAlert } from "./AutoHideAlert.js";
 import { mint } from "../mint/web3.js";
-import { mintViaWebill } from "../mint/bridge.js";
+import {mintViaWebill} from "../mint/bridge";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -32,7 +32,7 @@ const MintModalContent = (props) => {
         fee: "1% fee",
         image: "images/eth-logo.svg",
         onClick: async () => {
-            await mintViaWebill(1)
+            await mintViaWebill(1, 137)
         }
     }, {
         title: "MATIC",
