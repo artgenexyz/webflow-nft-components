@@ -1,7 +1,6 @@
 import { mint } from "./web3.js";
 import { parseTxError } from "../utils.js";
-
-const showAlert = UIComponents.showAlert;
+import {showAlert} from "../index.js";
 
 export const updateMintButton = () => {
     const mintButton = document.querySelector('#mint-button');

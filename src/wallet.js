@@ -1,6 +1,11 @@
+import Web3 from "web3";
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
 import { NETWORKS } from "./constants.js";
 import {isMobile, objectMap} from "./utils.js";
 import {setContracts} from "./contract.js";
+
 
 export let [web3, provider] = [];
 
@@ -22,12 +27,12 @@ const initWeb3 = async (forceConnect = false) => {
     }
     const disableInjectedProvider = isMobile() && !window.ethereum;
     const onlyInjectedProvider = isMobile() && window.ethereum;
-    const web3Modal = new Web3Modal.default({
+    const web3Modal = new Web3Modal({
         disableInjectedProvider,
         cacheProvider: true,
         providerOptions: !onlyInjectedProvider ? {
             walletconnect: {
-                package: WalletConnectProvider.default,
+                package: WalletConnectProvider,
                 options: walletConnectOptions
             }
         } : {}

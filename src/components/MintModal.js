@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import {Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { parseTxError } from "../utils.js";
+import { showAlert } from "./AutoHideAlert.js";
+import { mint } from "../mint/web3.js";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -54,4 +57,11 @@ export const MintModal = (props, ref) => {
             <MintModalContent />
         </Dialog>
     )
+}
+
+const styles = {
+    mintModalContent: {
+        display: "flex",
+        flexDirection: "row"
+    }
 }
