@@ -1,12 +1,24 @@
 import React from 'react';
 import { render } from "react-dom";
-import AutoHideAlert from "./components/AutoHideAlert.js";
+import { App } from "./components/App.js";
+import { showAlert } from "./components/AutoHideAlert.js";
 
-const DevApp = () => (
-    <div style={{ width: 640, margin: "15px auto" }}>
-        <h1>Components testing</h1>
-        <AutoHideAlert />
-    </div>
-);
+const createDOMElement = () => {
+    const body = document.getElementsByTagName('body')[0];
+    const div = Object.assign(document.createElement('div'), {
+        id: "root",
+    });
+    body.appendChild(div);
+    return div;
+}
 
-render(<DevApp />, document.getElementById("root"));
+const renderAppContainer = () => {
+    render(<App />, createDOMElement());
+}
+
+renderAppContainer();
+
+export { showAlert, renderAppContainer };
+
+
+
