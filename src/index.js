@@ -3,6 +3,7 @@ import { render } from "react-dom";
 import { App } from "./components/App.js";
 import "./styles/index.css";
 import { showAlert } from "./components/AutoHideAlert.js";
+import { showMintModal } from "./components/MintModal.js";
 import { init } from "./mint";
 
 const createDOMElement = () => {
@@ -21,7 +22,7 @@ const renderAppContainer = () => {
 renderAppContainer();
 init();
 
-export { showAlert, renderAppContainer };
+export { showAlert, showMintModal, renderAppContainer };
 
 
 

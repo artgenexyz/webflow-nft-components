@@ -11,12 +11,15 @@ module.exports = {
                 : isEnvDevelopment && 'static/js/bundle.js';
             // Turn off chunking
             webpackConfig.optimization = {};
-            // Remove ModuleScopePlugin
-            const scopePluginIndex = webpackConfig.resolve.plugins.findIndex(
-                ({ constructor }) => constructor && constructor.name === 'ModuleScopePlugin'
+
+            const miniCssPlugin = webpackConfig.plugins.find(
+                ({ constructor }) => constructor.name === 'MiniCssExtractPlugin'
             );
-            webpackConfig.resolve.plugins.splice(scopePluginIndex, 1);
+            if (miniCssPlugin) {
+                miniCssPlugin.options.filename = 'static/css/[name].css';
+                miniCssPlugin.options.chunkFilename = 'static/css/[name].css';
+            }
             return webpackConfig;
-        }
+        },
     },
 }

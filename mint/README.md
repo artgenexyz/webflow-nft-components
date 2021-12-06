@@ -14,6 +14,7 @@ Check out our ready-to-use minting website template: https://textapes.art
     NETWORK_ID = 1
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
+<link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
 4. If you have your Ethereum NFT contract, insert your contract address in `CONTRACT_ADDRESS` field. If you don't, [contact us](https://buildship.dev).
 5. Change `NETWORK_ID` if you're using something other than Ethereum:
