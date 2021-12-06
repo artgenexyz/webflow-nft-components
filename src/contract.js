@@ -30,8 +30,7 @@ const initContractGlobalObject = async () => {
                 [chainID]: window.CONTRACT_ADDRESS,
             },
             abi: await fetchABI(window.CONTRACT_ADDRESS, chainID),
-            allowedNetworks: [chainID],
-            allowedURLs: [window.WEBSITE_URL]
+            allowedNetworks: [chainID]
         }
     }
 }
