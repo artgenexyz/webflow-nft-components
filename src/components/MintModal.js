@@ -26,14 +26,14 @@ const DialogTitleWithClose = ({ children, onClose }) => {
     </DialogTitle>
 }
 
-const MintModalContent = (props) => {
+const MintModalContent = ({ quantity }) => {
     const paymentOptions = [{
         title: "ETH",
         subtitle: "Via Webill",
         fee: "1% fee",
         image: `${BASE_URL}/images/eth-logo.svg`,
         onClick: async () => {
-            await mintViaWebill(1, 137)
+            await mintViaWebill(quantity ?? 1, 137)
         }
     }, {
         title: "MATIC",
@@ -41,7 +41,7 @@ const MintModalContent = (props) => {
         fee: "",
         image: `${BASE_URL}/images/polygon-logo.svg`,
         onClick: async () => {
-            await mint(1).then((r) => {
+            await mint(quantity ?? 1).then((r) => {
                 showAlert(`Successfully minted ${1} NFTs`, "success")
             }).catch((e) => {
                 const { code, message } = parseTxError(e);
@@ -65,12 +65,13 @@ const MintModalContent = (props) => {
 
 export const MintModal = (props, ref) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [quantity, setQuantity] = useState(1);
     const handleClose = () => {
         setIsOpen(false);
     }
 
     useImperativeHandle(ref, () => ({
-            setIsOpen
+            setIsOpen, setQuantity
         })
     )
 
@@ -81,14 +82,15 @@ export const MintModal = (props, ref) => {
             <DialogTitleWithClose onClose={handleClose}>
                 <Typography variant="h4">Pay with</Typography>
             </DialogTitleWithClose>
-            <MintModalContent />
+            <MintModalContent quantity={quantity} />
         </Dialog>
     )
 }
 
 export const modalRef = React.createRef();
 
-export const showMintModal = () => {
+export const showMintModal = (quantity) => {
+    modalRef.current?.setQuantity(quantity)
     modalRef.current?.setIsOpen(true);
 }
 

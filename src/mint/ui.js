@@ -7,14 +7,14 @@ export const updateMintButton = () => {
     const mintButton = document.querySelector('#mint-button');
     if (mintButton) {
         mintButton.onclick = async () => {
+            const initialBtnText = mintButton.textContent;
+            setButtonText(mintButton, "Loading...")
+            const quantity = getMintQuantity();
+
             if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
                 showMintModal();
                 return
             }
-
-            const initialBtnText = mintButton.textContent;
-            setButtonText(mintButton, "Loading...")
-            const quantity = getMintQuantity();
 
             await mint(quantity, getMintReferral()).then((r) => {
                 setButtonText(mintButton, "Mint more");
