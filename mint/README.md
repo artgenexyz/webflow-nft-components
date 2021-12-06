@@ -13,9 +13,10 @@ No coding skills required! Check out our ready-to-use template: https://textapes
 <script type="text/javascript" src="https://unpkg.com/web3modal"></script>
 <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider"></script>
 <script>
-    window.CONTRACT_ADDRESS = "<your contract address here>"
-    window.CONTRACT_ABI = "<your contract ABI here>"
-    window.WEBSITE_URL = "<your mint website URL here>"
+    CONTRACT_ADDRESS = "<your contract address here>"
+    WEBSITE_URL = "<your mint website URL here>"
+    //  Add NETWORK_ID if you're using Polygon (id = 137), Binance (id = 56) or another Ethereum-like network
+    NETWORK_ID = <your network ID if not Ethereum>
 </script>
 <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
