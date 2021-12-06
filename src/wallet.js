@@ -72,10 +72,14 @@ export const getWalletAddressOrConnect = async (shouldSwitchNetwork, refresh) =>
         }
     }
     if (!isWeb3Initialized()) {
-        await connectWallet(shouldSwitchNetwork ?? true);
+        await connectWallet();
         if (refresh) {
             window.location.reload();
         }
+    }
+    // For multi-chain dapps (multi-chain contracts on the same page)
+    if (shouldSwitchNetwork ?? true) {
+        await setContracts(shouldSwitchNetwork ?? true);
     }
     return await currentAddress();
 }
@@ -120,7 +124,7 @@ export const switchNetwork = async (chainID) => {
     }
 }
 
-export const connectWallet = async (shouldSwitchNetwork=true) => {
+export const connectWallet = async () => {
     console.log("Connecting Wallet")
     await initWeb3(true);
     // if (isMobile()) {
@@ -129,7 +133,6 @@ export const connectWallet = async (shouldSwitchNetwork=true) => {
     //         .replace("www.", "");
     //     window.open(`https://metamask.app.link/dapp/${link}`);
     // }
-    await setContracts(shouldSwitchNetwork);
     await updateWalletStatus();
     console.log("Connected Wallet");
 }

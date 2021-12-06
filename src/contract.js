@@ -50,12 +50,12 @@ const fetchABI = async (address, chainID) => {
 
 export const setContracts = async (shouldSwitchNetwork=true) => {
     await initContractGlobalObject();
-    if (!isWeb3Initialized()) {
-        return
+    if (shouldSwitchNetwork) {
+        await switchNetwork(window.CONTRACT.nft.allowedNetworks[0]);
     }
     if (NFTContract) {
         return
     }
-    NFTContract = await initContract(window.CONTRACT.nft, shouldSwitchNetwork);
+    NFTContract = await initContract(window.CONTRACT.nft, false);
     console.log("NFTContract", NFTContract)
 }
