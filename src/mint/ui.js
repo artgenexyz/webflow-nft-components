@@ -12,7 +12,7 @@ export const updateMintButton = () => {
             const quantity = getMintQuantity();
 
             if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
-                showMintModal();
+                showMintModal(quantity);
                 return
             }
 
@@ -59,7 +59,7 @@ export const updateMintByTierButtons = () => {
 
 const getMintQuantity = () => {
     const quantity = document.querySelector('#quantity-select')?.value
-    return quantity !== '' ? quantity : undefined;
+    return quantity !== '' ? Number(quantity) : undefined;
 }
 
 const getMintReferral = () => {
