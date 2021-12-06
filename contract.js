@@ -7,7 +7,7 @@ export let NFTContract;
 const initContract = async (contract) => {
     const host = normalizeURL(window.location.href);
     const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
-    if (!allowedURLs?.some(v => v.includes(host))) {
+    if (allowedURLs && !allowedURLs?.some(v => v.includes(host))) {
         return undefined;
     }
     let currentNetwork = await getCurrentNetwork();
@@ -30,8 +30,7 @@ const initContractGlobalObject = async () => {
                 [chainID]: window.CONTRACT_ADDRESS,
             },
             abi: await fetchABI(window.CONTRACT_ADDRESS, chainID),
-            allowedNetworks: [chainID],
-            allowedURLs: [window.WEBSITE_URL]
+            allowedNetworks: [chainID]
         }
     }
 }
