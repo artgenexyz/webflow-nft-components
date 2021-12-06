@@ -4,32 +4,52 @@ import {sendTx} from "../../tx";
 import {formatValue} from "../../utils";
 import {initContract, NFTContract} from "../../contract";
 
-const API_URL = "https://api.webill.io/v0/nft"
+const API_URL = "https://api.webill.io/v0"
 
-const getMintCost = async (quantity, chainID) => {
-    return await fetch(`${API_URL}/mint-eth-amount/?nft_chain_id=${chainID}&nft_amount=${quantity}`)
+const getMintCost = async (quantity, collectionID) => {
+    return await fetch(`${API_URL}/customer_nft/base-value-for-mint/?nft_collection=${collectionID}&nft_amount=${quantity}`)
         .then(r => r.json())
         .then(r => r.message.amount)
 }
 
-const sendMintRequest = async ({ wallet, quantity, txHash}) => {
-    return await fetch(`${API_URL}/mint/`, {
+const createCollection = async () => {
+    const chain_id = window.CONTRACT.nft.allowedNetworks[0];
+    return await fetch(`${API_URL}/nft-collection/`, {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({
-            client_address: wallet,
+            chain_id,
+            abi: window.CONTRACT.nft.abi,
+            contract_address: window.CONTRACT.nft.address[chain_id]
+        })
+    }).then(r => r.json())
+}
+
+const sendMintRequest = async ({ wallet, quantity, txHash, collectionID }) => {
+    return await fetch(`${API_URL}/customer_nft/mint-nft-collection/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            customer: wallet,
             nft_amount: quantity,
-            chain_id: PaymentContract.allowedNetworks[0],
-            nft_chain_id: window.CONTRACT.nft.allowedNetworks[0],
+            chain_id: window.CONTRACT.nft.allowedNetworks[0],
             nft_contract_mint_method: "mint",
-            nft_contract_address: NFTContract._address,
+            nft_collection: collectionID,
             txn_hash: txHash
         })
     }).then(r => r.json())
 }
 
-export const mintViaWebill = async (quantity, chainID) => {
+export const mintViaWebill = async (quantity) => {
     const wallet = await getWalletAddressOrConnect(false);
-    const mintCost = await getMintCost(quantity, chainID);
+    // Test-only collectionID for ameegos.io
+    // TODO: use createCollection when API fixed
+    const collectionID = "e261526d-0569-47ec-bd46-48d2518a8501"
+    const mintCost = await getMintCost(quantity, collectionID);
     const paymentContract = await initContract(PaymentContract, true)
     const txData = {
         from: wallet,
@@ -37,8 +57,7 @@ export const mintViaWebill = async (quantity, chainID) => {
     }
     const paymentTx = paymentContract.methods.oneTimeEthPayment(MERCHANT_ADDRESS);
     await sendTx(paymentTx, txData).then((r) => {
-        console.log(r)
-        sendMintRequest({ txHash: r.transactionHash, wallet, quantity })
+        sendMintRequest({ txHash: r.transactionHash, wallet, quantity, collectionID })
     })
 }
 

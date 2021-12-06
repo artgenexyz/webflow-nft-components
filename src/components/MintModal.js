@@ -41,7 +41,6 @@ const MintModalContent = (props) => {
         image: "images/polygon-logo.svg",
         onClick: async () => {
             await mint(1).then((r) => {
-                console.log(r);
                 showAlert(`Successfully minted ${1} NFTs`, "success")
             }).catch((e) => {
                 const { code, message } = parseTxError(e);
