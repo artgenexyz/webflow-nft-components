@@ -16,11 +16,11 @@ const initContract = async (contract) => {
         currentNetwork = await getCurrentNetwork();
     }
     const address = contract.address[currentNetwork];
-    const abi = contract.abi;
+    const abi = contract.abi ?? await fetchABI(address, currentNetwork);
     return new web3.eth.Contract(abi, address);
 }
 
-const initContractGlobalObject = () => {
+const initContractGlobalObject = async () => {
     // Default to Ethereum
     const networkID = window.NETWORK_ID ?? 1;
     const chainID = window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
@@ -29,17 +29,28 @@ const initContractGlobalObject = () => {
             address: {
                 [chainID]: window.CONTRACT_ADDRESS,
             },
-            abi: typeof window.CONTRACT_ABI === 'string'
-                ? JSON.parse(window.CONTRACT_ABI)
-                : window.CONTRACT_ABI,
+            abi: await fetchABI(window.CONTRACT_ADDRESS, chainID),
             allowedNetworks: [chainID],
             allowedURLs: [window.WEBSITE_URL]
         }
     }
 }
 
+const fetchABI = async (address, chainID) => {
+    const abi = await fetch(`https://metadata.buildship.dev/api/info/${address}?network_id=${chainID}`)
+        .then(r => r.json())
+        .then(r => r.abi)
+    if (!abi) {
+        console.log("No ABI returned from https://metadata.buildship.dev")
+        return typeof window.CONTRACT_ABI === 'string'
+            ? JSON.parse(window.CONTRACT_ABI)
+            : window.CONTRACT_ABI
+    }
+    return abi;
+}
+
 export const setContracts = async () => {
-    initContractGlobalObject();
+    await initContractGlobalObject();
     if (!isWeb3Initialized()) {
         return
     }
