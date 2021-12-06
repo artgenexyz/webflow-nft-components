@@ -50,6 +50,9 @@ const fetchABI = async (address, chainID) => {
 
 export const setContracts = async (shouldSwitchNetwork=true) => {
     await initContractGlobalObject();
+    if (!isWeb3Initialized()) {
+        return
+    }
     if (shouldSwitchNetwork) {
         await switchNetwork(window.CONTRACT.nft.allowedNetworks[0]);
     }
