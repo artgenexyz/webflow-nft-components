@@ -1,7 +1,6 @@
 import React from "react";
-import {alertRef} from "./AutoHideAlert.js";
-import {MintModal} from "./MintModal.js";
-import AutoHideAlert from "./AutoHideAlert.js";
+import AutoHideAlert, {alertRef} from "./AutoHideAlert.js";
+import MintModal, {modalRef} from "./MintModal.js";
 import {ThemeProvider} from "@mui/material";
 import {theme} from "../styles/theme.js";
 
@@ -9,7 +8,7 @@ export const App = () => {
     return <ThemeProvider theme={theme}>
         <div>
             <AutoHideAlert ref={alertRef} />
-            <MintModal />
+            <MintModal ref={modalRef} />
         </div>
     </ThemeProvider>
 }

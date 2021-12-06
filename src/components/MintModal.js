@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useImperativeHandle, useState} from "react";
 import {Box, Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { parseTxError } from "../utils.js";
 import { showAlert } from "./AutoHideAlert.js";
 import { mint } from "../mint/web3.js";
 import {mintViaWebill} from "../mint/bridge";
+import {BASE_URL} from "../constants";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -30,7 +31,7 @@ const MintModalContent = (props) => {
         title: "ETH",
         subtitle: "Via Webill",
         fee: "1% fee",
-        image: "images/eth-logo.svg",
+        image: `${BASE_URL}/images/eth-logo.svg`,
         onClick: async () => {
             await mintViaWebill(1, 137)
         }
@@ -38,7 +39,7 @@ const MintModalContent = (props) => {
         title: "MATIC",
         subtitle: "Via Polygon",
         fee: "",
-        image: "images/polygon-logo.svg",
+        image: `${BASE_URL}/images/polygon-logo.svg`,
         onClick: async () => {
             await mint(1).then((r) => {
                 showAlert(`Successfully minted ${1} NFTs`, "success")
@@ -63,10 +64,15 @@ const MintModalContent = (props) => {
 }
 
 export const MintModal = (props, ref) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => {
         setIsOpen(false);
     }
+
+    useImperativeHandle(ref, () => ({
+            setIsOpen
+        })
+    )
 
     return (
         <Dialog
@@ -78,6 +84,12 @@ export const MintModal = (props, ref) => {
             <MintModalContent />
         </Dialog>
     )
+}
+
+export const modalRef = React.createRef();
+
+export const showMintModal = () => {
+    modalRef.current?.setIsOpen(true);
 }
 
 const styles = {
@@ -100,3 +112,5 @@ const styles = {
         }
     },
 }
+
+export default React.forwardRef(MintModal);

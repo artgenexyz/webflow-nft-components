@@ -1,11 +1,17 @@
 import { mint } from "./web3.js";
 import { parseTxError } from "../utils.js";
 import {showAlert} from "../index.js";
+import {showMintModal} from "../components/MintModal";
 
 export const updateMintButton = () => {
     const mintButton = document.querySelector('#mint-button');
     if (mintButton) {
         mintButton.onclick = async () => {
+            if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
+                showMintModal();
+                return
+            }
+
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
             const quantity = getMintQuantity();

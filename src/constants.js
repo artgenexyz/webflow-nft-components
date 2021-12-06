@@ -88,3 +88,5 @@ export const NETWORKS = {
         blockExplorerURL: "https://moonbase-blockscout.testnet.moonbeam.network"
     }
 }
+
+export const BASE_URL = "https://nftcomponents.vercel.app"
