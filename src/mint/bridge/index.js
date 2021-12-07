@@ -56,7 +56,7 @@ export const mintViaWebill = async (quantity) => {
         value: formatValue(mintCost * 1e18),
     }
     const paymentTx = paymentContract.methods.oneTimeEthPayment(MERCHANT_ADDRESS);
-    await sendTx(paymentTx, txData).then((r) => {
+    await sendTx(paymentTx, txData, 80000).then((r) => {
         sendMintRequest({ txHash: r.transactionHash, wallet, quantity, collectionID })
     })
 }
