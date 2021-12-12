@@ -10,24 +10,7 @@ export const updateMintButton = () => {
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
             const quantity = getMintQuantity();
-
-            if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
-                showMintModal(quantity);
-                return
-            }
-
-            await mint(quantity, getMintReferral()).then((r) => {
-                setButtonText(mintButton, "Mint more");
-                console.log(r);
-                showAlert(`Successfully minted ${quantity} NFTs`, "success")
-            }).catch((e) => {
-                console.log(e)
-                setButtonText(mintButton, initialBtnText);
-                const { code, message } = parseTxError(e);
-                if (code !== 4001) {
-                    showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
-                }
-            })
+            showMintModal(quantity);
         }
     }
 }
