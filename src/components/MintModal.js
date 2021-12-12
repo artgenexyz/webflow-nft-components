@@ -1,12 +1,12 @@
 import React, { useEffect, useImperativeHandle, useState } from "react";
-import {Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { PaymentModalStep } from './PaymentModalStep';
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
-        {children}
+        <Box sx={{ mr: 4 }}>{children}</Box>
         {onClose ? (
             <IconButton
                 aria-label="close"
@@ -15,6 +15,7 @@ const DialogTitleWithClose = ({ children, onClose }) => {
                     position: 'absolute',
                     right: 16,
                     top: 16,
+                    ml: 4,
                     color: (theme) => theme.palette.grey[500],
                 }}
             >

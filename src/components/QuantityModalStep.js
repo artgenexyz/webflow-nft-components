@@ -13,7 +13,7 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
         getMaxTokensPerMint().then(setMaxTokens)
     }, [])
 
-    const marks = [...Array(maxTokens)]
+    const marks = [...Array(Math.floor(maxTokens / 10) + 1)]
         .map((_, i) => 1 + i * 10)
         .map(m => ({
             value: Math.max(1, m - 1),
@@ -31,11 +31,11 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
         })
     }
 
-    return <div>
+    return <div style={{ width: "100%" }}>
         <Box sx={{
             display: "flex",
             alignItems: "flex-end",
-            width: 300,
+            width: "100%",
             height: 75
         }}>
             <Slider
