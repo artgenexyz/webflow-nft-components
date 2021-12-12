@@ -15,6 +15,11 @@ const getMintPrice = async (tier) => {
         await NFTContract.methods.getPrice().call();
 }
 
+export const getMaxTokensPerMint = async () => {
+    if (!NFTContract) return 20
+    return Number(await NFTContract.methods.MAX_TOKENS_PER_MINT().call());
+}
+
 export const mint = async (nTokens, ref, tier) => {
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
