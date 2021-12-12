@@ -7,7 +7,7 @@ import { Attribution } from './Attribution';
 
 export const QuantityModalStep = ({ setQuantity, setStep }) => {
     const [value, setValue] = useState(1)
-    const [maxTokens, setMaxTokens] = useState(20)
+    const [maxTokens, setMaxTokens] = useState(50)
 
     useEffect(() => {
         getMaxTokensPerMint().then(setMaxTokens)
