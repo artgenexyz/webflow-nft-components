@@ -89,4 +89,9 @@ export const NETWORKS = {
     }
 }
 
-export const BASE_URL = "https://nftcomponents.vercel.app"
+export const getBaseURL = () => {
+    if (window.location.href.includes("localhost")) {
+        return "http://localhost:3000"
+    }
+    return "https://nftcomponents.vercel.app"
+}

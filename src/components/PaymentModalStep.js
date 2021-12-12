@@ -1,4 +1,4 @@
-import { BASE_URL } from '../constants';
+import { getBaseURL } from '../constants';
 import { mintViaWebill } from '../mint/bridge';
 import { mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
@@ -11,7 +11,7 @@ export const PaymentModalStep = ({ quantity }) => {
         title: "ETH",
         subtitle: "Via Webill",
         fee: "1% fee",
-        image: `${BASE_URL}/images/eth-logo.svg`,
+        image: `${getBaseURL()}/images/eth-logo.svg`,
         onClick: async () => {
             await mintViaWebill(quantity ?? 1, 137)
         }
@@ -19,7 +19,7 @@ export const PaymentModalStep = ({ quantity }) => {
         title: "MATIC",
         subtitle: "Via Polygon",
         fee: "",
-        image: `${BASE_URL}/images/polygon-logo.svg`,
+        image: `${getBaseURL()}/images/polygon-logo.svg`,
         onClick: async () => {
             await mint(quantity ?? 1).then((r) => {
                 showAlert(`Successfully minted ${1} NFTs`, "success")

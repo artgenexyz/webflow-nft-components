@@ -3,6 +3,7 @@ import { Box, Button, Slider } from '@mui/material';
 import { getMaxTokensPerMint, mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
+import { Attribution } from './Attribution';
 
 export const QuantityModalStep = ({ setQuantity, setStep }) => {
     const [value, setValue] = useState(1)
@@ -58,5 +59,6 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
         >
             Mint now
         </Button>
+        <Attribution />
     </div>
 }
