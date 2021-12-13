@@ -48,8 +48,15 @@ export const mintViaWebill = async (quantity) => {
     const wallet = await getWalletAddressOrConnect(false);
     // Test-only collectionID for ameegos.io
     // TODO: use createCollection when API fixed
-    const collectionID = "e261526d-0569-47ec-bd46-48d2518a8501"
-    const mintCost = await getMintCost(quantity, collectionID);
+    const collectionID = () => {
+        if (window.location.href.includes("ameegos.io"))
+            return "e261526d-0569-47ec-bd46-48d2518a8501"
+        else if (window.location.href.includes("culd.org"))
+            return "b046d89b-daf0-4632-b02c-8a85d67fa1e4"
+        else
+            return "b046d89b-daf0-4632-b02c-8a85d67fa1e4"
+    }
+    const mintCost = await getMintCost(quantity, collectionID());
     const paymentContract = await initContract(PaymentContract, true)
     const txData = {
         from: wallet,
@@ -57,7 +64,7 @@ export const mintViaWebill = async (quantity) => {
     }
     const paymentTx = paymentContract.methods.oneTimeEthPayment(MERCHANT_ADDRESS);
     await sendTx(paymentTx, txData, 80000).then((r) => {
-        sendMintRequest({ txHash: r.transactionHash, wallet, quantity, collectionID })
+        sendMintRequest({ txHash: r.transactionHash, wallet, quantity, collectionID: collectionID() })
     })
 }
 

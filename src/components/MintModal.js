@@ -53,7 +53,7 @@ export const MintModal = (props, ref) => {
                 {step === 1 ? "Choose how many to mint" : "Pay with"}
             </DialogTitleWithClose>
             <DialogContent style={styles.mintModalContent}>
-                {step === 1 && <QuantityModalStep setQuantity={setQuantity} />}
+                {step === 1 && <QuantityModalStep setQuantity={setQuantity} setStep={setStep} />}
                 {step === 2 && <PaymentModalStep quantity={quantity} />}
             </DialogContent>
         </Dialog>

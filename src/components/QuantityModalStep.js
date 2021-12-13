@@ -4,6 +4,7 @@ import { getMaxTokensPerMint, mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
+import { getCurrentNetwork } from '../wallet';
 
 export const QuantityModalStep = ({ setQuantity, setStep }) => {
     const [value, setValue] = useState(1)
@@ -21,6 +22,11 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
         }))
 
     const onSuccess = () => {
+        if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
+            setStep(2)
+            return
+        }
+
         mint(value).then((r) => {
             showAlert(`Successfully minted ${value} NFTs`, "success")
         }).catch((e) => {
