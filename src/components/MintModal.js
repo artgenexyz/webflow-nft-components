@@ -63,7 +63,9 @@ export const MintModal = (props, ref) => {
 export const modalRef = React.createRef();
 
 export const showMintModal = (quantity) => {
-    modalRef.current?.setQuantity(quantity)
+    if (quantity) {
+        modalRef.current?.setQuantity(quantity)
+    }
     modalRef.current?.setIsOpen(true);
 }
 

@@ -42,7 +42,7 @@ export const updateMintByTierButtons = () => {
 
 const getMintQuantity = () => {
     const quantity = document.querySelector('#quantity-select')?.value
-    return quantity !== '' ? Number(quantity) : undefined;
+    return quantity !== '' && quantity !== undefined ? Number(quantity) : undefined;
 }
 
 const getMintReferral = () => {
