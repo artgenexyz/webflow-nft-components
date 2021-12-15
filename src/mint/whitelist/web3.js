@@ -4,6 +4,7 @@ import { fetchABI } from '../../contract';
 import { WHITELIST } from './index';
 import { sendTx } from '../../tx';
 import { getMerkleProofURL } from './constants';
+import { showMintModal } from '../../components/MintModal';
 
 const getMintPrice = async (wallet) => {
     return getUserWhitelist(wallet).price * 1e18
@@ -30,12 +31,9 @@ const getMerkleProof = async (wallet) => {
         .then(r => r.proof)
 }
 
-const getMintTx = async ({ wallet, contract, quantity, shouldUseMerkleProof }) => {
-    if (shouldUseMerkleProof) {
-        const proof = await getMerkleProof(wallet)
-        return contract.methods.mint(quantity, proof)
-    }
-    return contract.methods.mint(quantity)
+const getMintTx = async ({ wallet, contract, quantity }) => {
+    const proof = await getMerkleProof(wallet)
+    return contract.methods.mint(quantity, proof)
 }
 
 export const mint = async (nTokens) => {
@@ -43,12 +41,16 @@ export const mint = async (nTokens) => {
     const quantity = nTokens ?? 1;
     const mintPrice = await getMintPrice(wallet)
     const contract = await getMintContract(wallet)
-    const shouldUseMerkleProof = getUserWhitelist(wallet).merkleID !== undefined
+    const isWhitelist = getUserWhitelist(wallet).merkleID !== undefined
+    if (!isWhitelist) {
+        showMintModal()
+        return Promise.reject()
+    }
 
     const txParams = {
         from: wallet,
         value: formatValue(Number(mintPrice) * quantity),
     }
-    const mintTx = await getMintTx({contract, wallet, quantity, shouldUseMerkleProof})
+    const mintTx = await getMintTx({contract, wallet, quantity})
     return sendTx(mintTx, txParams)
 }

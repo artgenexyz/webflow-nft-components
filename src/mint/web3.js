@@ -18,8 +18,10 @@ const getMintPrice = async (tier) => {
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (!NFTContract) return 50
-    return Number(await NFTContract.methods.MAX_TOKENS_PER_MINT().call());
+    if (!NFTContract) return 3
+    const method = NFTContract.methods.MAX_TOKENS_PER_MINT ?? NFTContract.methods.maxPerMint
+    return Number(await method().call())
+
 }
 
 export const mint = async (nTokens, ref, tier) => {
