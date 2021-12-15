@@ -11,17 +11,22 @@ const getMintPrice = async (wallet) => {
 }
 
 const getMintContract = async (wallet) => {
+    console.log(getUserWhitelist(wallet))
     const address = getUserWhitelist(wallet).contract
+    console.log("ADDRESS CONTACT", address)
     const abi = await fetchABI(address, window.NETWORK_ID)
+    console.log("ABI", abi)
     return new web3.eth.Contract(abi, address)
 }
 
 const getUserWhitelist = (wallet) => {
-    return Object.values(WHITELIST)
-        .filter(l => l.wallets === null ||
+    console.log(WHITELIST)
+    const wl = Object.values(WHITELIST)
+        .filter(l =>
             l.wallets?.map(w => w.toLowerCase())
             ?.includes(wallet.toLowerCase())
-        )[0]
+        )
+    return wl.length ? wl : Object.values(WHITELIST).slice(-1)[0]
 }
 
 const getMerkleProof = async (wallet) => {
