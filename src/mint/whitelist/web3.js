@@ -16,15 +16,16 @@ const getMintContract = async (wallet) => {
 }
 
 const getUserWhitelist = (wallet) => {
-    console.log(wallet)
-    console.log(WHITELIST)
     return Object.values(WHITELIST)
-        .filter(l => l.wallets.map(w => w.toLowerCase())
-        .includes(wallet.toLowerCase()))[0]
+        .filter(l => l.wallets === null ||
+            l.wallets?.map(w => w.toLowerCase())
+            ?.includes(wallet.toLowerCase())
+        )[0]
 }
 
 const getMerkleProof = async (wallet) => {
-    return fetch(getMerkleProofURL(wallet))
+    const merkleID = getUserWhitelist(wallet).merkleID
+    return fetch(getMerkleProofURL(merkleID, wallet))
         .then(r => r.json())
         .then(r => r.proof)
 }
@@ -42,7 +43,7 @@ export const mint = async (nTokens) => {
     const quantity = nTokens ?? 1;
     const mintPrice = await getMintPrice(wallet)
     const contract = await getMintContract(wallet)
-    const shouldUseMerkleProof = getUserWhitelist(wallet).isMerkle
+    const shouldUseMerkleProof = getUserWhitelist(wallet).merkleID !== undefined
 
     const txParams = {
         from: wallet,
