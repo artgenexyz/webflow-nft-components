@@ -50,7 +50,7 @@ const getMintReferral = () => {
     return searchParams.get("ref");
 }
 
-const setButtonText = (btn, text) => {
+export const setButtonText = (btn, text) => {
     if (btn.childElementCount > 0) {
         btn.children[0].textContent = text;
     } else {

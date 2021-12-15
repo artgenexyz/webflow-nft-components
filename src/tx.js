@@ -5,6 +5,8 @@ import {showAlert} from "./components/AutoHideAlert";
 export const sendTx = async (tx, txData, defaultGasLimit) => {
     const estimatedGas = await estimateGasLimit(tx, txData, defaultGasLimit ?? 300000);
     const maxFeePerGas = await estimateMaxGasFee(tx);
+    if (estimatedGas === undefined)
+        return Promise.reject()
     return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas });
 }
 
@@ -14,8 +16,9 @@ const estimateGasLimit = (tx, txData, defaultGasLimit) => {
         if (code === -32000) {
             return defaultGasLimit;
         }
-        showAlert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
+        showAlert(`Minting error: ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`, "error");
         console.log(e);
+        return undefined;
     })
 }
 

@@ -39,7 +39,7 @@ const initContractGlobalObject = async () => {
     }
 }
 
-const fetchABI = async (address, chainID) => {
+export const fetchABI = async (address, chainID) => {
     const abi = await fetch(`https://metadata.buildship.dev/api/info/${address}?network_id=${chainID}`)
         .then(r => r.json())
         .then(r => r.abi)

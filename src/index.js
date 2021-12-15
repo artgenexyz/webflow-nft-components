@@ -5,6 +5,7 @@ import "./styles/index.css";
 import { showAlert } from "./components/AutoHideAlert.js";
 import { showMintModal } from "./components/MintModal.js";
 import { init } from "./mint";
+import { initWhitelist } from './mint/whitelist';
 
 const createDOMElement = () => {
     const body = document.getElementsByTagName('body')[0];
@@ -21,6 +22,7 @@ const renderAppContainer = () => {
 
 renderAppContainer();
 init();
+initWhitelist();
 
 export { showAlert, showMintModal, renderAppContainer };
 
