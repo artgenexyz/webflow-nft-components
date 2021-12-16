@@ -45,9 +45,12 @@ const fetchABI = async (address, chainID) => {
         .then(r => r.abi)
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.dev")
-        return typeof window.CONTRACT_ABI === 'string'
+        const savedABI = typeof window.CONTRACT_ABI === 'string'
             ? JSON.parse(window.CONTRACT_ABI)
             : window.CONTRACT_ABI
+        if (!savedABI) {
+            alert(`Error: no ABI loaded for ${address}. Please contact support`)
+        }
     }
     return abi;
 }
