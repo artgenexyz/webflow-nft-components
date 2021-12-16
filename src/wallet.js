@@ -24,10 +24,17 @@ const initWeb3 = async (forceConnect = false) => {
             ],
         }
     }
-    // const disableInjectedProvider = isMobile() && window.ethereum;
-    const onlyInjectedProvider = isMobile() && window.ethereum;
+    const mobileNotInjectedProvider = isMobile() && !window.ethereum
+    const onlyInjectedProvider = isMobile() && window.ethereum
+    if (mobileNotInjectedProvider) {
+        // Use Metamask for mobile only
+        const link = window.location.href
+            .replace("https://", "")
+            .replace("www.", "");
+        window.open(`https://metamask.app.link/dapp/${link}`);
+        return undefined
+    }
     const web3Modal = new Web3Modal({
-        // disableInjectedProvider,
         cacheProvider: false,
         providerOptions: !onlyInjectedProvider ? {
             walletconnect: {
