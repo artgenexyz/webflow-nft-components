@@ -19,17 +19,16 @@ const initWeb3 = async (forceConnect = false) => {
         rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
         qrcodeModalOptions: {
             mobileLinks: [
-                "metamask",
                 "rainbow",
                 "trust",
             ],
         }
     }
-    const disableInjectedProvider = isMobile() && !window.ethereum;
+    // const disableInjectedProvider = isMobile() && window.ethereum;
     const onlyInjectedProvider = isMobile() && window.ethereum;
     const web3Modal = new Web3Modal({
-        disableInjectedProvider,
-        cacheProvider: true,
+        // disableInjectedProvider,
+        cacheProvider: false,
         providerOptions: !onlyInjectedProvider ? {
             walletconnect: {
                 package: WalletConnectProvider,
@@ -39,6 +38,10 @@ const initWeb3 = async (forceConnect = false) => {
     });
     if (web3Modal.cachedProvider || forceConnect) {
         provider = await web3Modal.connect();
+        if (provider && provider.isMetaMask) {
+            // console.log("provider", provider)
+            web3Modal.setCachedProvider("injected")
+        }
         provider.on("accountsChanged", async (accounts) => {
             if (accounts.length === 0) {
                 if (provider.close) {
