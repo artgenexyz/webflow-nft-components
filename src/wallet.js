@@ -37,6 +37,9 @@ const initWeb3 = async (forceConnect = false) => {
         } : {}
     });
     if (web3Modal.cachedProvider || forceConnect) {
+        if (web3Modal.cachedProvider === "walletconnect") {
+            web3Modal.clearCachedProvider()
+        }
         provider = await web3Modal.connect();
         if (provider && provider.isMetaMask) {
             // console.log("provider", provider)
@@ -47,7 +50,7 @@ const initWeb3 = async (forceConnect = false) => {
                 if (provider.close) {
                     await provider.close();
                 }
-                await web3Modal.clearCachedProvider();
+                web3Modal.clearCachedProvider();
             }
         });
     }
