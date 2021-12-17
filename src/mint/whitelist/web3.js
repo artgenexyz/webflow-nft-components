@@ -26,7 +26,7 @@ const getUserWhitelist = (wallet) => {
             l.wallets?.map(w => w.toLowerCase())
             ?.includes(wallet.toLowerCase())
         )
-    return wl.length ? wl[0] : Object.values(WHITELIST).slice(-1)[0]
+    return wl.length ? wl[0] : Object.values(WHITELIST).filter(l => l.wallets === null)[0]
 }
 
 const getMerkleProof = async (wallet) => {
