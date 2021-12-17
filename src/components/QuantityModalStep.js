@@ -14,8 +14,9 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
         getMaxTokensPerMint().then(setMaxTokens)
     }, [])
 
-    const marks = [...Array(Math.floor(maxTokens / 10) + 1)]
-        .map((_, i) => 1 + i * 10)
+    const step = maxTokens >= 10 ? 10 : maxTokens
+    const marks = [...Array(Math.floor(maxTokens / step) + 1)]
+        .map((_, i) => 1 + i * step)
         .map(m => ({
             value: Math.max(1, m - 1),
             label: (Math.max(1, m - 1)).toString()
