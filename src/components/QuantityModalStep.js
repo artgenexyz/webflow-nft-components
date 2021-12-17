@@ -8,13 +8,13 @@ import { getCurrentNetwork } from '../wallet';
 
 export const QuantityModalStep = ({ setQuantity, setStep }) => {
     const [value, setValue] = useState(1)
-    const [maxTokens, setMaxTokens] = useState(50)
+    const [maxTokens, setMaxTokens] = useState(65)
 
     useEffect(() => {
-        getMaxTokensPerMint().then(setMaxTokens)
+        // getMaxTokensPerMint().then(setMaxTokens)
     }, [])
 
-    const step = maxTokens >= 10 ? 10 : maxTokens
+    const step = maxTokens < 5 ? maxTokens : 10
     const marks = [...Array(Math.floor(maxTokens / step) + 1)]
         .map((_, i) => 1 + i * step)
         .map(m => ({
