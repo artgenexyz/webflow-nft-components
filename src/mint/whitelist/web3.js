@@ -21,12 +21,12 @@ const getMintContract = async (wallet) => {
 
 const getUserWhitelist = (wallet) => {
     console.log(WHITELIST)
-    const wl = Object.values(WHITELIST)
+    const wl = WHITELIST
         .filter(l =>
             l.wallets?.map(w => w.toLowerCase())
             ?.includes(wallet.toLowerCase())
         )
-    return wl.length ? wl[0] : Object.values(WHITELIST).filter(l => l.wallets === null)[0]
+    return wl.length ? wl[0] : WHITELIST.filter(l => l.wallets === null)[0]
 }
 
 const getMerkleProof = async (wallet) => {
