@@ -20,6 +20,8 @@ const getMintPrice = async (tier) => {
 }
 
 export const getMintedNumber = async () => {
+    if (!NFTContract)
+        return undefined
     if (NFTContract.methods.totalSupply)
         return await NFTContract.methods.totalSupply().call()
     // temporary solution, works only for buildship.dev contracts
@@ -34,6 +36,8 @@ export const getMintedNumber = async () => {
 }
 
 export const getMaxSupply = async () => {
+    if (!NFTContract)
+        return undefined
     if (NFTContract.methods.maxSupply)
         return await NFTContract.methods.maxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
@@ -47,7 +51,8 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (!NFTContract) return getDefaultMaxTokensPerMint()
+    if (!NFTContract)
+        return getDefaultMaxTokensPerMint()
     if (NFTContract.methods.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
