@@ -74,10 +74,15 @@ export const mint = async (nTokens, ref, tier) => {
         })
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Rinkeby (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
-    const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2.5e9);
+    const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2e9);
     const chainID = await web3.eth.getChainId();
     const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
 
     return getMintTx({ numberOfTokens, ref, tier, wallet })
-        .send({...txParams, gasLimit: estimatedGas + 5000, maxFeePerGas })
+        .send({
+            ...txParams,
+            gasLimit: estimatedGas + 5000,
+            maxPriorityFeePerGas: 2e9,
+            maxFeePerGas
+        })
 }
