@@ -28,7 +28,7 @@ Check out our ready-to-use minting website template: https://textapes.art
 ```html
 <script>
    CONTRACT_ADDRESS = "<your contract address here>"
-   IS_TESTNET = 4
+   IS_TESTNET = true
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
