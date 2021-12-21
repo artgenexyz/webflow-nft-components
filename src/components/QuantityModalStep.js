@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Slider } from '@mui/material';
-import { getMaxTokensPerMint, mint } from '../mint/web3';
+import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
@@ -8,7 +8,7 @@ import { getCurrentNetwork } from '../wallet';
 
 export const QuantityModalStep = ({ setQuantity, setStep }) => {
     const [value, setValue] = useState(1)
-    const [maxTokens, setMaxTokens] = useState(20)
+    const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
 
     useEffect(() => {
         getMaxTokensPerMint().then(setMaxTokens)

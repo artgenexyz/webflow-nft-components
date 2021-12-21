@@ -17,8 +17,12 @@ const getMintPrice = async (tier) => {
         await NFTContract.methods.getPrice().call();
 }
 
+export const getDefaultMaxTokensPerMint = () => {
+    return window.MAX_PER_MINT ?? 20
+}
+
 export const getMaxTokensPerMint = async () => {
-    if (!NFTContract) return 20
+    if (!NFTContract) return getDefaultMaxTokensPerMint()
     if (NFTContract.methods.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
