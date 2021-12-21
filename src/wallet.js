@@ -26,7 +26,7 @@ const initWeb3 = async (forceConnect = false) => {
     }
     const mobileNotInjectedProvider = isMobile() && !window.ethereum
     const onlyInjectedProvider = isMobile() && window.ethereum
-    if (mobileNotInjectedProvider) {
+    if (mobileNotInjectedProvider && forceConnect) {
         // Use Metamask for mobile only
         const link = window.location.href
             .replace("https://", "")
@@ -49,7 +49,6 @@ const initWeb3 = async (forceConnect = false) => {
         }
         provider = await web3Modal.connect();
         if (provider && provider.isMetaMask) {
-            // console.log("provider", provider)
             web3Modal.setCachedProvider("injected")
         }
         provider.on("accountsChanged", async (accounts) => {
