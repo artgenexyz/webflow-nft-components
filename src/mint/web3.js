@@ -1,6 +1,6 @@
 import {getWalletAddressOrConnect, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
-import {NFTContract, setContracts} from "../contract.js"
+import {NFTContract} from "../contract.js"
 
 const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     if (tier !== undefined) {
@@ -12,11 +12,34 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
 const getMintPrice = async (tier) => {
     if (NFTContract.methods.price)
         return NFTContract.methods.price().call();
-    if (NFTContract.methods.cost) 
+    if (NFTContract.methods.cost)
         return NFTContract.methods.cost().call();
     return tier ?
         await NFTContract.methods.getPrice(tier).call() :
         await NFTContract.methods.getPrice().call();
+}
+
+export const getMintedNumber = async () => {
+    if (NFTContract.methods.totalSupply)
+        return await NFTContract.methods.totalSupply().call()
+    // temporary solution, works only for buildship.dev contracts
+    // totalSupply was removed to save gas when minting
+    // but number minted still accessible in the contract as a private variable
+    // TODO: remove this in NFTFactory v1.1
+    const minted = await web3.eth.getStorageAt(
+        NFTContract._address,
+        '0x00000000000000000000000000000000000000000000000000000000000000fb'
+    )
+    return web3.utils.hexToNumber(minted)
+}
+
+export const getMaxSupply = async () => {
+    if (NFTContract.methods.maxSupply)
+        return await NFTContract.methods.maxSupply().call()
+    if (NFTContract.methods.MAX_SUPPLY)
+        return await NFTContract.methods.MAX_SUPPLY
+    alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.dev to resolve this.")
+    return undefined
 }
 
 export const getDefaultMaxTokensPerMint = () => {

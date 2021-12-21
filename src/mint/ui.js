@@ -1,4 +1,4 @@
-import { mint } from "./web3.js";
+import { getMaxSupply, getMintedNumber, mint } from "./web3.js";
 import { parseTxError } from "../utils.js";
 import {showAlert} from "../index.js";
 import {showMintModal} from "../components/MintModal";
@@ -12,6 +12,15 @@ export const updateMintButton = () => {
             const quantity = getMintQuantity();
             showMintModal(quantity);
         }
+    }
+}
+
+export const updateMintedCounter = async () => {
+    const mintedElem = document.querySelector("#minted-counter")
+    const totalElem = document.querySelector("#total-counter")
+    if (mintedElem && totalElem) {
+        mintedElem.textContent = await getMintedNumber()
+        totalElem.textContent = await getMaxSupply()
     }
 }
 
