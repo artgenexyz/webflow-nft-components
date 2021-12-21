@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Slider } from '@mui/material';
+import { Box, Button, CircularProgress, DialogContent, Slider } from '@mui/material';
 import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
 import { getCurrentNetwork } from '../wallet';
 
-export const QuantityModalStep = ({ setQuantity, setStep }) => {
-    const [value, setValue] = useState(1)
+export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading }) => {
+    const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
 
     useEffect(() => {
@@ -28,9 +28,12 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
             return
         }
 
-        mint(value).then((r) => {
-            showAlert(`Successfully minted ${value} NFTs`, "success")
+        setIsLoading(true)
+        mint(quantityValue).then((r) => {
+            setIsLoading(false)
+            showAlert(`Successfully minted ${quantityValue} NFTs`, "success")
         }).catch((e) => {
+            setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {
                 showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
@@ -51,7 +54,7 @@ export const QuantityModalStep = ({ setQuantity, setStep }) => {
                 valueLabelDisplay="auto"
                 onChange={(e, v) => {
                     setQuantity(v)
-                    setValue(v)
+                    setQuantityValue(v)
                 }}
                 step={1}
                 marks={marks}

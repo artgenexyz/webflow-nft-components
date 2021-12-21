@@ -1,5 +1,5 @@
 import React, { useEffect, useImperativeHandle, useState } from "react";
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { PaymentModalStep } from './PaymentModalStep';
@@ -26,6 +26,7 @@ const DialogTitleWithClose = ({ children, onClose }) => {
 
 export const MintModal = (props, ref) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1);
 
@@ -49,13 +50,33 @@ export const MintModal = (props, ref) => {
         <Dialog
             open={isOpen}
             onClose={handleClose}>
+            {isLoading &&
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: 300,
+                    height: 300,
+                    maxWidth: "50vw"
+                }}>
+                    <CircularProgress />
+                    <Box sx={{mt: 3}}>Minting {quantity} NFT...</Box>
+                </Box>
+            }
+            {!isLoading && <>
             <DialogTitleWithClose onClose={handleClose}>
                 {step === 1 ? "Choose how many to mint" : "Pay with"}
             </DialogTitleWithClose>
             <DialogContent style={styles.mintModalContent}>
-                {step === 1 && <QuantityModalStep setQuantity={setQuantity} setStep={setStep} />}
+                {step === 1 && <QuantityModalStep
+                    setQuantity={setQuantity}
+                    setStep={setStep}
+                    setIsLoading={setIsLoading}
+                />}
                 {step === 2 && <PaymentModalStep quantity={quantity} />}
             </DialogContent>
+            </>}
         </Dialog>
     )
 }
