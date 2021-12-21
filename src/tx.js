@@ -3,7 +3,7 @@ import {web3} from "./wallet";
 import {showAlert} from "./components/AutoHideAlert";
 
 export const sendTx = async (tx, txData, defaultGasLimit) => {
-    const estimatedGas = await estimateGasLimit(tx, txData, defaultGasLimit ?? 300000);
+    const estimatedGas = await estimateGasLimit(tx, txData, defaultGasLimit);
     const maxFeePerGas = await estimateMaxGasFee(tx);
     return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas });
 }
