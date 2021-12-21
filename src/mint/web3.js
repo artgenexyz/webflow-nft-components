@@ -67,7 +67,7 @@ export const mint = async (nTokens, ref, tier) => {
         .estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
-                return 300000;
+                return 100000 * numberOfTokens;
             }
             alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
