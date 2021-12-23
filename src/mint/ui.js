@@ -4,8 +4,11 @@ import {showAlert} from "../index.js";
 import {showMintModal} from "../components/MintModal";
 
 export const updateMintButton = () => {
-    const mintButton = document.querySelector('#mint-button');
+    const mintButton = document.querySelector('#mint-button') ??
+        document.querySelector("a[href*='#mint-button']")
     if (mintButton) {
+        console.log(mintButton)
+        mintButton.href = "#"
         mintButton.onclick = async () => {
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
