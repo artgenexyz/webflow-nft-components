@@ -14,6 +14,7 @@ export const updateMintButton = () => {
             setButtonText(mintButton, "Loading...")
             const quantity = getMintQuantity();
             showMintModal(quantity);
+            setButtonText(mintButton, initialBtnText)
         }
     }
 }
