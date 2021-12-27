@@ -5,7 +5,8 @@ import {showAlert} from "./components/AutoHideAlert";
 export const sendTx = async (tx, txData, defaultGasLimit) => {
     const estimatedGas = await estimateGasLimit(tx, txData, defaultGasLimit);
     const maxFeePerGas = await estimateMaxGasFee(tx);
-    return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas, maxPriorityFeePerGas: 2e9 });
+    const maxPriorityFeePerGas = await estimateMaxPriorityFeePerGas();
+    return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas, maxPriorityFeePerGas });
 }
 
 const estimateGasLimit = (tx, txData, defaultGasLimit) => {
@@ -25,4 +26,9 @@ const estimateMaxGasFee = async (tx) => {
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2e9);
     const chainID = await web3.eth.getChainId();
     return [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
+}
+
+const estimateMaxPriorityFeePerGas = async () => {
+    const chainID = await web3.eth.getChainId();
+    return [1, 4].includes(chainID) ? 2e9 : undefined;
 }
