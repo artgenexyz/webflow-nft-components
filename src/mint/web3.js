@@ -84,11 +84,13 @@ export const mint = async (nTokens, ref, tier) => {
     const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas =  [1, 4].includes(chainID) ? 2e9 : undefined;
 
-    return getMintTx({ numberOfTokens, ref, tier, wallet })
+    const tx = getMintTx({ numberOfTokens, ref, tier, wallet })
         .send({
             ...txParams,
             gasLimit: estimatedGas + 5000,
             maxPriorityFeePerGas,
             maxFeePerGas
         })
+    // https://github.com/ChainSafe/web3.js/issues/1547
+    return Promise.resolve({ tx })
 }

@@ -21,9 +21,10 @@ export const PaymentModalStep = ({ quantity }) => {
         fee: "",
         image: `${getBaseURL()}/images/polygon-logo.svg`,
         onClick: async () => {
-            await mint(quantity ?? 1).then((r) => {
+            const { tx } = await mint(quantity ?? 1)
+            tx.on("confirmation", (r) => {
                 showAlert(`Successfully minted ${1} NFTs`, "success")
-            }).catch((e) => {
+            }).on("error", (e) => {
                 const { code, message } = parseTxError(e);
                 if (code !== 4001) {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");

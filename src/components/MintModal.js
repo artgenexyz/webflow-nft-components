@@ -3,6 +3,7 @@ import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, 
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { PaymentModalStep } from './PaymentModalStep';
+import { getBaseURL } from '../constants';
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -25,10 +26,11 @@ const DialogTitleWithClose = ({ children, onClose }) => {
 }
 
 export const MintModal = (props, ref) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
+    const [txHash, setTxHash] = useState(undefined)
     const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
         // TODO: Remove this after merging to main
@@ -60,8 +62,21 @@ export const MintModal = (props, ref) => {
                     height: 300,
                     maxWidth: "50vw"
                 }}>
-                    <CircularProgress />
-                    <Box sx={{mt: 3}}>Minting {quantity} NFT...</Box>
+                    {txHash ? <CircularProgress /> : <span style={{
+                        fontSize: 60,
+                        margin: 0
+                    }}>
+                        👋
+                    </span>}
+                    <Typography sx={{mt: 3}} variant="subtitle1">{
+                        txHash
+                        ? `Minting ${quantity} NFT...`
+                        : 'Confirm the transaction in your wallet'
+                    }</Typography>
+                    {!txHash && <Typography sx={{
+                        mt: 1,
+                        color: "#757575"
+                    }} variant="subtitle2">May need to scroll down ⬇️</Typography>}
                 </Box>
             }
             {!isLoading && <>
@@ -70,6 +85,7 @@ export const MintModal = (props, ref) => {
             </DialogTitleWithClose>
             <DialogContent style={styles.mintModalContent}>
                 {step === 1 && <QuantityModalStep
+                    setTxHash={setTxHash}
                     setQuantity={setQuantity}
                     setStep={setStep}
                     setIsLoading={setIsLoading}

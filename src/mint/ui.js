@@ -40,12 +40,13 @@ export const updateMintByTierButtons = () => {
         element.setAttribute('href', '#');
         element.onclick = async () => {
             const initialBtnText = element.textContent;
-            const tierID = Number(element.getAttribute("tier"));
-            await mint(1, getMintReferral(), tierID).then((r) => {
+            const tierID = Number(element.getAttribute("tier"))
+            const { tx } = await mint(1, getMintReferral(), tierID)
+            tx.on("confirmation", (r) => {
                 setButtonText(element, initialBtnText);
                 console.log(r);
                 showAlert(`Successfully minted 1 NFTs`, "success")
-            }).catch((e) => {
+            }).on("error", (e) => {
                 console.log(e)
                 setButtonText(element, initialBtnText);
                 const { code, message } = parseTxError(e);
