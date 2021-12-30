@@ -28,7 +28,7 @@ Check out our ready-to-use minting website template: https://textapes.art
 ### Example for testing
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "0x8Fac2e25DFF0B248A19A66Ae8D530613c8Ff670B"
    IS_TESTNET = true
    MAX_PER_MINT = 20
 </script>
