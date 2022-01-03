@@ -51,12 +51,16 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (!NFTContract)
-        return getDefaultMaxTokensPerMint()
-    if (NFTContract.methods.maxPerMint) {
+    if (NFTContract?.methods?.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
-    return Number(await NFTContract.methods.MAX_TOKENS_PER_MINT().call());
+    if (NFTContract?.methods?.maxMintAmount) {
+        return Number(await NFTContract.methods.maxMintAmount().call())
+    }
+    if (NFTContract?.methods?.MAX_TOKENS_PER_MINT) {
+        return Number(await NFTContract.methods.MAX_TOKENS_PER_MINT().call())
+    }
+    return getDefaultMaxTokensPerMint()
 }
 
 export const mint = async (nTokens, ref, tier) => {
