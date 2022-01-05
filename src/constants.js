@@ -88,3 +88,10 @@ export const NETWORKS = {
         blockExplorerURL: "https://moonbase-blockscout.testnet.moonbeam.network"
     }
 }
+
+export const getBaseURL = () => {
+    if (window.location.href.includes("localhost")) {
+        return "http://localhost:3000"
+    }
+    return "https://nftcomponents.vercel.app"
+}

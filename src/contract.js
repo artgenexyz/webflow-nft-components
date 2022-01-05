@@ -4,18 +4,18 @@ import {NETWORKS} from "./constants.js";
 
 export let NFTContract;
 
-const initContract = async (contract) => {
+export const initContract = async (contract, shouldSwitchNetwork=true) => {
     const host = normalizeURL(window.location.href);
     const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
     if (allowedURLs && !allowedURLs?.some(v => v.includes(host))) {
         return undefined;
     }
     let currentNetwork = await getCurrentNetwork();
-    if (!contract.allowedNetworks.includes(currentNetwork)) {
+    if (shouldSwitchNetwork && !contract.allowedNetworks.includes(currentNetwork)) {
         await switchNetwork(contract.allowedNetworks[0])
         currentNetwork = await getCurrentNetwork();
     }
-    const address = contract.address[currentNetwork];
+    const address = contract.address[contract.allowedNetworks[0]];
     const abi = contract.abi ?? await fetchABI(address, currentNetwork);
     return new web3.eth.Contract(abi, address);
 }
@@ -45,22 +45,27 @@ const fetchABI = async (address, chainID) => {
         .then(r => r.abi)
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.dev")
-        return typeof window.CONTRACT_ABI === 'string'
+        const savedABI = typeof window.CONTRACT_ABI === 'string'
             ? JSON.parse(window.CONTRACT_ABI)
             : window.CONTRACT_ABI
+        if (!savedABI) {
+            alert(`Error: no ABI loaded for ${address}. Please contact support`)
+        }
     }
     return abi;
 }
 
-export const setContracts = async () => {
+export const setContracts = async (shouldSwitchNetwork=true) => {
     await initContractGlobalObject();
     if (!isWeb3Initialized()) {
         return
     }
+    if (shouldSwitchNetwork) {
+        await switchNetwork(window.CONTRACT.nft.allowedNetworks[0]);
+    }
     if (NFTContract) {
         return
     }
-    NFTContract = await initContract(window.CONTRACT.nft);
-    // for debug purposes
-    window.NFTContract = NFTContract;
+    NFTContract = await initContract(window.CONTRACT.nft, false);
+    console.log("NFTContract", NFTContract)
 }

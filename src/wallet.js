@@ -1,6 +1,11 @@
+import Web3 from "web3";
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
 import { NETWORKS } from "./constants.js";
 import {isMobile, objectMap} from "./utils.js";
 import {setContracts} from "./contract.js";
+
 
 export let [web3, provider] = [];
 
@@ -14,32 +19,44 @@ const initWeb3 = async (forceConnect = false) => {
         rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
         qrcodeModalOptions: {
             mobileLinks: [
-                "metamask",
                 "rainbow",
                 "trust",
             ],
         }
     }
-    const disableInjectedProvider = isMobile() && !window.ethereum;
-    const onlyInjectedProvider = isMobile() && window.ethereum;
-    const web3Modal = new Web3Modal.default({
-        disableInjectedProvider,
-        cacheProvider: true,
+    const mobileNotInjectedProvider = isMobile() && !window.ethereum
+    const onlyInjectedProvider = isMobile() && window.ethereum
+    if (mobileNotInjectedProvider && forceConnect) {
+        // Use Metamask for mobile only
+        const link = window.location.href
+            .replace("https://", "")
+            .replace("www.", "");
+        window.open(`https://metamask.app.link/dapp/${link}`);
+        return undefined
+    }
+    const web3Modal = new Web3Modal({
+        cacheProvider: false,
         providerOptions: !onlyInjectedProvider ? {
             walletconnect: {
-                package: WalletConnectProvider.default,
+                package: WalletConnectProvider,
                 options: walletConnectOptions
             }
         } : {}
     });
     if (web3Modal.cachedProvider || forceConnect) {
+        if (web3Modal.cachedProvider === "walletconnect") {
+            web3Modal.clearCachedProvider()
+        }
         provider = await web3Modal.connect();
+        if (provider && provider.isMetaMask) {
+            web3Modal.setCachedProvider("injected")
+        }
         provider.on("accountsChanged", async (accounts) => {
             if (accounts.length === 0) {
                 if (provider.close) {
                     await provider.close();
                 }
-                await web3Modal.clearCachedProvider();
+                web3Modal.clearCachedProvider();
             }
         });
     }
@@ -54,7 +71,7 @@ export const isWalletConnected = async () => {
     return accounts?.length > 0;
 }
 
-export const getWalletAddress = async (refresh=false) => {
+export const getWalletAddressOrConnect = async (shouldSwitchNetwork, refresh) => {
     const currentAddress = async () => {
         if (!isWeb3Initialized()) {
             return undefined;
@@ -71,6 +88,10 @@ export const getWalletAddress = async (refresh=false) => {
         if (refresh) {
             window.location.reload();
         }
+    }
+    // For multi-chain dapps (multi-chain contracts on the same page)
+    if (shouldSwitchNetwork ?? true) {
+        await setContracts(shouldSwitchNetwork ?? true);
     }
     return await currentAddress();
 }
@@ -124,7 +145,6 @@ export const connectWallet = async () => {
     //         .replace("www.", "");
     //     window.open(`https://metamask.app.link/dapp/${link}`);
     // }
-    await setContracts();
     await updateWalletStatus();
     console.log("Connected Wallet");
 }

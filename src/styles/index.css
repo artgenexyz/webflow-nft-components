@@ -1,0 +1,8 @@
+.MuiDialog-container {
+    font-family: "Inter", BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
+}
+
+.web3modal-modal-lightbox {
+    z-index: 10000 !important;
+}
