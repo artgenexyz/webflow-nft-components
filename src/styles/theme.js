@@ -4,15 +4,26 @@ export const theme = createTheme({
     palette: {
         primary: {
             main: "#55ACEE",
+            contrastText: "#1f1f1f"
         },
     },
     spacing: [0, 4, 8, 16, 24, 32, 64],
     components: {
         MuiDialog: {
             styleOverrides: {
+                container: {
+                    color: "#1f1f1f"
+                },
                 paper: {
                     borderRadius: "24px",
                     padding: "16px"
+                }
+            }
+        },
+        MuiDialogTitle: {
+            styleOverrides: {
+                root: {
+                    color: "#1f1f1f",
                 }
             }
         },
@@ -40,7 +51,11 @@ export const theme = createTheme({
             textTransform: "none",
         },
         h4: {
+            color: "#1f1f1f",
             fontWeight: 600
+        },
+        subtitle1: {
+            color: "#1f1f1f",
         },
         subtitle2: {
             fontWeight: 300,

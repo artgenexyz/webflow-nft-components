@@ -1,11 +1,6 @@
 .MuiDialog-container {
-    color: #1f1f1f !important;
     font-family: "Inter", BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
-}
-
-.MuiDialogTitle-root {
-    color: #1f1f1f !important;
 }
 
 .web3modal-modal-lightbox {

@@ -64,6 +64,7 @@ export const MintModal = (props, ref) => {
                 }}>
                     {txHash ? <CircularProgress /> : <span style={{
                         fontSize: 60,
+                        lineHeight: 1,
                         margin: 0
                     }}>
                         👋
@@ -75,8 +76,9 @@ export const MintModal = (props, ref) => {
                     }</Typography>
                     {!txHash && <Typography sx={{
                         mt: 1,
-                        color: "#757575"
-                    }} variant="subtitle2">May need to scroll down ⬇️</Typography>}
+                        color: "#757575",
+                        textAlign: "center"
+                    }} variant="subtitle2">Wait until transaction window appears.<br/>If you don't see the Confirm button, scroll down ⬇️</Typography>}
                 </Box>
             }
             {!isLoading && <>
