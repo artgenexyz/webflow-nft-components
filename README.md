@@ -3,7 +3,7 @@
 Connect web3 to Webflow without coding skills required.
 ## Lazy mint on Webflow
 
-![Mint widget](public/images/screenshot.png)
+<img src="public/images/screenshot.png" width="300" />
 
 Check out our ready-to-use minting website template: https://textapes.art
 
