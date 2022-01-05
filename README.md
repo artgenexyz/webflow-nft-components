@@ -3,6 +3,8 @@
 Connect web3 to Webflow without coding skills required.
 ## Lazy mint on Webflow
 
+![Mint widget](public/images/screenshot.png)
+
 Check out our ready-to-use minting website template: https://textapes.art
 
 [Contact us](https://buildship.dev) to get this Webflow template & create your Opensea-independent NFT collection
@@ -36,6 +38,8 @@ Check out our ready-to-use minting website template: https://textapes.art
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
 
+## FAQ
+
 ### I'm confused / it's not working, can you help me?
 Yes, absolutely! You can contact us at https://buildship.dev, or open a [GitHub issue](https://github.com/buildship-dev/webflow-nft-components/issues/new)
 
@@ -43,6 +47,11 @@ Yes, absolutely! You can contact us at https://buildship.dev, or open a [GitHub 
 Mint button will ask to connect wallet, so it's not necessary to add a "Connect wallet" button.
 
 If you still want to do it, create a Webflow button with ID `connect`.
+
+### How to add minted counter?
+Just create two text elements and assign them:
+- `minted-counter` ID to display minted number
+- `total-counter` ID to display collection max size
 
 ### How to use this with Polygon, Binance, or other Ethereum-based networks?
 It's easy! Change `NETWORK_ID` in the code snippet:
