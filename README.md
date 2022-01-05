@@ -3,7 +3,7 @@
 Connect web3 to Webflow without coding skills required.
 ## Lazy mint on Webflow
 
-![Mint widget](public/images/screenshot.png)
+<img src="public/images/screenshot.png" width="300" />
 
 Check out our ready-to-use minting website template: https://textapes.art
 
@@ -22,9 +22,12 @@ Check out our ready-to-use minting website template: https://textapes.art
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
-4. If you have your Ethereum NFT contract, insert your contract address in `CONTRACT_ADDRESS` field. If you don't, [contact us](https://buildship.dev).
-5. Create a button with ID `mint-button` to your Webflow site.
-6. You're done 🎉
+4. If you have your Ethereum NFT contract, insert your contract address in `CONTRACT_ADDRESS` field. If you don't, [contact us](https://buildship.dev). 
+
+> Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = ...` line in the above code, replaced with your contract ABI 
+
+6. Create a button with ID `mint-button` to your Webflow site.
+7. You're done 🎉
 
 
 ### Example for testing
@@ -60,13 +63,6 @@ It's easy! Change `NETWORK_ID` in the code snippet:
 - Polygon `NETWORK_ID = 137`
 - Binance `NETWORK_ID = 56`
 - For others visit: https://chainlist.org/
-5. Change `NETWORK_ID` if you're using something other than Ethereum:
-   - Ethereum Rinkeby Testnet: `NETWORK_ID = 4`
-   - Polygon `NETWORK_ID = 137`
-   - Binance `NETWORK_ID = 56`
-6. Create a button with ID `mint-button` to your Webflow site.
-7. You're done 🎉
 
-Minting will work via Metamask wallet, and will ask to connect the wallet first, so it's not necessary to add a "Connect wallet" button.
 
 If you don't know how to code or want to launch fast, get Webflow NFT minting templates at https://buildship.dev
