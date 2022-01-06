@@ -60,12 +60,6 @@ It's easy! Change `NETWORK_ID` in the code snippet:
 - Polygon `NETWORK_ID = 137`
 - Binance `NETWORK_ID = 56`
 - For others visit: https://chainlist.org/
-5. Change `NETWORK_ID` if you're using something other than Ethereum:
-   - Ethereum Rinkeby Testnet: `NETWORK_ID = 4`
-   - Polygon `NETWORK_ID = 137`
-   - Binance `NETWORK_ID = 56`
-6. Create a button with ID `mint-button` to your Webflow site.
-7. You're done 🎉
 
 Minting will work via Metamask wallet, and will ask to connect the wallet first, so it's not necessary to add a "Connect wallet" button.
 
