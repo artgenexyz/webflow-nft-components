@@ -1,8 +1,9 @@
 import React, { useEffect, useImperativeHandle, useState } from "react";
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { PaymentModalStep } from './PaymentModalStep';
+import { getBaseURL } from '../constants';
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -25,9 +26,11 @@ const DialogTitleWithClose = ({ children, onClose }) => {
 }
 
 export const MintModal = (props, ref) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
+    const [txHash, setTxHash] = useState(undefined)
+    const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
         // TODO: Remove this after merging to main
@@ -49,13 +52,49 @@ export const MintModal = (props, ref) => {
         <Dialog
             open={isOpen}
             onClose={handleClose}>
+            {isLoading &&
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: 300,
+                    height: 300,
+                    maxWidth: "50vw"
+                }}>
+                    {txHash ? <CircularProgress /> : <span style={{
+                        fontSize: 60,
+                        lineHeight: 1,
+                        margin: 0
+                    }}>
+                        👋
+                    </span>}
+                    <Typography sx={{mt: 3}} variant="subtitle1">{
+                        txHash
+                        ? `Minting ${quantity} NFT...`
+                        : 'Confirm the transaction in your wallet'
+                    }</Typography>
+                    {!txHash && <Typography sx={{
+                        mt: 1,
+                        color: "#757575",
+                        textAlign: "center"
+                    }} variant="subtitle2">Wait until transaction window appears.<br/>If you don't see the Confirm button, scroll down ⬇️</Typography>}
+                </Box>
+            }
+            {!isLoading && <>
             <DialogTitleWithClose onClose={handleClose}>
                 {step === 1 ? "Choose how many to mint" : "Pay with"}
             </DialogTitleWithClose>
             <DialogContent style={styles.mintModalContent}>
-                {step === 1 && <QuantityModalStep setQuantity={setQuantity} setStep={setStep} />}
+                {step === 1 && <QuantityModalStep
+                    setTxHash={setTxHash}
+                    setQuantity={setQuantity}
+                    setStep={setStep}
+                    setIsLoading={setIsLoading}
+                />}
                 {step === 2 && <PaymentModalStep quantity={quantity} />}
             </DialogContent>
+            </>}
         </Dialog>
     )
 }

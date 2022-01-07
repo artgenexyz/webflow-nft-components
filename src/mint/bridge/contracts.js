@@ -7,4 +7,11 @@ export const PaymentContract = {
     allowedNetworks: [1]
 }
 
+export const SendAndMintContract = {
+    address: {
+        137: "0xFEf76b0a395465EBa0A52493625168eEF032ec6F"
+    },
+    allowedNetworks: [137]
+}
+
 export const MERCHANT_ADDRESS = "0x3CCb0F1f6Cc0709f491A2D25b4FBCa5Fe78870e8";
