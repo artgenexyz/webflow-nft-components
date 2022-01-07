@@ -2,6 +2,7 @@ import { setButtonText } from '../ui';
 import { showAlert } from '../../components/AutoHideAlert';
 import { parseTxError } from '../../utils';
 import { mint } from './web3';
+import { showJoinWhitelistModal } from '../../components/JoinWhitelistModal';
 
 export const updateMintWhitelistButton = () => {
     const mintButton = document.querySelector('#mint-whitelist');
@@ -21,6 +22,15 @@ export const updateMintWhitelistButton = () => {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
                 }
             })
+        }
+    }
+}
+
+export const updateJoinWhitelistButton = () => {
+    const joinButton = document.querySelector('#join-whitelist')
+    if (joinButton) {
+        joinButton.onclick = async () => {
+            showJoinWhitelistModal()
         }
     }
 }

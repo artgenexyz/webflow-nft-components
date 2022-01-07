@@ -4,6 +4,7 @@ import { App } from "./components/App.js";
 import "./styles/index.css";
 import { showAlert } from "./components/AutoHideAlert.js";
 import { showMintModal } from "./components/MintModal.js";
+import { showJoinWhitelistModal } from './components/JoinWhitelistModal';
 import { init } from "./mint";
 import { initWhitelist } from './mint/whitelist';
 
@@ -24,7 +25,4 @@ renderAppContainer();
 init();
 initWhitelist();
 
-export { showAlert, showMintModal, renderAppContainer };
-
-
-
+export { showAlert, showMintModal, showJoinWhitelistModal, renderAppContainer };
