@@ -5,7 +5,8 @@ import { mint } from './web3';
 import { showJoinWhitelistModal } from '../../components/JoinWhitelistModal';
 
 export const updateMintWhitelistButton = () => {
-    const mintButton = document.querySelector('#mint-whitelist');
+    const mintButton = document.querySelector('#mint-whitelist') ??
+        document.querySelector("a[href*='#mint-whitelist']")
     if (mintButton) {
         mintButton.onclick = async () => {
             const initialBtnText = mintButton.textContent;
@@ -27,7 +28,8 @@ export const updateMintWhitelistButton = () => {
 }
 
 export const updateJoinWhitelistButton = () => {
-    const joinButton = document.querySelector('#join-whitelist')
+    const joinButton = document.querySelector('#join-whitelist') ??
+        document.querySelector("a[href*='#join-whitelist']")
     if (joinButton && window.JOIN_WHITELIST_ID) {
         joinButton.onclick = async () => {
             showJoinWhitelistModal()
