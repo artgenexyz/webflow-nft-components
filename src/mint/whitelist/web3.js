@@ -1,62 +1,55 @@
 import { formatValue } from '../../utils';
 import { getWalletAddressOrConnect, web3 } from '../../wallet';
 import { fetchABI } from '../../contract';
-import { WHITELIST } from './index';
 import { sendTx } from '../../tx';
-import { getMerkleProofURL } from './constants';
-import { showMintModal } from '../../components/MintModal';
+import { getFindWhitelistURL } from './constants';
 
-const getMintPrice = async (wallet) => {
-    return getUserWhitelist(wallet).price * 1e18
+const getMintPrice = async (contract) => {
+    return contract.methods.price().call()
 }
 
-const getMintContract = async (wallet) => {
-    console.log(getUserWhitelist(wallet))
-    const address = getUserWhitelist(wallet).contract
-    console.log("ADDRESS CONTACT", address)
+const getMintContract = async (whitelist) => {
+    const address = whitelist.whitelist_address
+    console.log("WHITELIST ADDRESS", address)
     const abi = await fetchABI(address, window.NETWORK_ID)
     console.log("ABI", abi)
     return new web3.eth.Contract(abi, address)
 }
 
-const getUserWhitelist = (wallet) => {
-    console.log(WHITELIST)
-    const wl = WHITELIST
-        .filter(l =>
-            l.wallets?.map(w => w.toLowerCase())
-            ?.includes(wallet.toLowerCase())
-        )
-    return wl.length ? wl[0] : WHITELIST.filter(l => l.wallets === null)[0]
-}
-
-const getMerkleProof = async (wallet) => {
-    const merkleID = getUserWhitelist(wallet).merkleID
-    console.log("MERKLE ID", merkleID)
-    return fetch(getMerkleProofURL(merkleID, wallet))
+export const fetchUserWhitelist = (wallet) => {
+    return fetch(getFindWhitelistURL(wallet))
         .then(r => r.json())
-        .then(r => r.proof)
+        .then(r =>
+            r.airdrops.filter(a =>
+                a.is_valid && a.nft_address === window.CONTRACT_ADDRESS
+            )[0]
+        )
 }
 
-const getMintTx = async ({ wallet, contract, quantity }) => {
-    const proof = await getMerkleProof(wallet)
+const getMerkleProof = async (whitelist) => {
+    return whitelist.proof
+}
+
+const getMintTx = async ({ whitelist, contract, quantity }) => {
+    const proof = await getMerkleProof(whitelist)
     return contract.methods.mint(quantity, proof)
 }
 
 export const mint = async (nTokens) => {
-    const wallet = await getWalletAddressOrConnect(true);
-    const quantity = nTokens ?? 1;
-    const mintPrice = await getMintPrice(wallet)
-    const contract = await getMintContract(wallet)
-    const isWhitelist = getUserWhitelist(wallet).merkleID !== undefined
-    if (!isWhitelist) {
-        showMintModal()
-        return Promise.reject()
+    const wallet = await getWalletAddressOrConnect(true)
+    const whitelist = await fetchUserWhitelist(wallet)
+    console.log("WHITELIST", whitelist)
+    if (!whitelist) {
+        return Promise.reject("Your wallet is not whitelisted. If this is a mistake, contact our support in Discord")
     }
+    const quantity = nTokens ?? 1
+    const contract = await getMintContract(whitelist)
+    const mintPrice = await getMintPrice(contract)
 
     const txParams = {
         from: wallet,
         value: formatValue(Number(mintPrice) * quantity),
     }
-    const mintTx = await getMintTx({contract, wallet, quantity})
+    const mintTx = await getMintTx({contract, whitelist, quantity})
     return sendTx(mintTx, txParams)
 }

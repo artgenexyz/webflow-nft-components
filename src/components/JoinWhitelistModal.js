@@ -11,7 +11,7 @@ export const JoinWhitelistModal = (props, ref) => {
     const [walletAddress, setWalletAddress] = useState(undefined)
 
     const addToWhitelist = (address) => {
-        return fetch(`${BUILDSHIP_API_BASE}/extensions/whitelist/${window.WHITELIST_ID}/add`, {
+        return fetch(`${BUILDSHIP_API_BASE}/extensions/whitelist/${window.JOIN_WHITELIST_ID}/add`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

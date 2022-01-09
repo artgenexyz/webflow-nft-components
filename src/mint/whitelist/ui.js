@@ -28,7 +28,7 @@ export const updateMintWhitelistButton = () => {
 
 export const updateJoinWhitelistButton = () => {
     const joinButton = document.querySelector('#join-whitelist')
-    if (joinButton) {
+    if (joinButton && window.JOIN_WHITELIST_ID) {
         joinButton.onclick = async () => {
             showJoinWhitelistModal()
         }
