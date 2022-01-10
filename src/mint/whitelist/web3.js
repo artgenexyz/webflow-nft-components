@@ -51,5 +51,5 @@ export const mint = async (nTokens) => {
         value: formatValue(Number(mintPrice) * quantity),
     }
     const mintTx = await getMintTx({contract, whitelist, quantity})
-    return sendTx(mintTx, txParams)
+    return sendTx(mintTx, txParams, 160000)
 }
