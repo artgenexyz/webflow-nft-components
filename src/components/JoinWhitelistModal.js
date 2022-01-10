@@ -3,6 +3,7 @@ import { Box, CircularProgress, Dialog, Typography } from "@mui/material";
 import { getWalletAddressOrConnect } from '../wallet';
 import { BUILDSHIP_API_BASE } from '../constants';
 import { showAlert } from '../index';
+import { updateWhitelistSpotsLeft } from '../mint/whitelist/ui';
 
 export const JoinWhitelistModal = (props, ref) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -37,7 +38,7 @@ export const JoinWhitelistModal = (props, ref) => {
 
     const getMessage = () => (
         <>
-            {whitelistStatus === "joined" && <>Joined the whitelist with {walletAddress}</>}
+            {whitelistStatus === "joined" && <>Joined the whitelist with {walletAddress.slice(0, 6)}...</>}
             {whitelistStatus === "already_added" && <>You're already in the whitelist</>}
             {whitelistStatus === "full" && <>Whitelist is already full</>}
             {whitelistStatus === "error" && <>Error adding to whitelist</>}
@@ -46,7 +47,7 @@ export const JoinWhitelistModal = (props, ref) => {
 
     useEffect(() => {
         if (isOpen && !walletAddress) {
-            getWalletAddressOrConnect(true)
+            getWalletAddressOrConnect(false)
                 .then((address) => {
                     setIsLoading(true)
                     setWalletAddress(address)
@@ -68,6 +69,7 @@ export const JoinWhitelistModal = (props, ref) => {
                         return
                     }
                     setWhitelistStatus("joined")
+                    updateWhitelistSpotsLeft()
                 })
         }
     }, [isOpen, walletAddress])
@@ -95,7 +97,10 @@ export const JoinWhitelistModal = (props, ref) => {
                     }}>
                         {getEmoji()}
                     </span>
-                    <Typography sx={{mt: 3}} variant="subtitle1">
+                    <Typography sx={{
+                        mt: 3,
+                        textAlign: "center"
+                    }} variant="subtitle1">
                         {getMessage()}
                     </Typography>
                 </>}
