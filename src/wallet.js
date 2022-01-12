@@ -104,6 +104,10 @@ export const switchNetwork = async (chainID) => {
     if (!provider) {
         return
     }
+    if (chainID === await getCurrentNetwork()) {
+        console.log("Don't need to change network")
+        return
+    }
     const chainIDHex = `0x${chainID.toString(16)}`;
     try {
         await provider.request({
