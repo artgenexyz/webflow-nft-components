@@ -4,6 +4,7 @@ import { parseTxError } from '../../utils';
 import { mint } from './web3';
 import { showJoinWhitelistModal } from '../../components/JoinWhitelistModal';
 import { BUILDSHIP_API_BASE } from '../../constants';
+import { sendEvent } from '../../analytics';
 
 export const updateMintWhitelistButton = () => {
     const mintButton = document.querySelector('#mint-whitelist') ??
@@ -12,17 +13,28 @@ export const updateMintWhitelistButton = () => {
         mintButton.onclick = async () => {
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
+
+            sendEvent(window.analytics, 'whitelist-mint-button-click', {})
+
             await mint(1).then((r) => {
                 setButtonText(mintButton, initialBtnText);
                 console.log(r);
                 showAlert(`Successfully minted 1 NFTs`, "success")
+
+                sendEvent(window.analytics, 'whitelist-mint-success', {})
+
             }).catch((e) => {
                 console.log(e)
                 setButtonText(mintButton, initialBtnText);
                 const { code, message } = parseTxError(e);
+
                 if (e && code !== 4001) {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                    sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
+                } else {
+                    sendEvent(window.analytics, 'whitelist-mint-rejected', { error: message })
                 }
+
             })
         }
     }
