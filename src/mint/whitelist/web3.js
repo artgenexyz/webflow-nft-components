@@ -39,7 +39,7 @@ const getMintTx = async ({ whitelist, contract, quantity }) => {
 export const mint = async (nTokens) => {
     const wallet = await getWalletAddressOrConnect(true)
 
-    sendEvent('connect-wallet-success', { wallet });
+    sendEvent(window.analytics, 'connect-wallet-success', { wallet });
 
     const whitelist = await fetchUserWhitelist(wallet)
     console.log("WHITELIST", whitelist)
