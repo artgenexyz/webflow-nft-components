@@ -35,6 +35,68 @@ Check out our ready-to-use minting website template: https://textapes.art
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
 
+## Analytics
+
+How can you add analytics to your minting website? Currently, we support tracking these events:
+
+```
+connect-wallet-success
+
+whitelist-mint-button-click
+whitelist-mint-success
+whitelist-mint-reject
+whitelist-mint-error
+
+public-sale-mint-button-click
+public-sale-mint-success
+public-sale-mint-reject
+public-sale-mint-error
+```
+
+To track ones you're interested in, append this code block to your Webflow Embed block AFTER your buildship script:
+
+```html
+<script>
+    // example tracking event with data
+    analytics.addEventListener('connect-wallet-success', (data) => console.log('connect-wallet-success', data));
+
+    // track event into your Yandex Metrika
+    analytics.addEventListener('connect-wallet-success', () => ym(99999, 'reachGoal', 'WalletConnected'));
+
+    // track event into your Google Analytics
+    analytics.addEventListener('connect-wallet-success', () => ga('send', 'event', 'WalletConnected'));
+
+    // track event into your Facebook Pixel
+    analytics.addEventListener('connect-wallet-success', () => fbq('track', 'WalletConnected'));
+
+    // track many events at once:
+    analytics.addEventListener('public-sale-mint-success', () => ym(99999, 'reachGoal', 'MintSuccess'));
+    analytics.addEventListener('public-sale-mint-error', () => ym(99999, 'reachGoal', 'MintError'));
+    analytics.addEventListener('public-sale-mint-reject', () => ym(99999, 'reachGoal', 'MintReject'));
+</script>
+```
+
+Full example:
+
+```html
+<script>
+   CONTRACT_ADDRESS = "<your contract address here>"
+   NETWORK_ID = 1
+   // for public mint
+   MAX_PER_MINT = 20
+</script>
+<script src="https://nftcomponents-git-feature-whitelist-buildship.vercel.app/static/js/main.js"></script>
+<link href="https://nftcomponents-git-feature-whitelist-buildship.vercel.app/static/css/main.css" rel="stylesheet">
+
+<script>
+    analytics.addEventListener('public-sale-mint-success', () => ym(99999, 'reachGoal', 'MintSuccess'));
+    analytics.addEventListener('public-sale-mint-error', () => ym(99999, 'reachGoal', 'MintError'));
+    analytics.addEventListener('public-sale-mint-reject', () => ym(99999, 'reachGoal', 'MintReject'));
+</script>
+```
+
+If this doesn't work, first check the console for errors, and see if it outputs "ANALYTICS" when events are happening.
+
 ## FAQ
 
 ### I'm confused / it's not working, can you help me?
