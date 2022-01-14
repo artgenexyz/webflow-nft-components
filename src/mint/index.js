@@ -14,4 +14,3 @@ export const init = async () => {
     updateMintByTierButtons();
 }
 
-init();
