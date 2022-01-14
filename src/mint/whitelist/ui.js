@@ -30,9 +30,11 @@ export const updateMintWhitelistButton = () => {
 
                 if (e && code !== 4001) {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                    sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
+                } else {
+                    sendEvent(window.analytics, 'whitelist-mint-rejected', { error: message })
                 }
 
-                sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
             })
         }
     }
