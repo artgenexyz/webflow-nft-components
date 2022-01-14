@@ -59,11 +59,11 @@ export const updateMintByTierButtons = () => {
                 const { code, message } = parseTxError(e);
                 if (code !== 4001) {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
-
-                    sendEvent(window.analytics, 'public-sale-mint-error', { error: message })
                 } else {
-                    sendEvent(window.analytics, 'public-sale-mint-rejected', { error: message })
+                    // Most probably user rejected the transaction
                 }
+
+                sendEvent(window.analytics, 'public-sale-mint-error', { error: message })
             })
         }
     })
