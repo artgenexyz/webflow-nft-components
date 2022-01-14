@@ -3,6 +3,7 @@ import { getWalletAddressOrConnect, web3 } from '../../wallet';
 import { fetchABI } from '../../contract';
 import { sendTx } from '../../tx';
 import { getFindWhitelistURL } from './constants';
+import { sendEvent } from '../../analytics';
 
 const getMintPrice = async (contract) => {
     return contract.methods.price().call()
@@ -37,6 +38,9 @@ const getMintTx = async ({ whitelist, contract, quantity }) => {
 
 export const mint = async (nTokens) => {
     const wallet = await getWalletAddressOrConnect(true)
+
+    sendEvent('connect-wallet-success', { wallet });
+
     const whitelist = await fetchUserWhitelist(wallet)
     console.log("WHITELIST", whitelist)
     if (!whitelist) {
