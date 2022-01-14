@@ -65,6 +65,17 @@ export const NETWORKS = {
         testnetID: 97,
         blockExplorerURL: "https://testnet.bscscan.com",
     },
+    250: {
+        name: "Fantom Opera",
+        rpcURL: "https://rpc.ftm.tools/",
+        currency: {
+            name: "Fantom",
+            symbol: "FTM",
+            decimals: 18,
+        },
+        testnetID: 250,
+        blockExplorerURL: "https://ftmscan.com",
+    },    
     1285: {
         name: "Moonriver",
         rpcURL: "https://rpc.moonriver.moonbeam.network",
