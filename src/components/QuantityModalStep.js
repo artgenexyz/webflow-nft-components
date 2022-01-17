@@ -4,6 +4,7 @@ import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/w
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
+import { sendEvent } from '../analytics';
 import { getCurrentNetwork } from '../wallet';
 
 export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHash }) => {

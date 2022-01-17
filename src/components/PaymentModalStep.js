@@ -3,6 +3,7 @@ import { mintViaWebill } from '../mint/bridge';
 import { mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
+import { sendEvent } from '../analytics';
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 
