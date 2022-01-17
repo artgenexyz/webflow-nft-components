@@ -43,7 +43,7 @@ export const updateMintByTierButtons = () => {
             const initialBtnText = element.textContent;
             const tierID = Number(element.getAttribute("tier"))
 
-            sendEvent(window.analytics, 'public-sale-mint-button-click', {})
+            sendEvent(window.analytics, 'public-sale-mint-button-click', { tier: tierID })
 
             const { tx } = await mint(1, getMintReferral(), tierID)
             tx.on("confirmation", (r) => {
@@ -51,7 +51,7 @@ export const updateMintByTierButtons = () => {
                 console.log(r);
                 showAlert(`Successfully minted 1 NFTs`, "success")
 
-                sendEvent(window.analytics, 'public-sale-mint-success', {})
+                sendEvent(window.analytics, 'public-sale-mint-success', { tier: tierID })
 
             }).on("error", (e) => {
                 console.log(e)

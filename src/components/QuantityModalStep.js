@@ -28,6 +28,8 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
             return
         }
 
+        sendEvent(window.analytics, 'public-sale-mint-button-click', {})
+
         setIsLoading(true)
         const { tx } = await mint(quantityValue)
         tx.on("transactionHash", (hash) => {
@@ -35,11 +37,16 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
         }).on("confirmation", async () => {
             setIsLoading(false)
             showAlert(`Successfully minted ${quantityValue} NFTs`, "success")
+
+            sendEvent(window.analytics, 'public-sale-mint-success', {})
         }).on("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {
                 showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                sendEvent(window.analytics, 'public-sale-mint-error', { error: message })
+            } else {
+                sendEvent(window.analytics, 'public-sale-mint-rejected', { error: message })
             }
         })
     }
