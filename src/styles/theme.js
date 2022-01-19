@@ -2,7 +2,6 @@ import { createTheme } from "@mui/material";
 
 const defaultStyles = {
     primaryColor: "#55ACEE",
-    backgroundColor: "#ffffff",
     secondaryTextColor: "#9e9e9e",
     buttonTextColor: "#ffffff",
     theme: "light",
@@ -13,6 +12,8 @@ const getStyles = () => ({...defaultStyles, ...window.STYLES})
 
 const makeStyles = () => ({
     ...getStyles(),
+    backgroundColor: getStyles().backgroundColor
+        ?? (getStyles().theme === "dark" ? "#1f1f1f" : "#ffffff"),
     primaryTextColor: getStyles().theme === "dark" ? "#ffffff" : "#1f1f1f",
     buttonRadius: getStyles().corners === "squared" ? "0px" : "30px",
     dialogRadius: getStyles().corners === "squared" ? "0px" : "24px",
@@ -25,6 +26,7 @@ const {
     secondaryTextColor,
     buttonTextColor,
     backgroundColor,
+    defaultBackgroundColor,
     buttonRadius,
     dialogRadius
 } = makeStyles()
@@ -76,6 +78,14 @@ export const theme = createTheme({
                 },
             }
         },
+        MuiSlider: {
+            styleOverrides: {
+                valueLabel: {
+                    color: buttonTextColor,
+                    backgroundColor: secondaryTextColor
+                }
+            }
+        }
     },
     typography: {
         fontFamily: "Inter, San Francisco, Roboto, Helvetica, sans-serif",

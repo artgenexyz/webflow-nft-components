@@ -10,7 +10,21 @@ export const Attribution = () => {
             display: "flex",
             alignItems: "center"
         }}>
-        <img width={16} src={`${getBaseURL()}/images/buildship.png`} />
+        <div style={{
+            backgroundColor: "#ffffff",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 24,
+            height: 24,
+            borderRadius: 24,
+        }}>
+            <img
+                style={{ marginTop: "-2px" }}
+                width={14}
+                src={`${getBaseURL()}/images/buildship.png`}
+            />
+        </div>
         <Box sx={{
             marginLeft: "6px",
             fontSize: 14,
