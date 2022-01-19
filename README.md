@@ -54,7 +54,7 @@ If you still want to do it, create a Webflow button with ID `connect`.
 ### How to add minted counter?
 Just create two text elements and assign them:
 - `minted-counter` ID to display minted number
-- `total-counter` ID to display collection max size
+- `total-counter` ID to display collection size
 
 ### How to use this with Polygon, Binance, or other Ethereum-based networks?
 It's easy! Change `NETWORK_ID` in the code snippet:
@@ -64,5 +64,8 @@ It's easy! Change `NETWORK_ID` in the code snippet:
 - Binance `NETWORK_ID = 56`
 - For others visit: https://chainlist.org/
 
+### How to style minting dialog?
+[See the example here](https://github.com/buildship-dev/webflow-nft-components/wiki/Mint-button-widget#how-to-style-minting-dialog)
 
-If you don't know how to code or want to launch fast, get Webflow NFT minting templates at https://buildship.dev
+
+If you need help with this instruction or your want to deploy your NFT contract, contact us at https://buildship.dev
