@@ -6,7 +6,7 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     if (tier !== undefined) {
         return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
     }
-    return NFTContract.methods.mint(numberOfTokens);
+    return NFTContract.methods.mintDape(numberOfTokens);
 }
 
 const getMintPrice = async (tier) => {
