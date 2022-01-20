@@ -1,20 +1,33 @@
 import { createTheme } from "@mui/material";
 
 const defaultStyles = {
+    backgroundColor: "#ffffff",
     primaryColor: "#55ACEE",
+    primaryTextColor: "#1f1f1f",
     secondaryTextColor: "#9e9e9e",
     buttonTextColor: "#ffffff",
     theme: "light",
     corners: "rounded"
 }
 
-const getStyles = () => ({...defaultStyles, ...window.STYLES})
+const darkDefaultStyles = {
+    // dark theme uses dialog auto-lightner so using #000 here
+    backgroundColor: "#000000",
+    primaryColor: "#2986CC",
+    primaryTextColor: "#ffffff",
+    secondaryTextColor: "#9e9e9e",
+    buttonTextColor: "#ffffff",
+    theme: "dark",
+    corners: "rounded"
+}
+
+const getStyles = () => ({
+    ...(window.STYLES.theme === "dark" ? darkDefaultStyles : defaultStyles),
+    ...window.STYLES
+})
 
 const makeStyles = () => ({
     ...getStyles(),
-    backgroundColor: getStyles().backgroundColor
-        ?? (getStyles().theme === "dark" ? "#1f1f1f" : "#ffffff"),
-    primaryTextColor: getStyles().theme === "dark" ? "#ffffff" : "#1f1f1f",
     buttonRadius: getStyles().corners === "squared" ? "0px" : "30px",
     dialogRadius: getStyles().corners === "squared" ? "0px" : "24px",
 })
@@ -26,7 +39,6 @@ const {
     secondaryTextColor,
     buttonTextColor,
     backgroundColor,
-    defaultBackgroundColor,
     buttonRadius,
     dialogRadius
 } = makeStyles()
