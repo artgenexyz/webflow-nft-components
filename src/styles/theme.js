@@ -22,7 +22,7 @@ const darkDefaultStyles = {
 }
 
 const getStyles = () => ({
-    ...(window.STYLES.theme === "dark" ? darkDefaultStyles : defaultStyles),
+    ...(window.STYLES?.theme === "dark" ? darkDefaultStyles : defaultStyles),
     ...window.STYLES
 })
 
