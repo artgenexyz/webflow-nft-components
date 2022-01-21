@@ -7,9 +7,7 @@ import {
 export const initWhitelist = async () => {
     updateJoinWhitelistButton()
     updateMintWhitelistButton()
-    setInterval(() => {
-        updateWhitelistSpotsLeft()
-    }, 3000)
+    updateWhitelistSpotsLeft()
 }
 
 initWhitelist()
