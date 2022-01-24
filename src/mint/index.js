@@ -7,10 +7,14 @@ export const init = async () => {
     setupAnalytics();
 
     await updateWalletStatus();
-    await setContracts();
     updateConnectButton();
-    updateMintedCounter();
-    updateMintButton();
-    updateMintByTierButtons();
+    if (!window.DISABLE_MINT) {
+        await setContracts();
+        updateMintedCounter();
+        updateMintButton();
+        updateMintByTierButtons();
+    } else {
+        console.log("MINT DISABLED")
+    }
 }
 

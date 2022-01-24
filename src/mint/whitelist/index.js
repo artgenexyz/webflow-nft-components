@@ -7,9 +7,13 @@ import {
 
 export const initWhitelist = async () => {
     updateJoinWhitelistButton()
-    updateMintWhitelistButton()
     updateCheckWhitelistButton()
     updateWhitelistSpotsLeft()
+    if (!window.DISABLE_MINT) {
+        updateMintWhitelistButton()
+    } else {
+        console.log("MINT DISABLED")
+    }
 }
 
 initWhitelist()
