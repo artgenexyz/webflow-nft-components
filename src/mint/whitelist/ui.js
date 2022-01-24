@@ -10,6 +10,7 @@ export const updateMintWhitelistButton = () => {
     const mintButton = document.querySelector('#mint-whitelist') ??
         document.querySelector("a[href*='#mint-whitelist']")
     if (mintButton) {
+        console.log("mint WL button", mintButton)
         mintButton.onclick = async () => {
             const initialBtnText = mintButton.textContent;
             setButtonText(mintButton, "Loading...")
