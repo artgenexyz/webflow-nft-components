@@ -1,4 +1,5 @@
 import {
+    updateCheckWhitelistButton,
     updateJoinWhitelistButton,
     updateMintWhitelistButton,
     updateWhitelistSpotsLeft
@@ -7,6 +8,7 @@ import {
 export const initWhitelist = async () => {
     updateJoinWhitelistButton()
     updateMintWhitelistButton()
+    updateCheckWhitelistButton()
     updateWhitelistSpotsLeft()
 }
 

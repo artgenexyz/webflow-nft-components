@@ -4,6 +4,7 @@ import MintModal, {modalRef} from "./MintModal.js";
 import {ThemeProvider} from "@mui/material";
 import {theme} from "../styles/theme.js";
 import JoinWhitelistModal, { joinWhitelistRef } from './JoinWhitelistModal';
+import CheckWhitelistedModal, { checkWhitelistedModalRef } from './CheckWhitelistedModal';
 
 export const App = () => {
     return <ThemeProvider theme={theme}>
@@ -11,6 +12,7 @@ export const App = () => {
             <AutoHideAlert ref={alertRef} />
             <MintModal ref={modalRef} />
             <JoinWhitelistModal ref={joinWhitelistRef} />
+            <CheckWhitelistedModal ref={checkWhitelistedModalRef} />
         </div>
     </ThemeProvider>
 }

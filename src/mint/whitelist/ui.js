@@ -5,6 +5,7 @@ import { mint } from './web3';
 import { showJoinWhitelistModal } from '../../components/JoinWhitelistModal';
 import { BUILDSHIP_API_BASE } from '../../constants';
 import { sendEvent } from '../../analytics';
+import { showCheckWhitelistModal } from '../../components/CheckWhitelistedModal';
 
 export const updateMintWhitelistButton = () => {
     const mintButton = document.querySelector('#mint-whitelist') ??
@@ -51,6 +52,19 @@ export const updateJoinWhitelistButton = () => {
         joinButtons.forEach((button) => {
             button.onclick = async () => {
                 showJoinWhitelistModal()
+            }
+        })
+    }
+}
+
+export const updateCheckWhitelistButton = () => {
+    const checkButtons = document.querySelectorAll('#check-whitelist') ??
+        document.querySelectorAll("a[href*='#check-whitelist']")
+    console.log(checkButtons)
+    if (window.JOIN_WHITELIST_ID) {
+        checkButtons.forEach((button) => {
+            button.onclick = async () => {
+                showCheckWhitelistModal()
             }
         })
     }
