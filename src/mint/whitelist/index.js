@@ -13,5 +13,3 @@ export const initWhitelist = async () => {
         console.log("MINT DISABLED")
     }
 }
-
-initWhitelist()
