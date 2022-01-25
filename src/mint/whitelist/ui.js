@@ -7,40 +7,42 @@ import { BUILDSHIP_API_BASE } from '../../constants';
 import { sendEvent } from '../../analytics';
 
 export const updateMintWhitelistButton = () => {
-    const mintButton = document.querySelector('#mint-whitelist') ??
-        document.querySelector("a[href*='#mint-whitelist']")
-    if (mintButton) {
-        console.log("mint WL button", mintButton)
-        mintButton.onclick = async () => {
-            const initialBtnText = mintButton.textContent;
-            setButtonText(mintButton, "Loading...")
+    const mintButtons = document.querySelectorAll('#mint-whitelist') ??
+        document.querySelectorAll("a[href*='#mint-whitelist']")
+    if (mintButtons) {
+        console.log("mint WL buttons", mintButtons)
+        mintButtons.forEach((mintButton) => {
+            mintButton.onclick = async () => {
+                const initialBtnText = mintButton.textContent;
+                setButtonText(mintButton, "Loading...")
 
-            sendEvent(window.analytics, 'whitelist-mint-button-click', {})
+                sendEvent(window.analytics, 'whitelist-mint-button-click', {})
 
-            await mint(1).then((r) => {
-                setButtonText(mintButton, initialBtnText);
-                console.log(r);
-                showAlert(`Successfully minted 1 NFTs`, "success")
+                await mint(1).then((r) => {
+                    setButtonText(mintButton, initialBtnText);
+                    console.log(r);
+                    showAlert(`Successfully minted 1 NFTs`, "success")
 
-                sendEvent(window.analytics, 'whitelist-mint-success', {})
+                    sendEvent(window.analytics, 'whitelist-mint-success', {})
 
-            }).catch((e) => {
-                console.log(e)
-                setButtonText(mintButton, initialBtnText);
-                const { code, message } = parseTxError(e);
+                }).catch((e) => {
+                    console.log(e)
+                    setButtonText(mintButton, initialBtnText);
+                    const { code, message } = parseTxError(e);
 
-                if (code !== 4001) {
-                    if (e) {
-                        showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                    if (code !== 4001) {
+                        if (e) {
+                            showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+                        }
+
+                        sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
+                    } else {
+                        sendEvent(window.analytics, 'whitelist-mint-rejected', { error: message })
                     }
 
-                    sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
-                } else {
-                    sendEvent(window.analytics, 'whitelist-mint-rejected', { error: message })
-                }
-
-            })
-        }
+                })
+            }
+        })
     }
 }
 
