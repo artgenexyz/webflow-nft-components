@@ -5,18 +5,20 @@ import {showMintModal} from "../components/MintModal";
 import { sendEvent } from '../analytics';
 
 export const updateMintButton = () => {
-    const mintButton = document.querySelector('#mint-button') ??
-        document.querySelector("a[href*='#mint-button']")
-    if (mintButton) {
-        console.log(mintButton)
-        mintButton.href = "#"
-        mintButton.onclick = async () => {
-            const initialBtnText = mintButton.textContent;
-            setButtonText(mintButton, "Loading...")
-            const quantity = getMintQuantity();
-            showMintModal(quantity);
-            setButtonText(mintButton, initialBtnText)
-        }
+    const mintButtons = document.querySelectorAll('#mint-button') ??
+        document.querySelectorAll("a[href*='#mint-button']")
+    if (mintButtons) {
+        console.log(mintButtons)
+        mintButtons.forEach((mintButton) => {
+            mintButton.href = "#"
+            mintButton.onclick = async () => {
+                const initialBtnText = mintButton.textContent;
+                setButtonText(mintButton, "Loading...")
+                const quantity = getMintQuantity();
+                showMintModal(quantity);
+                setButtonText(mintButton, initialBtnText)
+            }
+        })
     }
 }
 
