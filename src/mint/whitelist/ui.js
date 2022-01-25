@@ -18,10 +18,11 @@ export const updateMintWhitelistButton = () => {
 
                 sendEvent(window.analytics, 'whitelist-mint-button-click', {})
 
-                await mint(1).then((r) => {
+                const defaultQuantity = window.DEFAULTS.whitelist.mintQuantity ?? 1
+                await mint(defaultQuantity).then((r) => {
                     setButtonText(mintButton, initialBtnText);
                     console.log(r);
-                    showAlert(`Successfully minted 1 NFTs`, "success")
+                    showAlert(`Successfully minted ${defaultQuantity} NFTs`, "success")
 
                     sendEvent(window.analytics, 'whitelist-mint-success', {})
 
