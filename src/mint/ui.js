@@ -5,8 +5,11 @@ import {showMintModal} from "../components/MintModal";
 import { sendEvent } from '../analytics';
 
 export const updateMintButton = () => {
-    const mintButtons = document.querySelectorAll('#mint-button') ??
-        document.querySelectorAll("a[href*='#mint-button']")
+    const mintButtons = [
+        ...document.querySelectorAll('#mint-button'),
+        ...document.querySelectorAll("a[href*='#mint-button']")
+    ]
+
     if (mintButtons) {
         console.log(mintButtons)
         mintButtons.forEach((mintButton) => {
