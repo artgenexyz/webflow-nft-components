@@ -8,8 +8,10 @@ import { sendEvent } from '../../analytics';
 import { showCheckWhitelistModal } from '../../components/CheckWhitelistedModal';
 
 export const updateMintWhitelistButton = () => {
-    const mintButtons = document.querySelectorAll('#mint-whitelist') ??
-        document.querySelectorAll("a[href*='#mint-whitelist']")
+    const mintButtons = [
+        ...document.querySelectorAll('#mint-whitelist'),
+        ...document.querySelectorAll("a[href*='#mint-whitelist']")
+    ]
     if (mintButtons) {
         console.log("mint WL buttons", mintButtons)
         mintButtons.forEach((mintButton) => {
@@ -49,8 +51,10 @@ export const updateMintWhitelistButton = () => {
 }
 
 export const updateJoinWhitelistButton = () => {
-    const joinButtons = document.querySelectorAll('#join-whitelist') ??
-        document.querySelectorAll("a[href*='#join-whitelist']")
+    const joinButtons = [
+        ...document.querySelectorAll('#join-whitelist'),
+        ...document.querySelectorAll("a[href*='#join-whitelist']")
+    ]
     if (window.JOIN_WHITELIST_ID) {
         joinButtons.forEach((button) => {
             button.onclick = async () => {
