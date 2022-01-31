@@ -18,8 +18,9 @@ const getMintContract = async (whitelist) => {
 }
 
 export const fetchUserWhitelist = (wallet) => {
-    if (window.AIRDROP_ID) {
-        return fetch(getMerkleProofURL(window.AIRDROP_ID, wallet))
+    const airdropID = window.DEFAULTS?.whitelist?.airdropID
+    if (airdropID) {
+        return fetch(getMerkleProofURL(airdropID, wallet))
             .then(r => r.json())
             .then(r => {
                 if (r.is_valid &&
