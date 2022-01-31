@@ -21,7 +21,7 @@ export const updateMintWhitelistButton = () => {
 
                 sendEvent(window.analytics, 'whitelist-mint-button-click', {})
 
-                const defaultQuantity = window.DEFAULTS.whitelist.mintQuantity ?? 1
+                const defaultQuantity = window.DEFAULTS?.whitelist?.mintQuantity ?? 1
                 await mint(defaultQuantity).then((r) => {
                     setButtonText(mintButton, initialBtnText);
                     console.log(r);
