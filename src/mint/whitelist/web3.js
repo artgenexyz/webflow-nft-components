@@ -2,7 +2,7 @@ import { formatValue } from '../../utils';
 import { getWalletAddressOrConnect, web3 } from '../../wallet';
 import { fetchABI } from '../../contract';
 import { sendTx } from '../../tx';
-import { getFindWhitelistURL } from './constants';
+import { getFindWhitelistURL, getMerkleProofURL } from './constants';
 import { sendEvent } from '../../analytics';
 
 const getMintPrice = async (contract) => {
@@ -18,6 +18,19 @@ const getMintContract = async (whitelist) => {
 }
 
 export const fetchUserWhitelist = (wallet) => {
+    if (window.AIRDROP_ID) {
+        return fetch(getMerkleProofURL(window.AIRDROP_ID, wallet))
+            .then(r => r.json())
+            .then(r => {
+                if (r.is_valid &&
+                    r.nft_address.toLowerCase() !== window.CONTRACT_ADDRESS.toLowerCase()) {
+                        alert("NFT contract addresses don't match between widget config and db")
+                        return undefined
+                }
+                return r.is_valid ? r : undefined
+            })
+    }
+
     return fetch(getFindWhitelistURL(wallet))
         .then(r => r.json())
         .then(r =>
