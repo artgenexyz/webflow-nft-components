@@ -1,6 +1,6 @@
-import {getCurrentNetwork, switchNetwork, web3, isWeb3Initialized} from './wallet.js';
-import {normalizeURL} from "./utils.js";
-import {NETWORKS} from "./constants.js";
+import { getCurrentNetwork, isWeb3Initialized, switchNetwork, web3 } from './wallet.js';
+import { normalizeURL } from "./utils.js";
+import { NETWORKS } from "./constants.js";
 
 export let NFTContract;
 
@@ -39,20 +39,52 @@ const initContractGlobalObject = async () => {
     }
 }
 
-const fetchABI = async (address, chainID) => {
+export const fetchABI = async (address, chainID) => {
+    const cachedABI = await fetchCachedABI(address)
+    console.log("CACHED ABI", cachedABI)
+    if (cachedABI)
+        return cachedABI
+
     const abi = await fetch(`https://metadata.buildship.dev/api/info/${address}?network_id=${chainID}`)
         .then(r => r.json())
         .then(r => r.abi)
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.dev")
-        const savedABI = typeof window.CONTRACT_ABI === 'string'
-            ? JSON.parse(window.CONTRACT_ABI)
-            : window.CONTRACT_ABI
-        if (!savedABI) {
+        const savedMainABI = getSavedMainABI(address)
+        if (!savedMainABI) {
             alert(`Error: no ABI loaded for ${address}. Please contact support`)
         }
     }
     return abi;
+}
+
+const fetchCachedABI = async (address) => {
+    if (window.DEFAULTS?.abiCacheURL) {
+        console.log("Trying to load ABI from cache URL", address)
+        try {
+            return fetch(window.DEFAULTS?.abiCacheURL)
+                .then(r => r.json())
+                .then(r => Object.keys(r).reduce((acc, key) => {
+                    acc[key.toLowerCase()] = r[key]
+                    return acc
+                }, {}))
+                .then(r => r[address.toLowerCase()])
+        } catch (e) {
+            alert("Wrong format for ABI cache. Should be a URL to .json file. Fix or remove ABI cache URL to resolve")
+            console.log("Wrong format for ABI cache", e)
+        }
+    }
+    return undefined
+}
+
+const getSavedMainABI = (address) => {
+    if (address.toLowerCase() === window.CONTRACT_ADDRESS?.toLowerCase()) {
+        console.log("Trying to load saved main contract ABI")
+        return typeof window.CONTRACT_ABI === 'string'
+            ? JSON.parse(window.CONTRACT_ABI)
+            : window.CONTRACT_ABI
+    }
+    return undefined
 }
 
 export const setContracts = async (shouldSwitchNetwork=true) => {

@@ -20,7 +20,9 @@ const renderAppContainer = () => {
 }
 
 renderAppContainer();
-init();
+document.addEventListener("DOMContentLoaded", () => {
+    init()
+});
 
 export { showAlert, showMintModal, renderAppContainer };
 
