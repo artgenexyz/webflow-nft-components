@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <script>
-      CONTRACT_ADDRESS = "0x95A46c07e57F5E96e809901419F728D8aEFFa80a"
+      CONTRACT_ADDRESS = "0x8D53d7c1F7230aB84aAE6cB5f78358D386097ddA"
       NETWORK_ID = 4
       // insert Buildship whitelist ID to enable "Join whitelist"
       JOIN_WHITELIST_ID = 1
       // for public mint
-      MAX_PER_MINT = 20
+      MAX_PER_MINT = 3
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -29,7 +29,8 @@
     <title>React App</title>
   </head>
   <body>
-    <button id="mint-whitelist">Mint whitelist</button>
+  <button id="mint-button">Mint</button>
+  <button id="mint-whitelist">Mint whitelist</button>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <button id="join-whitelist">Join whitelist</button>
