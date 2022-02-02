@@ -22,14 +22,17 @@ export const updateMintButton = () => {
 export const updateMintedCounter = async () => {
     const mintedElem = document.querySelector("#minted-counter")
     const totalElem = document.querySelector("#total-counter")
+    console.log("COUNTER ELEMS", mintedElem, totalElem)
     if (mintedElem) {
         const minted = await getMintedNumber()
+        console.log("MINTED", minted)
         if (minted) {
             mintedElem.textContent = minted
         }
     }
     if (totalElem) {
         const maxSupply = await getMaxSupply()
+        console.log("TOTAL", maxSupply)
         if (maxSupply) {
             totalElem.textContent = maxSupply
         }
