@@ -1,6 +1,6 @@
 import { formatValue } from '../../utils';
 import { getWalletAddressOrConnect, web3 } from '../../wallet';
-import { fetchABI } from '../../contract';
+import { fetchABI, getConfigChainID } from '../../contract';
 import { sendTx } from '../../tx';
 import { getFindWhitelistURL } from './constants';
 import { sendEvent } from '../../analytics';
@@ -12,7 +12,7 @@ const getMintPrice = async (contract) => {
 const getMintContract = async (whitelist) => {
     const address = whitelist.whitelist_address
     console.log("WHITELIST ADDRESS", address)
-    const abi = await fetchABI(address, window.NETWORK_ID)
+    const abi = await fetchABI(address, getConfigChainID())
     console.log("ABI", abi)
     return new web3.eth.Contract(abi, address)
 }

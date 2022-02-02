@@ -25,9 +25,7 @@ const initContractGlobalObject = async () => {
         alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.dev")
         return
     }
-    // Default to Ethereum
-    const networkID = window.NETWORK_ID ?? 1;
-    const chainID = window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
+    const chainID = getConfigChainID()
     window.CONTRACT = {
         nft: {
             address: {
@@ -37,6 +35,12 @@ const initContractGlobalObject = async () => {
             allowedNetworks: [chainID]
         }
     }
+}
+
+export const getConfigChainID = () => {
+    // Default to Ethereum
+    const networkID = window.NETWORK_ID ?? 1;
+    return  window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
 }
 
 export const fetchABI = async (address, chainID) => {
