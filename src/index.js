@@ -22,7 +22,9 @@ const renderAppContainer = () => {
 }
 
 renderAppContainer();
-init();
-initWhitelist();
+document.addEventListener("DOMContentLoaded", () => {
+    init();
+    initWhitelist();
+});
 
 export { showAlert, showMintModal, showJoinWhitelistModal, renderAppContainer };
