@@ -14,6 +14,11 @@ const getMintPrice = async (tier) => {
         return NFTContract.methods.price().call();
     if (NFTContract.methods.cost)
         return NFTContract.methods.cost().call();
+    if (NFTContract.methods.PUBLIC_SALE_PRICE)
+        return NFTContract.methods.PUBLIC_SALE_PRICE().call();
+    // TODO: try this
+    // if (let k = Object.keys(NFTContract.methods).find(key => key.toLowerCase().includes('price')))
+    //    return NFTContract.methods[k]().call();
     return tier ?
         await NFTContract.methods.getPrice(tier).call() :
         await NFTContract.methods.getPrice().call();
