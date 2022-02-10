@@ -17,7 +17,7 @@ const getMintContract = async (whitelist) => {
     return new web3.eth.Contract(abi, address)
 }
 
-export const fetchUserWhitelist = async (wallet) => {
+export const fetchUserWhitelist = (wallet) => {
     return fetch(getFindWhitelistURL(wallet)).then(r => r.json())
         .then(r => r.airdrops
               .filter(a => a.is_valid && a.nft_address.toLowerCase() === window.CONTRACT_ADDRESS.toLowerCase())
