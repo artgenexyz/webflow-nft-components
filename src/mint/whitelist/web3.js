@@ -18,11 +18,15 @@ const getMintContract = async (whitelist) => {
 }
 
 export const fetchUserWhitelist = (wallet) => {
+    const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
+    const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
     return fetch(getFindWhitelistURL(wallet))
         .then(r => r.json())
         .then(r =>
             r.airdrops.filter(a =>
-                a.is_valid && a.nft_address.toLowerCase() === window.CONTRACT_ADDRESS.toLowerCase()
+                a.is_valid
+                && a.nft_address.toLowerCase() === contractAddress
+                && (!wlAddress || a.whitelist_address.toLowerCase() === wlAddress)
             )[0]
         )
 }
