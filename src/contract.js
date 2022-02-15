@@ -62,7 +62,7 @@ const fetchCachedABI = async (address) => {
     if (window.DEFAULTS?.abiCacheURL) {
         console.log("Trying to load ABI from cache URL", address)
         try {
-            return fetch(window.DEFAULTS?.abiCacheURL)
+            return await fetch(window.DEFAULTS?.abiCacheURL)
                 .then(r => r.json())
                 .then(r => Object.keys(r).reduce((acc, key) => {
                     acc[key.toLowerCase()] = r[key]
