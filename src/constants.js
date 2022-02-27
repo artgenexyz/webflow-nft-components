@@ -66,7 +66,7 @@ export const NETWORKS = {
         blockExplorerURL: "https://testnet.bscscan.com",
     },
 
-25: {
+    25: {
         name: "Cronos Blockchain",
         rpcURL: "https://evm-cronos.crypto.org",
         currency: {
