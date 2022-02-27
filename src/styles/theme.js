@@ -28,8 +28,8 @@ const getStyles = () => ({
 
 const makeStyles = () => ({
     ...getStyles(),
-    buttonRadius: getStyles().corners === "squared" ? "0px" : "30px",
-    dialogRadius: getStyles().corners === "squared" ? "0px" : "24px",
+    buttonRadius: getStyles().corners === "squared" ? "2px" : "30px",
+    dialogRadius: getStyles().corners === "squared" ? "2px" : "24px",
 })
 
 const {
@@ -62,6 +62,7 @@ export const theme = createTheme({
                     color: primaryTextColor
                 },
                 paper: {
+                    backgroundImage: "inherit",
                     backgroundColor: backgroundColor,
                     borderRadius: dialogRadius,
                     padding: "16px"
