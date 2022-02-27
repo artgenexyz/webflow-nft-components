@@ -56,6 +56,7 @@ export const fetchABI = async (address, chainID) => {
         if (!savedMainABI) {
             alert(`Error: no ABI loaded for ${address}. Please contact support`)
         }
+        return savedMainABI;
     }
     return abi;
 }
