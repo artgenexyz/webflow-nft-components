@@ -27,8 +27,6 @@ const getNFTsOfOwner = async (wallet, nft_address) => {
 const getPassesOwnedIds = async (wallet, pass_address) => {
     const passes = getNFTsOfOwner(wallet, pass_address)
     return passes.then(r => r.result.map(t => Number(t.token_id)))
-        // TODO: remove before commit
-        .then(r => r.filter(i => i > 13))
 }
 
 export const getMaxPerMintForPass = async (wallet, passAddress) => {
