@@ -1,6 +1,7 @@
 import {getWalletAddressOrConnect, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import {NFTContract} from "../contract.js"
+import { getMaxPerMintForPass, mintWithPass } from './pass/web3';
 
 const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     if (tier !== undefined) {
@@ -9,7 +10,7 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     return NFTContract.methods.mint(numberOfTokens);
 }
 
-const getMintPrice = async (tier) => {
+export const getMintPrice = async (tier) => {
     if (NFTContract.methods.price)
         return NFTContract.methods.price().call();
     if (NFTContract.methods.cost)
@@ -51,6 +52,12 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
+    if (NFTContract?.methods.mintPassAddress) {
+        const wallet = await getWalletAddressOrConnect(true)
+        const passAddress = await NFTContract.methods.mintPassAddress().call()
+        return getMaxPerMintForPass(wallet, passAddress)
+    }
+
     if (NFTContract?.methods?.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
@@ -64,6 +71,11 @@ export const getMaxTokensPerMint = async () => {
 }
 
 export const mint = async (nTokens, ref, tier) => {
+    if (NFTContract?.methods.mintPassAddress) {
+        const tx = mintWithPass(nTokens)
+        console.log("mint pass tx", tx)
+        return tx
+    }
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
     const mintPrice = await getMintPrice(tier);

@@ -12,7 +12,7 @@ export const sendTx = async (tx, txData, defaultGasLimit) => {
     return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas, maxPriorityFeePerGas });
 }
 
-const estimateGasLimit = (tx, txData, defaultGasLimit) => {
+export const estimateGasLimit = (tx, txData, defaultGasLimit) => {
     return tx.estimateGas(txData).catch((e) => {
         const { code, message } = parseTxError(e);
         if (code === -32000) {
@@ -23,7 +23,7 @@ const estimateGasLimit = (tx, txData, defaultGasLimit) => {
     })
 }
 
-const estimateMaxGasFee = async (tx) => {
+export const estimateMaxGasFee = async (tx) => {
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Rinkeby (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2e9);
@@ -31,7 +31,7 @@ const estimateMaxGasFee = async (tx) => {
     return [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
 }
 
-const estimateMaxPriorityFeePerGas = async () => {
+export const estimateMaxPriorityFeePerGas = async () => {
     const chainID = await web3.eth.getChainId();
     return [1, 4].includes(chainID) ? 2e9 : undefined;
 }
