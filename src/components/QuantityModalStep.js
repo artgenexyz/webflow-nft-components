@@ -11,10 +11,13 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
 
     useEffect(() => {
-        getMaxTokensPerMint().then(setMaxTokens)
-        if (NFTContract?.methods?.mintPassAddress) {
-            showAlert("WARNING: if you use less than all of your mint passes, you'll not be able to mint more again without our support. To avoid issues you must mint maximum allowed.", "warning")
-        }
+        getMaxTokensPerMint().then((max) => {
+            setMaxTokens(max)
+            if (NFTContract?.methods?.mintPassAddress) {
+                setQuantityValue(max)
+                setQuantity(max)
+            }
+        })
     }, [])
 
     const step = maxTokens <= 5 ? maxTokens : 10
@@ -57,10 +60,14 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
             <Slider
                 aria-label="Quantity"
                 defaultValue={1}
+                value={quantityValue}
                 valueLabelDisplay="auto"
                 onChange={(e, v) => {
                     setQuantity(v)
                     setQuantityValue(v)
+                    if (NFTContract?.methods?.mintPassAddress) {
+                        showAlert("WARNING: if you use less than all of your mint passes, you'll not be able to mint more again without our Discord support. To avoid issues you must mint maximum allowed.", "warning")
+                    }
                 }}
                 step={1}
                 marks={marks}
