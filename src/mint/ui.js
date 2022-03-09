@@ -2,6 +2,9 @@ import { getMaxSupply, getMintedNumber, mint } from "./web3.js";
 import { parseTxError } from "../utils.js";
 import {showAlert} from "../index.js";
 import {showMintModal} from "../components/MintModal";
+import { NFTContract } from '../contract';
+import { getMaxPerMintForPass } from './pass/web3';
+import { getWalletAddressOrConnect } from '../wallet';
 
 export const updateMintButton = () => {
     const mintButtons = [
@@ -17,7 +20,21 @@ export const updateMintButton = () => {
                 const initialBtnText = mintButton.textContent;
                 setButtonText(mintButton, "Loading...")
                 const quantity = getMintQuantity();
-                showMintModal(quantity);
+
+                if (NFTContract?.methods?.mintPassAddress) {
+                    console.log("KKKas")
+                    const wallet = await getWalletAddressOrConnect(true)
+                    const passAddress = await NFTContract.methods.mintPassAddress().call()
+                    const passes = await getMaxPerMintForPass(wallet, passAddress)
+
+                    if (!passes) {
+                        alert("You don't have any mint passes. Please wait for the public mint 👀")
+                    } else {
+                        showMintModal(quantity);
+                    }
+                } else {
+                    showMintModal(quantity);
+                }
                 setButtonText(mintButton, initialBtnText)
             }
         })

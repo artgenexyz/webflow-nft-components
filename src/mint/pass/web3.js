@@ -40,6 +40,10 @@ export const mintWithPass = async (nTokens) => {
     const passAddress = await NFTContract.methods.mintPassAddress().call()
     console.log("PASS", passAddress)
     const ownedPasses = cachedPasses ? cachedPasses : await getPassesOwnedIds(wallet, passAddress)
+    if (!ownedPasses?.length) {
+        alert("You don't have any mint passes. Please wait for public mint to start")
+        return Promise.reject()
+    }
     const numberOfTokens = nTokens ?? 1
     const passesToUse = ownedPasses.slice(0, numberOfTokens)
     const txData = {
