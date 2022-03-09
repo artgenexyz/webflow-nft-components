@@ -4,7 +4,7 @@ import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/w
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
-import { getCurrentNetwork } from '../wallet';
+import { NFTContract } from '../contract';
 
 export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHash }) => {
     const [quantityValue, setQuantityValue] = useState(1)
@@ -12,6 +12,9 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
 
     useEffect(() => {
         getMaxTokensPerMint().then(setMaxTokens)
+        if (NFTContract?.methods?.mintPassAddress) {
+            showAlert("WARNING: if you use less than all of your mint passes, you'll not be able to mint more again without our support. To avoid issues you must mint maximum allowed.", "warning")
+        }
     }, [])
 
     const step = maxTokens <= 5 ? maxTokens : 10
