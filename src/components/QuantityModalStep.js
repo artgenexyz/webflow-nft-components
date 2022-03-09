@@ -66,7 +66,7 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
                     setQuantity(v)
                     setQuantityValue(v)
                     if (NFTContract?.methods?.mintPassAddress) {
-                        showAlert("WARNING: if you use less than all of your mint passes, you'll not be able to mint more again without our Discord support. To avoid issues you must mint maximum allowed.", "warning")
+                        showAlert("WARNING: you have only one attempt to use your mint passes. You should mint maximum allowed (as much as you can) to avoid issues. If you already have issues, contact us in Discord.", "warning")
                     }
                 }}
                 step={1}
