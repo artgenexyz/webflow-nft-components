@@ -21,8 +21,7 @@ export const updateMintButton = () => {
                 setButtonText(mintButton, "Loading...")
                 const quantity = getMintQuantity();
 
-                if (NFTContract?.methods?.mintPassAddress) {
-                    console.log("KKKas")
+                if (window?.DEFAULTS?.apiKeys?.moralis) {
                     const wallet = await getWalletAddressOrConnect(true)
                     const passAddress = await NFTContract.methods.mintPassAddress().call()
                     const passes = await getMaxPerMintForPass(wallet, passAddress)
