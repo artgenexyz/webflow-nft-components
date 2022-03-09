@@ -2,7 +2,7 @@ import {getWalletAddressOrConnect} from "../../wallet";
 import { MERCHANT_ADDRESS, PaymentContract, SendAndMintContract } from "./contracts";
 import {sendTx} from "../../tx";
 import {formatValue} from "../../utils";
-import {initContract} from "../../contract";
+import {initContractWithObject} from "../../contract";
 
 const API_URL = "https://api.webill.io/v0/customer_nft/buildship"
 
@@ -51,7 +51,7 @@ const sendMintRequest = async ({ wallet, quantity, txHash }) => {
 export const mintViaWebill = async (quantity) => {
     const wallet = await getWalletAddressOrConnect(false);
     const mintCost = await getMintCost(quantity);
-    const paymentContract = await initContract(PaymentContract, true)
+    const paymentContract = await initContractWithObject(PaymentContract, true)
     const txData = {
         from: wallet,
         value: formatValue(mintCost * 1e18),

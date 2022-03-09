@@ -1,6 +1,6 @@
 import {getWalletAddressOrConnect, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
-import {NFTContract} from "../contract.js"
+import { initContract, initContractWithObject, NFTContract } from "../contract.js"
 import { getMaxPerMintForPass, mintWithPass } from './pass/web3';
 
 const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
@@ -23,6 +23,25 @@ export const getMintPrice = async (tier) => {
 export const getMintedNumber = async () => {
     if (!NFTContract)
         return undefined
+
+    // TODO: remove this dirty hack for mint pass
+    if (NFTContract?.methods?.mintPassAddress) {
+        const realNFTAddress = await NFTContract.methods.nft().call()
+        const realNFTContract = await initContract(realNFTAddress, window.NETWORK_ID, true)
+        console.log(realNFTContract)
+        if (realNFTContract?.methods?.totalSupply)
+            return await realNFTContract.methods.totalSupply().call()
+        // temporary solution, works only for buildship.dev contracts
+        // totalSupply was removed to save gas when minting
+        // but number minted still accessible in the contract as a private variable
+        // TODO: remove this in NFTFactory v1.1
+        const minted = await web3.eth.getStorageAt(
+            realNFTContract._address,
+            '0x00000000000000000000000000000000000000000000000000000000000000fb'
+        )
+        return web3.utils.hexToNumber(minted)
+    }
+
     if (NFTContract.methods.totalSupply)
         return await NFTContract.methods.totalSupply().call()
     // temporary solution, works only for buildship.dev contracts
@@ -39,6 +58,19 @@ export const getMintedNumber = async () => {
 export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
+    // TODO: remove this dirty hack for mint pass
+    if (NFTContract?.methods?.mintPassAddress) {
+        const realNFTAddress = await NFTContract.methods.nft().call()
+        const realNFTContract = await initContract(realNFTAddress, window.NETWORK_ID, true)
+
+        if (realNFTContract.methods.maxSupply)
+            return await realNFTContract.methods.maxSupply().call()
+        if (realNFTContract.methods.MAX_SUPPLY)
+            return await realNFTContract.methods.MAX_SUPPLY().call()
+        alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.dev to resolve this.")
+        return undefined
+    }
+
     if (NFTContract.methods.maxSupply)
         return await NFTContract.methods.maxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
@@ -71,7 +103,7 @@ export const getMaxTokensPerMint = async () => {
 }
 
 export const mint = async (nTokens, ref, tier) => {
-    if (NFTContract?.methods.mintPassAddress) {
+    if (NFTContract?.methods?.mintPassAddress) {
         const tx = mintWithPass(nTokens)
         console.log("mint pass tx", tx)
         return tx
