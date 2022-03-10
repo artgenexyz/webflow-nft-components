@@ -24,7 +24,7 @@ export const fetchUserWhitelist = async (wallet) => {
     
     const { airdrops } = await r.json()
     
-    const valid = .airdrops
+    const valid = airdrops
         .filter(a =>
             a.is_valid
             && a.nft_address.toLowerCase() === contractAddress
