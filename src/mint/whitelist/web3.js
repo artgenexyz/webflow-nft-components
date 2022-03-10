@@ -17,20 +17,23 @@ const getMintContract = async (whitelist) => {
     return new web3.eth.Contract(abi, address)
 }
 
-export const fetchUserWhitelist = (wallet) => {
+export const fetchUserWhitelist = async (wallet) => {
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
-    return fetch(getFindWhitelistURL(wallet))
-        .then(r => r.json())
-        .then(r => r.airdrops
-              .filter(a =>
-                a.is_valid
-                && a.nft_address.toLowerCase() === contractAddress
-                && (!wlAddress || a.whitelist_address.toLowerCase() === wlAddress)
-              )
-              .sort((a,b) => a.created_at > b.created_at)
-              .shift() // take first
+    const r = await fetch(getFindWhitelistURL(wallet))
+    
+    const { airdrops } = await r.json()
+    
+    const valid = .airdrops
+        .filter(a =>
+            a.is_valid
+            && a.nft_address.toLowerCase() === contractAddress
+            && (!wlAddress || a.whitelist_address.toLowerCase() === wlAddress)
         )
+        .sort((a,b) => a.created_at > b.created_at)
+    
+    return valid.shift() // take first
+
 }
 
 const getMerkleProof = async (whitelist) => {
