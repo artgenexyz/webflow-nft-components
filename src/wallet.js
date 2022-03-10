@@ -5,6 +5,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import { NETWORKS } from "./constants.js";
 import {isMobile, objectMap} from "./utils.js";
 import {setContracts} from "./contract.js";
+import { updateMintedCounter } from './mint/ui';
 
 
 export let [web3, provider] = [];
@@ -170,5 +171,11 @@ export const updateWalletStatus = async () => {
 
 export const updateConnectButton = () => {
     const walletBtn = getConnectButton();
-    walletBtn?.addEventListener('click', connectWallet);
+    walletBtn?.addEventListener('click', async () => {
+        await connectWallet()
+        if (window.CONTRACT_ADDRESS && !window?.DISABLE_MINT) {
+            await setContracts(true)
+            await updateMintedCounter()
+        }
+    });
 }

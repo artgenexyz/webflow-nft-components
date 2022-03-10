@@ -65,6 +65,30 @@ export const NETWORKS = {
         testnetID: 97,
         blockExplorerURL: "https://testnet.bscscan.com",
     },
+
+    25: {
+        name: "Cronos Blockchain",
+        rpcURL: "https://evm-cronos.crypto.org",
+        currency: {
+            name: "Cronos",
+            symbol: "CRO",
+            decimals: 18,
+        },
+        testnetID: 338,
+        blockExplorerURL: "https://cronos.crypto.org/explorer/",
+    },
+    338: {
+        name: "Cronos Testnet",
+        rpcURL: "https://cronos-testnet-3.crypto.org:8545/",
+        currency: {
+            name: "Cronos",
+            symbol: "tCRO",
+            decimals: 18,
+        },
+        testnetID: 338,
+        blockExplorerURL: "https://cronos.crypto.org/explorer/testnet3/",
+    },
+
     1285: {
         name: "Moonriver",
         rpcURL: "https://rpc.moonriver.moonbeam.network",
