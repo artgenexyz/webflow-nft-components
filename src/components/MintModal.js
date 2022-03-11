@@ -32,13 +32,6 @@ export const MintModal = (props, ref) => {
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1)
 
-    useEffect(() => {
-        // TODO: Remove this after merging to main
-        if (window.location.href.includes("ameegos.io")) {
-            setStep(2)
-        }
-    }, [])
-
     const handleClose = () => {
         setIsOpen(false);
     }
