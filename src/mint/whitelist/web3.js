@@ -1,39 +1,70 @@
 import { formatValue } from '../../utils';
 import { getWalletAddressOrConnect, web3 } from '../../wallet';
 import { fetchABI, getConfigChainID } from '../../contract';
-import { sendTx } from '../../tx';
+import { buildTx } from '../../tx';
 import { getFindWhitelistURL } from './constants';
 import { sendEvent } from '../../analytics';
+import { getDefaultMaxTokensPerMint } from '../web3';
+
+let whitelistCache = {}
+let presaleContract
 
 const getMintPrice = async (contract) => {
     return contract.methods.price().call()
 }
 
-const getMintContract = async (whitelist) => {
+const fetchPresaleContract = async (whitelist) => {
+    if (presaleContract)
+        return presaleContract
     const address = whitelist.whitelist_address
     console.log("WHITELIST ADDRESS", address)
     const abi = await fetchABI(address, getConfigChainID())
     console.log("ABI", abi)
-    return new web3.eth.Contract(abi, address)
+    presaleContract = new web3.eth.Contract(abi, address)
+    return presaleContract
+}
+
+export const getPresaleMaxPerAddress = async () => {
+    const wallet = await getWalletAddressOrConnect(true)
+    const contract = await fetchPresaleContract(whitelistCache[wallet])
+
+    if (contract?.methods?.maxPerAddress) {
+        console.log(await contract.methods.maxPerAddress().call())
+        return await contract.methods.maxPerAddress().call()
+    }
+    return getDefaultMaxTokensPerMint()
+}
+
+export const checkWhitelistEligibility = async () => {
+    const wallet = await getWalletAddressOrConnect(true)
+    sendEvent(window.analytics, 'connect-wallet-success', { wallet });
+    const whitelist = await fetchUserWhitelist(wallet)
+    return whitelist !== undefined
 }
 
 export const fetchUserWhitelist = async (wallet) => {
+    if (whitelistCache[wallet]) {
+        return whitelistCache[wallet]
+    }
+
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
     const r = await fetch(getFindWhitelistURL(wallet))
-    
     const { airdrops } = await r.json()
-    
-    const valid = airdrops
+    const validLists = airdrops
         .filter(a =>
             a.is_valid
             && a.nft_address.toLowerCase() === contractAddress
             && (!wlAddress || a.whitelist_address.toLowerCase() === wlAddress)
         )
         .sort((a,b) => a.created_at > b.created_at)
-    
-    return valid.shift() // take first
 
+    const whitelist = validLists.shift()
+    whitelistCache = {
+        ...whitelistCache,
+        [wallet]: whitelist
+    }
+    return whitelist
 }
 
 const getMerkleProof = async (whitelist) => {
@@ -56,7 +87,7 @@ export const mint = async (nTokens) => {
         return Promise.reject("Your wallet is not whitelisted. If this is a mistake, contact our support in Discord")
     }
     const quantity = nTokens ?? 1
-    const contract = await getMintContract(whitelist)
+    const contract = await fetchPresaleContract(whitelist)
     const mintPrice = await getMintPrice(contract)
 
     const txParams = {
@@ -64,5 +95,6 @@ export const mint = async (nTokens) => {
         value: formatValue(Number(mintPrice) * quantity),
     }
     const mintTx = await getMintTx({contract, whitelist, quantity})
-    return sendTx(mintTx, txParams, 160000)
+    const tx = mintTx.send(await buildTx(mintTx, txParams, 160000))
+    return Promise.resolve({ tx })
 }

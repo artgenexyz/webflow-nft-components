@@ -12,6 +12,16 @@ export const sendTx = async (tx, txData, defaultGasLimit) => {
     return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas, maxPriorityFeePerGas });
 }
 
+export const buildTx = async (tx, txData, defaultGasLimit) => {
+    const estimatedGas = await estimateGasLimit(tx, txData, defaultGasLimit);
+    if (!estimatedGas) {
+        return Promise.reject()
+    }
+    const maxFeePerGas = await estimateMaxGasFee(tx);
+    const maxPriorityFeePerGas = await estimateMaxPriorityFeePerGas();
+    return {...txData, gasLimit: estimatedGas + 5000, maxFeePerGas, maxPriorityFeePerGas }
+}
+
 const estimateGasLimit = (tx, txData, defaultGasLimit) => {
     return tx.estimateGas(txData).catch((e) => {
         const { code, message } = parseTxError(e);

@@ -1,10 +1,11 @@
 import { setButtonText } from '../ui';
 import { showAlert } from '../../components/AutoHideAlert';
-import { parseTxError } from '../../utils';
-import { mint } from './web3';
+import { checkWhitelistEligibility, mint } from './web3';
 import { showJoinWhitelistModal } from '../../components/JoinWhitelistModal';
 import { BUILDSHIP_API_BASE } from '../../constants';
 import { sendEvent } from '../../analytics';
+import { showMintModal } from '../../index';
+import { parseTxError } from '../../utils';
 
 export const updateMintWhitelistButton = () => {
     const mintButtons = [
@@ -21,29 +22,13 @@ export const updateMintWhitelistButton = () => {
                 sendEvent(window.analytics, 'whitelist-mint-button-click', {})
 
                 const defaultQuantity = window.DEFAULTS?.whitelist?.mintQuantity ?? 1
-                await mint(defaultQuantity).then((r) => {
-                    setButtonText(mintButton, initialBtnText);
-                    console.log(r);
-                    showAlert(`Successfully minted ${defaultQuantity} NFTs`, "success")
-
-                    sendEvent(window.analytics, 'whitelist-mint-success', {})
-
-                }).catch((e) => {
-                    console.log(e)
-                    setButtonText(mintButton, initialBtnText);
-                    const { code, message } = parseTxError(e);
-
-                    if (code !== 4001) {
-                        if (e) {
-                            showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
-                        }
-
-                        sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
-                    } else {
-                        sendEvent(window.analytics, 'whitelist-mint-rejected', { error: message })
-                    }
-
-                })
+                const isEligible = await checkWhitelistEligibility()
+                if (isEligible) {
+                    showMintModal(defaultQuantity, "whitelist")
+                } else {
+                    showAlert("Your wallet is not whitelisted. If this is a mistake, contact our support in Discord", "error")
+                }
+                setButtonText(mintButton, initialBtnText)
             }
         })
     }
@@ -82,3 +67,30 @@ const fetchSpotsLeft = async () => {
             console.log("ERROR IN fetchSpotsLeft", e)
         })
 }
+
+export const mintOne = async ({ quantity, button, initialBtnText }) => {
+    await mint(quantity).then((r) => {
+        setButtonText(button, initialBtnText);
+        console.log(r);
+        showAlert(`Successfully minted ${quantity} NFTs`, "success")
+
+        sendEvent(window.analytics, 'whitelist-mint-success', {})
+
+    }).catch((e) => {
+        console.log(e)
+        setButtonText(button, initialBtnText);
+        const { code, message } = parseTxError(e);
+
+        if (code !== 4001) {
+            if (e) {
+                showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
+            }
+
+            sendEvent(window.analytics, 'whitelist-mint-error', { error: message })
+        } else {
+            sendEvent(window.analytics, 'whitelist-mint-rejected', { error: message })
+        }
+
+    })
+}
+

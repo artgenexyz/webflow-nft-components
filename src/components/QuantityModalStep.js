@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, DialogContent, Slider } from '@mui/material';
+import { Box, Button, Slider } from '@mui/material';
 import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/web3';
+import { getPresaleMaxPerAddress, mint as mintWhitelist } from '../mint/whitelist/web3'
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
 import { sendEvent } from '../analytics';
-import { getCurrentNetwork } from '../wallet';
 
-export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHash }) => {
+export const QuantityModalStep = ({
+      launchType, setQuantity, setStep,
+      setIsOpen, setIsLoading, setTxHash
+}) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
 
     useEffect(() => {
-        getMaxTokensPerMint().then(setMaxTokens)
+        (launchType === "whitelist" ? getPresaleMaxPerAddress : getMaxTokensPerMint)()
+            .then(setMaxTokens)
     }, [])
+
+    const mintWithLaunchType = (quantity) => {
+        return launchType === "whitelist" ? mintWhitelist(quantity) : mint(quantity)
+    }
 
     const step = maxTokens <= 5 ? maxTokens : 10
     const marks = [...Array(Math.floor(maxTokens / step) + 1)]
@@ -32,22 +40,22 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
         sendEvent(window.analytics, 'public-sale-mint-button-click', {})
 
         setIsLoading(true)
-        const { tx } = await mint(quantityValue)
+        const { tx } = await mintWithLaunchType(quantityValue)
         tx.on("transactionHash", (hash) => {
             setTxHash(hash)
         }).on("confirmation", async () => {
             setIsLoading(false)
             showAlert(`Successfully minted ${quantityValue} NFTs`, "success")
 
-            sendEvent(window.analytics, 'public-sale-mint-success', {})
+            sendEvent(window.analytics, `${launchType}-mint-success`, {})
         }).on("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {
                 showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
-                sendEvent(window.analytics, 'public-sale-mint-error', { error: message })
+                sendEvent(window.analytics, `${launchType}-mint-error`, { error: message })
             } else {
-                sendEvent(window.analytics, 'public-sale-mint-rejected', { error: message })
+                sendEvent(window.analytics, `${launchType}-mint-rejected`, { error: message })
             }
         })
     }
