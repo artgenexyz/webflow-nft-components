@@ -51,6 +51,7 @@ export const fetchUserWhitelist = async (wallet) => {
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
     const r = await fetch(getFindWhitelistURL(wallet))
     const { airdrops } = await r.json()
+
     const validLists = airdrops
         .filter(a =>
             a.is_valid
@@ -59,12 +60,17 @@ export const fetchUserWhitelist = async (wallet) => {
         )
         .sort((a,b) => a.created_at > b.created_at)
 
-    const whitelist = validLists.shift()
+    // sorted by creation date, newest last
+    // we take newest whitelist
+
+    const newestList = validLists.pop()
+
     whitelistCache = {
         ...whitelistCache,
-        [wallet]: whitelist
+        [wallet]: newestList
     }
-    return whitelist
+
+    return newestList
 }
 
 const getMerkleProof = async (whitelist) => {
