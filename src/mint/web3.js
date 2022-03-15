@@ -2,26 +2,42 @@ import {getWalletAddressOrConnect, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import {NFTContract} from "../contract.js"
 
+const findMethodByName = (methodName) =>
+    Object.keys(NFTContract.methods)
+        .find(key => key.toLowerCase() === methodName.toLowerCase())
+
 const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     if (tier !== undefined) {
         return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
     }
-    return NFTContract.methods.mint(numberOfTokens);
+    console.log("Using hardcoded mint method detection")
+    const methodNameVariants = ['mint', 'publicMint']
+    const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
+    return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
 const getMintPrice = async (tier) => {
-    if (NFTContract.methods.price)
-        return NFTContract.methods.price().call();
-    if (NFTContract.methods.cost)
-        return NFTContract.methods.cost().call();
-    if (NFTContract.methods.PUBLIC_SALE_PRICE)
-        return NFTContract.methods.PUBLIC_SALE_PRICE().call();
-    // TODO: try this
-    // if (let k = Object.keys(NFTContract.methods).find(key => key.toLowerCase().includes('price')))
-    //    return NFTContract.methods[k]().call();
-    return tier ?
-        await NFTContract.methods.getPrice(tier).call() :
-        await NFTContract.methods.getPrice().call();
+    if (tier)
+        return NFTContract.methods.getPrice(tier).call()
+
+    const matches = Object.keys(NFTContract.methods).filter(key =>
+        key.toLowerCase().includes('price') || key.toLowerCase().includes('cost')
+    )
+    switch (matches.length) {
+        // Use auto-detection only when sure
+        // Otherwise this code might accidentally use presale price instead of public minting price
+        case 1:
+            console.log("Using price method auto-detection")
+            return NFTContract.methods[matches[0]]().call()
+        case 0:
+            alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.dev in Discord to resolve this.")
+            return undefined
+        default:
+            console.log("Using hardcoded price detection")
+            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
+            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
+            return NFTContract.methods[findMethodByName(name)]().call();
+    }
 }
 
 export const getMintedNumber = async () => {
