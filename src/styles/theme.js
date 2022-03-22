@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material";
 
 const defaultStyles = {
     backgroundColor: "#ffffff",
-    primaryColor: "#55ACEE",
+    primaryColor: "#2986CC",
     primaryTextColor: "#1f1f1f",
     secondaryTextColor: "#9e9e9e",
     buttonTextColor: "#ffffff",

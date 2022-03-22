@@ -3,15 +3,16 @@ import { getBaseURL } from '../constants';
 
 export const Attribution = () => {
     return <Box
-        onClick={() => window.open("https://buildship.dev")}
+        onClick={() => window.open("https://buildship.xyz")}
         sx={{
             mt: 4,
             cursor: "pointer",
             display: "flex",
             alignItems: "center"
         }}>
+        {/* for SEO */}
+        <a href="https://buildship.xyz" />
         <div style={{
-            backgroundColor: "#ffffff",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -20,16 +21,17 @@ export const Attribution = () => {
             borderRadius: 24,
         }}>
             <img
-                style={{ marginTop: "-2px" }}
                 width={14}
-                src={`${getBaseURL()}/images/buildship.png`}
+                src={`${getBaseURL()}/images/buildship${window.STYLES?.theme === "dark" ? "-white" : ""}.svg`}
             />
         </div>
         <Box sx={{
-            marginLeft: "6px",
+            marginLeft: "2px",
             fontSize: 14,
             fontWeight: 400,
             color: (theme) => theme.palette.grey[500],
-        }}>Powered by Buildship</Box>
+        }}>
+            Widget by Buildship
+        </Box>
     </Box>
 }

@@ -5,9 +5,13 @@ Connect web3 to Webflow without coding skills required.
 
 <img src="public/images/screenshot.png" width="300" />
 
-Check out our ready-to-use minting website template: https://textapes.art
+This widget allows minting NFTs on your website. 
 
-[Contact us](https://buildship.dev) to get this Webflow template & create your Opensea-independent NFT collection
+To start, you need an Ethereum NFT contract. [Contact us to deploy it using Buildship.](https://buildship.xyz)
+
+MetaverseNFT contract by [buildship.xyz](https://buildship.xyz) is used by **30+** collections with **1000ETH+** in total volume.
+It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bullet-proof security and extensions like presale lists, mint passes, etc.
+
 
 ## How to use?
 1. Open Webflow website editor
@@ -16,15 +20,22 @@ Check out our ready-to-use minting website template: https://textapes.art
 ```html
 <script>
    CONTRACT_ADDRESS = "<your contract address here>"
-   NETWORK_ID = 1
+   IS_TESTNET = false
    MAX_PER_MINT = 20
+   // place to put CONTRACT_ABI = [{...}]
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
-4. If you have your Ethereum NFT contract, insert your contract address in `CONTRACT_ADDRESS` field. If you don't, [contact us](https://buildship.dev). 
+4. If you **have your Ethereum NFT contract**
 
-> Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = ...` line in the above code, replaced with your contract ABI 
+    ✅ insert your contract address in `CONTRACT_ADDRESS` field
+
+    ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: Ethereum Mainnet or Rinkeby Testnet. 
+
+If you **don't have a contract**, [contact us to deploy using Buildship.](https://buildship.xyz)
+
+> Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = [{...}]` line in the above code, with your full contract ABI inserted. If you have errors because you ABI is too long, click here.
 
 6. Create a button with ID `mint-button` to your Webflow site.
 7. You're done 🎉
@@ -44,7 +55,7 @@ Check out our ready-to-use minting website template: https://textapes.art
 ## FAQ
 
 ### I'm confused / it's not working, can you help me?
-Yes, absolutely! You can contact us at https://buildship.dev, or open a [GitHub issue](https://github.com/buildship-dev/webflow-nft-components/issues/new)
+Yes, absolutely! You can [contact us in Discord](http://buildship.xyz/), or open a [GitHub issue](https://github.com/buildship-dev/webflow-nft-components/issues/new)
 
 ### How to add "Connect wallet" button?
 Mint button will ask to connect wallet, so it's not necessary to add a "Connect wallet" button.
@@ -57,15 +68,30 @@ Just create two text elements and assign them:
 - `total-counter` ID to display collection size
 
 ### How to use this with Polygon, Binance, or other Ethereum-based networks?
-It's easy! Change `NETWORK_ID` in the code snippet:
+It's easy! Set `NETWORK_ID` instead of `IS_TESTNET` in the code snippet
 
+```html
+<script>
+   CONTRACT_ADDRESS = "<your contract address here>"
+   NETWORK_ID = 1
+   // remove IS_TESTNET line
+   ...
+</script>
+<script ...>
+<link ...>
+```
+
+Some of the network IDs you might use:
+- Ethereum Mainnet: `NETWORK_ID = 1`
 - Ethereum Rinkeby Testnet: `NETWORK_ID = 4`
-- Polygon `NETWORK_ID = 137`
-- Binance `NETWORK_ID = 56`
-- For others visit: https://chainlist.org/
+- Polygon: `NETWORK_ID = 137`
+- Binance: `NETWORK_ID = 56`
+- For other IDs visit: https://chainlist.org/
 
 ### How to style minting dialog?
 [See the example here](https://github.com/buildship-dev/webflow-nft-components/wiki/Mint-button-widget#how-to-style-minting-dialog)
 
 
-If you need help with this instruction or your want to deploy your NFT contract, contact us at https://buildship.dev
+If that instruction didn't work, check out our ready-to-use minting website template: https://textapes.art
+
+[Contact us](https://buildship.xyz) to get this Webflow template, or to get help with this widget

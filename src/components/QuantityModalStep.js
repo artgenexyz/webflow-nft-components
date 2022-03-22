@@ -52,6 +52,7 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
             height: 75
         }}>
             <Slider
+                sx={{ ml: 2 }}
                 aria-label="Quantity"
                 defaultValue={1}
                 valueLabelDisplay="auto"
