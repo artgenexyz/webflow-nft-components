@@ -49,7 +49,7 @@ export const fetchABI = async (address, chainID) => {
         .then(r => r.json())
         .then(r => r.abi)
         .catch(e => null)
-    
+
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.dev")
         const savedMainABI = getSavedMainABI(address)
@@ -82,7 +82,7 @@ const fetchCachedABI = async (address) => {
 }
 
 const getSavedMainABI = (address) => {
-    if (address.toLowerCase() === window.CONTRACT_ADDRESS?.toLowerCase()) {
+    if (address?.toLowerCase() === window.CONTRACT_ADDRESS?.toLowerCase()) {
         console.log("Trying to load saved main contract ABI")
         return typeof window.CONTRACT_ABI === 'string'
             ? JSON.parse(window.CONTRACT_ABI)
