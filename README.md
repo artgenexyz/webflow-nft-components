@@ -7,9 +7,9 @@ Connect web3 to Webflow without coding skills required.
 
 This widget allows minting NFTs on your website. 
 
-To start, you need an Ethereum NFT contract. [Contact us to deploy it using Buildship.](https://buildship.xyz)
+To start, you need an Ethereum NFT contract. [Contact us to deploy it using Buildship](https://buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
 
-MetaverseNFT contract by [buildship.xyz](https://buildship.xyz) is used by **30+** collections with **1000ETH+** in total volume.
+**MetaverseNFT** contract by [buildship.xyz](https://buildship.xyz) is used by **40+** collections with **1000ETH+** in total volume.
 It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bullet-proof security and extensions like presale lists, mint passes, etc.
 
 
@@ -29,15 +29,21 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
 ```
 4. If you **have your Ethereum NFT contract**
 
-    ✅ insert your contract address in `CONTRACT_ADDRESS` field
+   ✅ insert your contract address in `CONTRACT_ADDRESS` field 
+   
+   ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Rinkeby Testnet`.
+   
 
-    ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: Ethereum Mainnet or Rinkeby Testnet. 
+If you **don't have a contract**, [contact us to deploy using Buildship](https://buildship.xyz)
 
-If you **don't have a contract**, [contact us to deploy using Buildship.](https://buildship.xyz)
+> Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = [{...}]` line in the above code, with your full contract ABI inserted. If you have an error saying your ABI is too long, [click here](https://github.com/buildship-dev/webflow-nft-components/issues/22#issuecomment-1042708174).
 
-> Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = [{...}]` line in the above code, with your full contract ABI inserted. If you have errors because you ABI is too long, click here.
+6. Create a button with ID `mint-button` on your Webflow site
 
-6. Create a button with ID `mint-button` to your Webflow site.
+<img src="public/images/webflow-id.png" width="200" />
+
+If you can't set an ID, you can set a button URL as `#mint-button` or `https://<your-website-url>/#mint-button`
+
 7. You're done 🎉
 
 
@@ -62,7 +68,7 @@ Mint button will ask to connect wallet, so it's not necessary to add a "Connect 
 
 If you still want to do it, create a Webflow button with ID `connect`.
 
-### How to add minted counter?
+### How to add a minted counter?
 Just create two text elements and assign them:
 - `minted-counter` ID to display minted number
 - `total-counter` ID to display collection size
@@ -86,7 +92,7 @@ Some of the network IDs you might use:
 - Ethereum Rinkeby Testnet: `NETWORK_ID = 4`
 - Polygon: `NETWORK_ID = 137`
 - Binance: `NETWORK_ID = 56`
-- For other IDs visit: https://chainlist.org/
+- For other IDs visit [Chainlist](https://chainlist.org)
 
 ### How to style minting dialog?
 [See the example here](https://github.com/buildship-dev/webflow-nft-components/wiki/Mint-button-widget#how-to-style-minting-dialog)
