@@ -22,7 +22,7 @@ export const initContract = async (contract, shouldSwitchNetwork=true) => {
 
 const initContractGlobalObject = async () => {
     if (window.CONTRACT_ADDRESS === "<your contract address here>") {
-        alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.dev")
+        alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.xyz")
         return
     }
     // Default to Ethereum
