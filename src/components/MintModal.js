@@ -110,10 +110,10 @@ export const showMintModal = (quantity) => {
 
 const styles = {
     mintModalContent: {
-        paddingTop: "8px",
         display: "flex",
         flexWrap: "wrap",
-        flexDirection: "row"
+        flexDirection: "row",
+        overflow: "visible"
     },
     mintOption: {
         padding: "16px",

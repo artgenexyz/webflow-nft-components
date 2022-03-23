@@ -2,6 +2,7 @@ import { getMaxSupply, getMintedNumber, mint } from "./web3.js";
 import { parseTxError } from "../utils.js";
 import {showAlert} from "../index.js";
 import {showMintModal} from "../components/MintModal";
+import { getWalletAddressOrConnect } from '../wallet';
 
 export const updateMintButton = () => {
     const mintButtons = [
@@ -17,6 +18,7 @@ export const updateMintButton = () => {
                 const initialBtnText = mintButton.textContent;
                 setButtonText(mintButton, "Loading...")
                 const quantity = getMintQuantity();
+                await getWalletAddressOrConnect(true)
                 showMintModal(quantity);
                 setButtonText(mintButton, initialBtnText)
             }

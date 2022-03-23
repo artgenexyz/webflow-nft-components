@@ -1,14 +1,15 @@
 import { Box, } from '@mui/material';
 import { getBaseURL } from '../constants';
 
-export const Attribution = () => {
+export const Attribution = (props) => {
     return <Box
         onClick={() => window.open("https://buildship.xyz")}
         sx={{
             mt: 4,
             cursor: "pointer",
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
+            ...props?.sx
         }}>
         {/* for SEO */}
         <a href="https://buildship.xyz" />

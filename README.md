@@ -73,6 +73,21 @@ Just create two text elements and assign them:
 - `minted-counter` ID to display minted number
 - `total-counter` ID to display collection size
 
+### How to hide minted counter from the dialog?
+You need to set `DEFAULTS.hideCounter` to `true`
+```html
+<script>
+   CONTRACT_ADDRESS = "<your contract address here>"
+   NETWORK_ID = 1
+   DEFAULTS = {
+       hideCounter: true
+   }
+   ...
+</script>
+<script ...>
+<link ...>
+```
+
 ### How to use this with Polygon, Binance, or other Ethereum-based networks?
 It's easy! Set `NETWORK_ID` instead of `IS_TESTNET` in the code snippet
 

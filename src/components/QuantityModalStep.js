@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, DialogContent, Slider } from '@mui/material';
-import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/web3';
+import { Box, Button, Slider } from '@mui/material';
+import { getDefaultMaxTokensPerMint, getMaxSupply, getMaxTokensPerMint, getMintedNumber, mint } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
@@ -9,9 +9,15 @@ import { getCurrentNetwork } from '../wallet';
 export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHash }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
+    const [mintedNumber, setMintedNumber] = useState()
+    const [totalNumber, setTotalNumber] = useState()
 
     useEffect(() => {
         getMaxTokensPerMint().then(setMaxTokens)
+        if (!window.DEFAULTS?.hideCounter) {
+            getMintedNumber().then(setMintedNumber)
+            getMaxSupply().then(setTotalNumber)
+        }
     }, [])
 
     const step = maxTokens <= 5 ? maxTokens : 10
@@ -68,11 +74,24 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
         </Box>
         <Button
             onClick={onSuccess}
-            sx={{ mt: 4 }}
+            sx={{ mt: 4, width: "100%" }}
             variant="contained"
         >
             Mint now
         </Button>
-        <Attribution />
+        {!window.DEFAULTS?.hideCounter && <Box
+            sx={{
+                color: (theme) => theme.palette.grey[500],
+                display: "flex",
+                fontWeight: 400,
+                fontSize: 14,
+                justifyContent: "center",
+                mt: 2
+            }}>
+            <span>{mintedNumber ?? "-"}</span>
+            <span style={{ margin: "0 2px"}}>/</span>
+            <span>{totalNumber ?? "-"}</span>
+        </Box>}
+        <Attribution sx={{ mt: 3, justifyContent: "center" }} />
     </div>
 }

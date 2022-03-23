@@ -7,10 +7,10 @@ const findMethodByName = (methodName) =>
         .find(key => key.toLowerCase() === methodName.toLowerCase())
 
 const getCustomMintTx = (numberOfTokens) => {
-    if (window.DEFAULTS.contractMethods.mint) {
-        console.log("Using custom mint method name: ", window.DEFAULTS.contractMethods.mint)
-        if (NFTContract.methods[window.DEFAULTS.contractMethods.mint]) {
-            return NFTContract.methods[window.DEFAULTS.contractMethods.mint](numberOfTokens)
+    if (window.DEFAULTS?.contractMethods?.mint) {
+        console.log("Using custom mint method name: ", window.DEFAULTS?.contractMethods?.mint)
+        if (NFTContract.methods[window.DEFAULTS?.contractMethods?.mint]) {
+            return NFTContract.methods[window.DEFAULTS?.contractMethods?.mint](numberOfTokens)
         } else {
             alert("Custom mint method name isn't present in the ABI, using default parser")
             console.log("Custom mint method name isn't present in the ABI, using default parser")
