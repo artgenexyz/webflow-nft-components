@@ -22,7 +22,7 @@ export const initContract = async (contract, shouldSwitchNetwork=true) => {
 
 const initContractGlobalObject = async () => {
     if (window.CONTRACT_ADDRESS === "<your contract address here>") {
-        alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.dev")
+        alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.xyz")
         return
     }
     const chainID = getConfigChainID()
@@ -53,7 +53,7 @@ export const fetchABI = async (address, chainID) => {
         .then(r => r.json())
         .then(r => r.abi)
         .catch(e => null)
-    
+
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.dev")
         const savedMainABI = getSavedMainABI(address)
@@ -86,7 +86,7 @@ const fetchCachedABI = async (address) => {
 }
 
 const getSavedMainABI = (address) => {
-    if (address.toLowerCase() === window.CONTRACT_ADDRESS?.toLowerCase()) {
+    if (address?.toLowerCase() === window.CONTRACT_ADDRESS?.toLowerCase()) {
         console.log("Trying to load saved main contract ABI")
         return typeof window.CONTRACT_ABI === 'string'
             ? JSON.parse(window.CONTRACT_ABI)

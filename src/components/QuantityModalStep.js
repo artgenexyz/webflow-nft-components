@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Slider } from '@mui/material';
-import { getDefaultMaxTokensPerMint, getMaxTokensPerMint, mint } from '../mint/web3';
+import { getDefaultMaxTokensPerMint, getMaxSupply, getMaxTokensPerMint, getMintedNumber, mint } from '../mint/web3';
 import { getPresaleMaxPerAddress, mint as mintWhitelist } from '../mint/whitelist/web3'
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
@@ -13,10 +13,17 @@ export const QuantityModalStep = ({
 }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
+    const [mintedNumber, setMintedNumber] = useState()
+    const [totalNumber, setTotalNumber] = useState()
 
     useEffect(() => {
         (launchType === "whitelist" ? getPresaleMaxPerAddress : getMaxTokensPerMint)()
             .then(setMaxTokens)
+
+        if (!window.DEFAULTS?.hideCounter) {
+            getMintedNumber().then(setMintedNumber)
+            getMaxSupply().then(setTotalNumber)
+        }
     }, [])
 
     const mintWithLaunchType = (quantity) => {
@@ -68,6 +75,7 @@ export const QuantityModalStep = ({
             height: 75
         }}>
             <Slider
+                sx={{ ml: 2 }}
                 aria-label="Quantity"
                 defaultValue={1}
                 valueLabelDisplay="auto"
@@ -83,11 +91,24 @@ export const QuantityModalStep = ({
         </Box>
         <Button
             onClick={onSuccess}
-            sx={{ mt: 4 }}
+            sx={{ mt: 4, width: "100%" }}
             variant="contained"
         >
             Mint now
         </Button>
-        <Attribution />
+        {!window.DEFAULTS?.hideCounter && <Box
+            sx={{
+                color: (theme) => theme.palette.grey[500],
+                display: "flex",
+                fontWeight: 400,
+                fontSize: 14,
+                justifyContent: "center",
+                mt: 2
+            }}>
+            <span>{mintedNumber ?? "-"}</span>
+            <span style={{ margin: "0 2px"}}>/</span>
+            <span>{totalNumber ?? "-"}</span>
+        </Box>}
+        <Attribution sx={{ mt: 3, justifyContent: "center" }} />
     </div>
 }

@@ -2,26 +2,67 @@ import {getWalletAddressOrConnect, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import {NFTContract} from "../contract.js"
 
+const findMethodByName = (methodName) =>
+    Object.keys(NFTContract.methods)
+        .find(key => key.toLowerCase() === methodName.toLowerCase())
+
+const getCustomMintTx = (numberOfTokens) => {
+    if (window.DEFAULTS?.contractMethods?.mint) {
+        console.log("Using custom mint method name: ", window.DEFAULTS?.contractMethods?.mint)
+        if (NFTContract.methods[window.DEFAULTS?.contractMethods?.mint]) {
+            return NFTContract.methods[window.DEFAULTS?.contractMethods?.mint](numberOfTokens)
+        } else {
+            alert("Custom mint method name isn't present in the ABI, using default parser")
+            console.log("Custom mint method name isn't present in the ABI, using default parser")
+        }
+    }
+    return undefined
+}
+
 const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
+    const customMintTx = getCustomMintTx(numberOfTokens)
+    if (customMintTx)
+        return customMintTx
+
     if (tier !== undefined) {
         return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
     }
-    return NFTContract.methods.mint(numberOfTokens);
+    console.log("Using hardcoded mint method detection")
+    const methodNameVariants = ['mint', 'publicMint']
+    const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
+    if (!name) {
+        alert("Buildship widget doesn't know how to mint from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+        return undefined
+    }
+    return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
 const getMintPrice = async (tier) => {
-    if (NFTContract.methods.price)
-        return NFTContract.methods.price().call();
-    if (NFTContract.methods.cost)
-        return NFTContract.methods.cost().call();
-    if (NFTContract.methods.PUBLIC_SALE_PRICE)
-        return NFTContract.methods.PUBLIC_SALE_PRICE().call();
-    // TODO: try this
-    // if (let k = Object.keys(NFTContract.methods).find(key => key.toLowerCase().includes('price')))
-    //    return NFTContract.methods[k]().call();
-    return tier ?
-        await NFTContract.methods.getPrice(tier).call() :
-        await NFTContract.methods.getPrice().call();
+    if (tier)
+        return NFTContract.methods.getPrice(tier).call()
+
+    const matches = Object.keys(NFTContract.methods).filter(key =>
+        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
+    )
+    switch (matches.length) {
+        // Use auto-detection only when sure
+        // Otherwise this code might accidentally use presale price instead of public minting price
+        case 1:
+            console.log("Using price method auto-detection")
+            return NFTContract.methods[matches[0]]().call()
+        case 0:
+            alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+            return undefined
+        default:
+            console.log("Using hardcoded price detection")
+            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
+            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
+            if (!name) {
+                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+                return undefined
+            }
+            return NFTContract.methods[findMethodByName(name)]().call();
+    }
 }
 
 export const getMintedNumber = async () => {
@@ -29,7 +70,7 @@ export const getMintedNumber = async () => {
         return undefined
     if (NFTContract.methods.totalSupply)
         return await NFTContract.methods.totalSupply().call()
-    // temporary solution, works only for buildship.dev contracts
+    // temporary solution, works only for buildship.xyz contracts
     // totalSupply was removed to save gas when minting
     // but number minted still accessible in the contract as a private variable
     // TODO: remove this in NFTFactory v1.1
@@ -47,7 +88,7 @@ export const getMaxSupply = async () => {
         return await NFTContract.methods.maxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
         return await NFTContract.methods.MAX_SUPPLY().call()
-    alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.dev to resolve this.")
+    alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.xyz to resolve this.")
     return undefined
 }
 
