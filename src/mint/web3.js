@@ -37,32 +37,8 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
-const getMintPrice = async (tier) => {
-    if (tier)
-        return NFTContract.methods.getPrice(tier).call()
-
-    const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('mintCost'))
-    )
-    switch (matches.length) {
-        // Use auto-detection only when sure
-        // Otherwise this code might accidentally use presale price instead of public minting price
-        case 1:
-            console.log("Using price method auto-detection")
-            return NFTContract.methods[matches[0]]().call()
-        case 0:
-            alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            return undefined
-        default:
-            console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
-            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
-            if (!name) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-                return undefined
-            }
-            return NFTContract.methods[findMethodByName(name)]().call();
-    }
+const getMintPrice = async (wallet) => {
+    return NFTContract.methods.mintCost(wallet).call()
 }
 
 export const getMintedNumber = async () => {
@@ -112,7 +88,7 @@ export const getMaxTokensPerMint = async () => {
 export const mint = async (nTokens, ref, tier) => {
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
-    const mintPrice = await getMintPrice(tier);
+    const mintPrice = await getMintPrice(wallet);
 
     const txParams = {
         from: wallet,
