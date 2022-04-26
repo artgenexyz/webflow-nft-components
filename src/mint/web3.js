@@ -1,6 +1,6 @@
 import {getWalletAddressOrConnect, web3} from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
-import {NFTContract} from "../contract.js"
+import {NFTContract, ExtensionContract} from "../contract.js"
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -20,6 +20,10 @@ const getCustomMintTx = (numberOfTokens) => {
 }
 
 const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
+    if (ExtensionContract) {
+        return ExtensionContract.methods.mint(numberOfTokens);
+    }
+
     const customMintTx = getCustomMintTx(numberOfTokens)
     if (customMintTx)
         return customMintTx

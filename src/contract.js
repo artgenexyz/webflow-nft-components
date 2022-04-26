@@ -4,6 +4,8 @@ import { NETWORKS } from "./constants.js";
 
 export let NFTContract;
 
+export let ExtensionContract;
+
 export const initContract = async (contract, shouldSwitchNetwork=true) => {
     const host = normalizeURL(window.location.href);
     const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
@@ -35,6 +37,17 @@ const initContractGlobalObject = async () => {
             allowedNetworks: [chainID]
         }
     }
+
+    if (window.EXTENSION_ADDRESS) {
+        window.CONTRACT.extension = {
+            address: {
+                [chainID]: window.EXTENSION_ADDRESS,
+            },
+            abi: await fetchABI(window.EXTENSION_ADDRESS, chainID),
+            allowedNetworks: [chainID]
+        }
+    }
+
 }
 
 export const getConfigChainID = () => {
@@ -107,5 +120,10 @@ export const setContracts = async (shouldSwitchNetwork=true) => {
         return
     }
     NFTContract = await initContract(window.CONTRACT.nft, false);
+
+    if (window.CONTRACT.extension) {
+        ExtensionContract = await initContract(window.CONTRACT.extension, false);
+    }
+
     console.log("NFTContract", NFTContract)
 }
