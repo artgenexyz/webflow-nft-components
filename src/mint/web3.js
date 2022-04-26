@@ -88,6 +88,8 @@ export const getMintedNumber = async () => {
 export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
+    if (ExtensionContract?.methods?.maxSupply)
+        return await ExtensionContract.methods.maxSupply().call()
     if (NFTContract.methods.maxSupply)
         return await NFTContract.methods.maxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
@@ -101,6 +103,9 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
+    if (ExtensionContract?.methods?.maxPerMint) {
+        return Number(await ExtensionContract.methods.maxPerMint().call())
+    }
     if (NFTContract?.methods?.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
