@@ -5,6 +5,11 @@ Connect web3 to Webflow without coding skills required.
 
 <img src="public/images/screenshot.png" width="300" />
 
+## Video guide
+[![Mint button video guide](https://img.youtube.com/vi/4MMylTzzwAg/sddefault.jpg)](http://www.youtube.com/watch?v=4MMylTzzwAg)
+
+## Starting out
+
 This widget allows minting NFTs on your website. 
 
 To start, you need an Ethereum NFT contract. [Contact us to deploy it using Buildship](https://buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
