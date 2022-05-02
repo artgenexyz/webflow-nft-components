@@ -45,9 +45,17 @@ If you **don't have a contract**, [contact us to deploy using Buildship](https:/
 
 6. Create a button with ID `mint-button` on your Webflow site
 
-<img src="public/images/webflow-id.png" width="200" />
+<!-- <img src="public/images/webflow-id.png" width="200" /> -->
 
-If you can't set an ID, you can set a button URL as `#mint-button` or `https://<your-website-url>/#mint-button`
+On the left side, press Add and find Button
+
+<img width="200" alt="image" src="https://user-images.githubusercontent.com/1909384/166176197-2b95b351-fcd8-409a-9db6-27fbf240d816.png">
+
+Select your button, then on the right side, set Button id to `mint-button`
+
+<img width="200" alt="image" src="https://user-images.githubusercontent.com/1909384/166176251-c0c5f981-2cab-40ac-b7d8-5a5d7c297987.png">
+
+If you can't set an ID, you can set a button URL as `mint-button` or `https://<your-website-url>/#mint-button`
 
 7. You're done 🎉
 
