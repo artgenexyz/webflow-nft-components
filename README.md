@@ -71,6 +71,26 @@ If you can't set an ID, you can set a button URL as `mint-button` or `https://<y
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
 
+### Available parameters
+```html
+<script>
+   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ABI = []
+   NETWORK_ID = 4                      // defaults to 1: Ethereum network
+   IS_TESTNET = true                   // true defaults to 4: Rinkeby network
+   MAX_PER_MINT = 5                    // defaults to 20
+   DEFAULTS = {
+      hideCounter: false,              // hide minted counter from the dialog. Default: true
+      contractMethods: {
+         mint: 'myCustomMintMethod'    // defaults to "mint" or "publicMint"
+      }
+   }
+   STYLES: {
+      theme: 'dark'                    // Default: ''
+   }
+</script>
+```
+
 ## FAQ
 
 ### I'm confused / it's not working, can you help me?
