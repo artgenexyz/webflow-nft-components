@@ -146,6 +146,38 @@ You need to set `DEFAULTS.hideCounter` to `true`
 ```
 
 
-If that instruction didn't work, check out our ready-to-use minting website template: https://textapes.art
+If that instruction was too complicated, check out our [free clonable NFT website templates for Webflow](https://webflow.com/theshadeth)
 
-[Contact us](https://buildship.xyz) to get this Webflow template, or to get help with this widget
+
+## Roadmap
+- [ ] Fix issues with WalletConnect on mobile
+- [ ] Support for Coinbase Wallet
+- [ ] Native support for Ledger
+- [ ] Support for Magic Wallet
+- [ ] Support for gasless mints
+- [ ] Support for buying with credit card: MoonPay / CrossMint
+- [ ] Support for Via Cross-Chain widget
+- [ ] Support for token-gating
+- [ ] Better support for Wix
+- [ ] "Disconnect wallet"
+- [ ] View wallet's NFTs via rainbow.me
+
+## Contributing
+Fork the repo and clone it
+```
+git clone ...
+```
+
+Install dependencies with `yarn` (`node v14+` required)
+```
+yarn i
+```
+
+Start server on `localhost:3000`
+```
+yarn start
+```
+
+Push changes, open a PR in our repo, and you'll be able to test your changes immediately on `nftcomponents-git-your-branch-name.vercel.app`.
+
+Leave a message in our [Discord](http://discord.gg/dRg2tGqfhE) to discuss & review your PR faster!
