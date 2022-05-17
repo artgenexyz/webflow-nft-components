@@ -24,7 +24,7 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
 3. Copy & paste this code in Webflow Embed block
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    IS_TESTNET = false
    MAX_PER_MINT = 20
    // place to put CONTRACT_ABI = [{...}]
@@ -74,7 +74,7 @@ If you can't set an ID, you can set a button URL as `mint-button` or `https://<y
 ### Available parameters
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    CONTRACT_ABI = []
    NETWORK_ID = 4                      // defaults to 1: Ethereum network
    IS_TESTNET = true                   // true defaults to 4: Rinkeby network
@@ -111,7 +111,7 @@ It's easy! Set `NETWORK_ID` instead of `IS_TESTNET` in the code snippet
 
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    NETWORK_ID = 1
    // remove IS_TESTNET line
    ...
@@ -134,7 +134,7 @@ Some of the network IDs you might use:
 You need to set `DEFAULTS.hideCounter` to `true`
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    NETWORK_ID = 1
    DEFAULTS = {
        hideCounter: true
