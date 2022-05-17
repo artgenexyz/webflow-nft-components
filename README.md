@@ -12,7 +12,7 @@ Connect web3 to Webflow without coding skills required.
 
 This widget allows minting NFTs on your website. 
 
-To start, you need an Ethereum NFT contract. [Contact us to deploy it using Buildship](https://buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
+To start, you need an Ethereum NFT contract. [Create it via Buildship app](https://app.buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
 
 **MetaverseNFT** contract by [buildship.xyz](https://buildship.xyz) is used by **40+** collections with **1000ETH+** in total volume.
 It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bullet-proof security and extensions like presale lists, mint passes, etc.
@@ -39,7 +39,7 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
    ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Rinkeby Testnet`.
    
 
-If you **don't have a contract**, [contact us to deploy using Buildship](https://buildship.xyz)
+If you **don't have a contract**, [create it via Buildship app](https://app.buildship.xyz)
 
 > Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = [{...}]` line in the above code, with your full contract ABI inserted. If you have an error saying your ABI is too long, [click here](https://github.com/buildship-dev/webflow-nft-components/issues/22#issuecomment-1042708174).
 
