@@ -12,7 +12,7 @@ Check out our ready-to-use minting website template: https://textapes.art
 3. Copy & paste this code in Webflow Embed block
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    NETWORK_ID = 1
    MAX_PER_MINT = 20
 </script>

@@ -5,9 +5,14 @@ Connect web3 to Webflow without coding skills required.
 
 <img src="public/images/screenshot.png" width="300" />
 
+## Video guide
+[![Mint button video guide](https://img.youtube.com/vi/4MMylTzzwAg/sddefault.jpg)](http://www.youtube.com/watch?v=4MMylTzzwAg)
+
+## Starting out
+
 This widget allows minting NFTs on your website. 
 
-To start, you need an Ethereum NFT contract. [Contact us to deploy it using Buildship](https://buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
+To start, you need an Ethereum NFT contract. [Create it via Buildship app](https://app.buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
 
 **MetaverseNFT** contract by [buildship.xyz](https://buildship.xyz) is used by **40+** collections with **1000ETH+** in total volume.
 It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bullet-proof security and extensions like presale lists, mint passes, etc.
@@ -19,7 +24,7 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
 3. Copy & paste this code in Webflow Embed block
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    IS_TESTNET = false
    MAX_PER_MINT = 20
    // place to put CONTRACT_ABI = [{...}]
@@ -34,15 +39,23 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
    ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Rinkeby Testnet`.
    
 
-If you **don't have a contract**, [contact us to deploy using Buildship](https://buildship.xyz)
+If you **don't have a contract**, [create it via Buildship app](https://app.buildship.xyz)
 
 > Your contract should be [verified](https://etherscan.io/verifyContract) on [Etherscan](https://etherscan.io). Otherwise you have to add `CONTRACT_ABI = [{...}]` line in the above code, with your full contract ABI inserted. If you have an error saying your ABI is too long, [click here](https://github.com/buildship-dev/webflow-nft-components/issues/22#issuecomment-1042708174).
 
 6. Create a button with ID `mint-button` on your Webflow site
 
-<img src="public/images/webflow-id.png" width="200" />
+<!-- <img src="public/images/webflow-id.png" width="200" /> -->
 
-If you can't set an ID, you can set a button URL as `#mint-button` or `https://<your-website-url>/#mint-button`
+On the left side, press Add and find Button
+
+<img width="200" alt="image" src="https://user-images.githubusercontent.com/1909384/166176197-2b95b351-fcd8-409a-9db6-27fbf240d816.png">
+
+Select your button, then on the right side, set Button id to `mint-button`
+
+<img width="200" alt="image" src="https://user-images.githubusercontent.com/1909384/166176251-c0c5f981-2cab-40ac-b7d8-5a5d7c297987.png">
+
+If you can't set an ID, you can set a button URL as `mint-button` or `https://<your-website-url>/#mint-button`
 
 7. You're done 🎉
 
@@ -56,6 +69,29 @@ If you can't set an ID, you can set a button URL as `#mint-button` or `https://<
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
+```
+
+### Available parameters
+```html
+<script>
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
+   CONTRACT_ABI = []
+   NETWORK_ID = 4                      // defaults to 1: Ethereum network
+   IS_TESTNET = true                   // true defaults to 4: Rinkeby network
+   MAX_PER_MINT = 5                    // max value of NFT quantity slider in the modal, default is 20
+   DEFAULTS = {
+      labels: {
+          walletConnected: "Wallet connected", // label for wallet connected button
+      },
+      hideCounter: false,              // hide minted counter from the dialog. Default: true
+      contractMethods: {
+         mint: 'myCustomMintMethod'    // defaults to "mint" or "publicMint"
+      }
+   }
+   STYLES: {
+      theme: 'dark'                    // Default: ''
+   }
+</script>
 ```
 
 ## FAQ
@@ -78,7 +114,7 @@ It's easy! Set `NETWORK_ID` instead of `IS_TESTNET` in the code snippet
 
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    NETWORK_ID = 1
    // remove IS_TESTNET line
    ...
@@ -101,7 +137,7 @@ Some of the network IDs you might use:
 You need to set `DEFAULTS.hideCounter` to `true`
 ```html
 <script>
-   CONTRACT_ADDRESS = "<your contract address here>"
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    NETWORK_ID = 1
    DEFAULTS = {
        hideCounter: true
@@ -113,6 +149,38 @@ You need to set `DEFAULTS.hideCounter` to `true`
 ```
 
 
-If that instruction didn't work, check out our ready-to-use minting website template: https://textapes.art
+If that instruction was too complicated, check out our [free clonable NFT website templates for Webflow](https://webflow.com/theshadeth)
 
-[Contact us](https://buildship.xyz) to get this Webflow template, or to get help with this widget
+
+## Roadmap
+- [ ] Fix issues with WalletConnect on mobile
+- [ ] Support for Coinbase Wallet
+- [ ] Native support for Ledger
+- [ ] Support for Magic Wallet
+- [ ] Support for gasless mints
+- [ ] Support for buying with credit card: MoonPay / CrossMint
+- [ ] Support for Via Cross-Chain widget
+- [ ] Support for token-gating
+- [ ] Better support for Wix
+- [ ] "Disconnect wallet"
+- [ ] View wallet's NFTs via rainbow.me
+
+## Contributing
+Fork the repo and clone it
+```
+git clone ...
+```
+
+Install dependencies with `yarn` (`node v14+` required)
+```
+yarn i
+```
+
+Start server on `localhost:3000`
+```
+yarn start
+```
+
+Push changes, open a PR in our repo, and you'll be able to test your changes immediately on `nftcomponents-git-your-branch-name.vercel.app`.
+
+Leave a message in our [Discord](http://discord.gg/dRg2tGqfhE) to discuss & review your PR faster!
