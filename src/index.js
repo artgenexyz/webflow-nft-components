@@ -7,6 +7,7 @@ import { showMintModal } from "./components/MintModal.js";
 import { showJoinWhitelistModal } from './components/JoinWhitelistModal';
 import { init } from "./mint";
 import { initWhitelist } from './mint/whitelist';
+import { dirtyFixConnectWalletUI } from "./utils";
 
 const createDOMElement = () => {
     const body = document.getElementsByTagName('body')[0];
@@ -25,6 +26,10 @@ renderAppContainer();
 document.addEventListener("DOMContentLoaded", () => {
     init()
     initWhitelist()
+
+    // TODO: remove this when migrated to @buildship/web3-login or forked Web3Modal
+    // Puts "custom-metamask" provider as the first option
+    dirtyFixConnectWalletUI()
 });
 
 export { showAlert, showMintModal, showJoinWhitelistModal, renderAppContainer };

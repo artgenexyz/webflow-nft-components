@@ -65,7 +65,8 @@ export const theme = createTheme({
                     backgroundImage: "inherit",
                     backgroundColor: backgroundColor,
                     borderRadius: dialogRadius,
-                    padding: "16px"
+                    padding: "16px",
+                    margin: "16px"
                 }
             }
         },

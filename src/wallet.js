@@ -1,10 +1,11 @@
 import Web3 from "web3";
-import Web3Modal from "web3modal";
+import Web3Modal, { injected } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 
 import { NETWORKS } from "./constants.js";
-import {isMobile, objectMap} from "./utils.js";
-import {setContracts} from "./contract.js";
+import { isMobile, objectMap } from "./utils.js";
+import { setContracts } from "./contract.js";
 import { updateMintedCounter } from './mint/ui';
 
 
@@ -14,43 +15,158 @@ export const isWeb3Initialized = () => {
     return web3 && provider;
 }
 
-const initWeb3 = async (forceConnect = false) => {
-    if (isWeb3Initialized()) return
+const getWeb3ModalProviderOptions = ({
+    forceConnect,
+    isMobileOnlyInjectedProvider,
+    isDesktopNoInjectedProvider
+}) => {
     const walletConnectOptions = {
         rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
         qrcodeModalOptions: {
             mobileLinks: [
                 "rainbow",
                 "trust",
+                "ledger",
+                "gnosis"
             ],
+            desktopLinks: [
+                "rainbow",
+                "trust",
+                "ledger",
+                "gnosis"
+            ]
         }
     }
-    const mobileNotInjectedProvider = isMobile() && !window.ethereum
-    const onlyInjectedProvider = isMobile() && window.ethereum
-    if (mobileNotInjectedProvider && forceConnect) {
-        // Use Metamask for mobile only
-        const link = window.location.href
-            .replace("https://", "")
-            .replace("www.", "");
-        window.open(`https://metamask.app.link/dapp/${link}`);
-        return undefined
+
+    const basicProviderOptions = {
+        walletconnect: {
+            display: {
+                description: "Connect Rainbow, Trust, Ledger, Gnosis, or scan QR code"
+            },
+            package: WalletConnectProvider,
+            options: walletConnectOptions
+        },
+        coinbasewallet: {
+            package: CoinbaseWalletSDK, // Required
+            options: {
+                appName: "Buildship", // Required
+                rpc: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161", // Optional if `infuraId` is provided; otherwise it's required
+                chainId: 1, // Optional. It defaults to 1 if not provided
+                darkMode: false // Optional. Use dark theme, defaults to false
+            }
+        }
     }
+    const metamaskProvider = {
+        // Use custom Metamask provider because of conflicts with Coinbase injected provider
+        "custom-metamask": {
+            display: {
+                logo: injected.METAMASK.logo,
+                name: "MetaMask",
+                description: "Connect to your MetaMask wallet"
+            },
+            package: {},
+            options: {},
+            connector: async (ProviderPackage, options) => {
+                const mobileNotInjectedProvider = isMobile() && !window.ethereum
+                // If mobile user doesn't have injected web3
+                // Open the website in the Metamask mobile app via deep link
+                if (mobileNotInjectedProvider && forceConnect) {
+                    const link = window.location.href
+                        .replace("https://", "")
+                        .replace("www.", "");
+                    window.open(`https://metamask.app.link/dapp/${link}`);
+                    return undefined
+                }
+
+                let provider
+                if (window?.ethereum?.providers?.length > 1) {
+                    provider = window?.ethereum?.providers?.filter(p => p.isMetaMask)?.at(0)
+                    console.log("Found multiple injected web3 providers, using Metamask")
+                } else {
+                    provider = window?.ethereum
+                }
+                await provider?.request({method: 'eth_requestAccounts'});
+                return provider
+            }
+        },
+    }
+    // Used on desktop browsers without injected web3
+    // Actually opens WalletConnect
+    // TODO: start using this if MetaMask app stops crashes
+    // TODO: experiment with MM + custom Infura for WalletConnect
+    const fakeMetamaskProvider = {
+        "custom-fake-metamask": {
+            display: {
+                logo: injected.METAMASK.logo,
+                name: "MetaMask",
+                description: "Connect MetaMask mobile wallet via QR code"
+            },
+            package: WalletConnectProvider,
+            options: {
+                rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
+                qrcodeModalOptions: {
+                    desktopLinks: ["metamask"]
+                },
+            },
+            connector: async (ProviderPackage, options) => {
+                const provider = new ProviderPackage(options);
+
+                await provider.enable();
+
+                return provider;
+            }
+        }
+    }
+
+    // Don't show separate Metamask option on Safari, Opera, Firefox desktop
+    const allProviderOptions = isDesktopNoInjectedProvider ? basicProviderOptions : {
+            ...metamaskProvider,
+            ...basicProviderOptions
+        }
+
+    // Use only injected provider if it's the only wallet available
+    // Built for mobile in-app browser wallets like Metamask, Coinbase
+    return !isMobileOnlyInjectedProvider ? allProviderOptions : {}
+}
+
+const initWeb3Modal = (forceConnect) => {
+    const isMobileOnlyInjectedProvider = isMobile() && window.ethereum
+    const isDesktopNoInjectedProvider =  !isMobile() && !window.ethereum
+
     const web3Modal = new Web3Modal({
         cacheProvider: false,
-        providerOptions: !onlyInjectedProvider ? {
-            walletconnect: {
-                package: WalletConnectProvider,
-                options: walletConnectOptions
-            }
-        } : {}
+        // Use custom Metamask provider because of conflicts with Coinbase injected provider
+        // On mobile apps with injected web3, use ONLY injected providers
+        disableInjectedProvider: !isMobileOnlyInjectedProvider,
+        providerOptions: getWeb3ModalProviderOptions({
+            forceConnect,
+            isMobileOnlyInjectedProvider,
+            isDesktopNoInjectedProvider
+        })
     });
+
+    return web3Modal
+}
+
+const initWeb3 = async (forceConnect = false) => {
+    if (isWeb3Initialized()) return
+
+    const web3Modal = initWeb3Modal(forceConnect)
+
     if (web3Modal.cachedProvider || forceConnect) {
         if (web3Modal.cachedProvider === "walletconnect") {
             web3Modal.clearCachedProvider()
         }
         provider = await web3Modal.connect();
-        if (provider && provider.isMetaMask) {
-            web3Modal.setCachedProvider("injected")
+        if (provider) {
+            let providerID
+            if (provider.isMetaMask)
+                providerID = "custom-metamask"
+            if (provider.isCoinbaseWallet)
+                providerID = "coinbasewallet"
+
+            if (providerID)
+                web3Modal.setCachedProvider(providerID)
         }
         provider.on("accountsChanged", async (accounts) => {
             if (accounts.length === 0) {
@@ -144,12 +260,6 @@ export const switchNetwork = async (chainID) => {
 export const connectWallet = async () => {
     console.log("Connecting Wallet")
     await initWeb3(true);
-    // if (isMobile()) {
-    //     const link = window.location.href
-    //         .replace("https://", "")
-    //         .replace("www.", "");
-    //     window.open(`https://metamask.app.link/dapp/${link}`);
-    // }
     await updateWalletStatus();
     console.log("Connected Wallet");
 }
