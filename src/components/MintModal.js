@@ -3,7 +3,7 @@ import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, 
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { PaymentModalStep } from './PaymentModalStep';
-import { getBaseURL } from '../constants';
+import { isMobile } from "../utils";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -60,14 +60,13 @@ export const MintModal = (props, ref) => {
                     alignItems: "center",
                     width: 300,
                     height: 300,
-                    maxWidth: "50vw"
                 }}>
                     {txHash ? <CircularProgress /> : <span style={{
                         fontSize: 60,
                         lineHeight: 1,
                         margin: 0
                     }}>
-                        👋
+                        👀
                     </span>}
                     <Typography sx={{mt: 3}} variant="subtitle1">{
                         txHash
@@ -76,9 +75,14 @@ export const MintModal = (props, ref) => {
                     }</Typography>
                     {!txHash && <Typography sx={{
                         mt: 1,
+                        pl: 3,
+                        pr: 3,
                         color: "#757575",
                         textAlign: "center"
-                    }} variant="subtitle2">Wait until transaction window appears.<br/>If you don't see the Confirm button, scroll down ⬇️</Typography>}
+                    }} variant="subtitle2">
+                        Wait up to 2-3 sec until the transaction appears in your wallet
+                        <br/><br/>
+                        {!isMobile() && "If you don't see the Confirm button, scroll down ⬇️"}</Typography>}
                 </Box>
             }
             {!isLoading && <>

@@ -1,7 +1,7 @@
 import { getMaxSupply, getMintedNumber, mint } from "./web3.js";
 import { parseTxError } from "../utils.js";
-import {showAlert} from "../index.js";
-import {showMintModal} from "../components/MintModal";
+import { showAlert } from "../index.js";
+import { showMintModal } from "../components/MintModal";
 import { getWalletAddressOrConnect } from '../wallet';
 
 export const updateMintButton = () => {
@@ -17,9 +17,14 @@ export const updateMintButton = () => {
             mintButton.onclick = async () => {
                 const initialBtnText = mintButton.textContent;
                 setButtonText(mintButton, "Loading...")
-                const quantity = getMintQuantity();
-                await getWalletAddressOrConnect(true)
-                showMintModal(quantity);
+                try {
+                    const quantity = getMintQuantity();
+                    await getWalletAddressOrConnect(true)
+                    showMintModal(quantity);
+                } catch (e) {
+                    console.log("Error on pressing mint")
+                    console.error(e)
+                }
                 setButtonText(mintButton, initialBtnText)
             }
         })

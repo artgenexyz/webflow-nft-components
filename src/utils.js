@@ -29,3 +29,10 @@ export const parseTxError = (error) => {
 export const formatValue = (v) => v.toLocaleString('fullwide', {
     useGrouping: false
 });
+
+// TODO: remove this when migrated to @buildship/web3-login or forked Web3Modal
+// Puts "custom-metamask" provider as the first option
+export const dirtyFixConnectWalletUI = () => {
+    const web3ModalElem = document.querySelector(".web3modal-modal-card")
+    web3ModalElem.insertBefore(web3ModalElem.lastChild, web3ModalElem.firstChild)
+}
