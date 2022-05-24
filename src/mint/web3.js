@@ -28,7 +28,7 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
         return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
     }
     console.log("Using hardcoded mint method detection")
-    const methodNameVariants = ['mint', 'publicMint']
+    const methodNameVariants = ['mint', 'publicMint', 'mintNFTs']
     const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
     if (!name) {
         alert("Buildship widget doesn't know how to mint from your contract. Contact https://buildship.xyz in Discord to resolve this.")
