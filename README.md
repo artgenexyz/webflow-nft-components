@@ -160,6 +160,20 @@ Here's a list of all available parameters for customization. If you need help wi
 </script>
 ```
 
+### Do you collect any data?
+Anonymous data collected using Amplitude, so we can know how many users the widget has. The only thing we collect is website URL.
+If you want to opt out, set 
+
+```html
+<script>
+...
+DEFAULTS = { 
+   analyticsOptOut: true
+}
+...
+</script>
+```
+
 If that instruction was too complicated, check out our [free clonable NFT website templates for Webflow](https://webflow.com/theshadeth)
 
 
@@ -195,3 +209,4 @@ yarn start
 Push changes, open a PR in our repo, and you'll be able to test your changes immediately on `nftcomponents-git-your-branch-name.vercel.app`.
 
 Leave a message in our [Discord](http://discord.gg/dRg2tGqfhE) to discuss & review your PR faster!
+
