@@ -27,7 +27,9 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
    CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    IS_TESTNET = false
    MAX_PER_MINT = 20
-   // place to put CONTRACT_ABI = [{...}]
+   // if your contract is NOT VERIFIED on Etherscan
+   // put here: CONTRACT_ABI = [{...}]
+   // don't do anything if unsure
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
@@ -69,29 +71,6 @@ If you can't set an ID, you can set a button URL as `mint-button` or `https://<y
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
-```
-
-### Available parameters
-```html
-<script>
-   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
-   CONTRACT_ABI = []
-   NETWORK_ID = 4                      // defaults to 1: Ethereum network
-   IS_TESTNET = true                   // true defaults to 4: Rinkeby network
-   MAX_PER_MINT = 5                    // max value of NFT quantity slider in the modal, default is 20
-   DEFAULTS = {
-      labels: {
-          walletConnected: "Wallet connected", // label for wallet connected button
-      },
-      hideCounter: false,              // hide minted counter from the dialog. Default: true
-      contractMethods: {
-         mint: 'myCustomMintMethod'    // defaults to "mint" or "publicMint"
-      }
-   }
-   STYLES: {
-      theme: 'dark'                    // Default: ''
-   }
-</script>
 ```
 
 ## FAQ
@@ -148,32 +127,64 @@ You need to set `DEFAULTS.hideCounter` to `true`
 <link ...>
 ```
 
+### What's all available customization?
+Here's a list of all available parameters for customization. If you need help with this, message us in Discord
+```html
+<script>
+   CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
+   CONTRACT_ABI = []                   // needed for non-verified contracts only
+   NETWORK_ID = 4                      // defaults to 1: Ethereum network
+   IS_TESTNET = true                   // true defaults to 4: Rinkeby network
+   MAX_PER_MINT = 5                    // max value of NFT quantity slider in the modal, default is 20
+   DEFAULTS = {
+      labels: {
+          walletConnected: "Wallet connected", // label for wallet connected button
+      },
+      hideCounter: false,              // hide minted counter from the dialog. Default: true
+      contractMethods: {
+         mint: "myCustomMintMethod"    // defaults to "mint" or "publicMint"
+      },
+      publicMint: {
+          price: 0.1                    // defaults to none, fetched automatically from smart-contract
+      }
+   }
+   STYLES = {
+      theme: "light",
+      backgroundColor: "#ffffff",
+      primaryColor: "#2986CC",
+      primaryTextColor: "#1f1f1f",
+      secondaryTextColor: "#9e9e9e",
+      buttonTextColor: "#ffffff",
+      corners: "rounded"
+   }
+</script>
+```
 
 If that instruction was too complicated, check out our [free clonable NFT website templates for Webflow](https://webflow.com/theshadeth)
 
 
 ## Roadmap
-- [ ] Fix issues with WalletConnect on mobile
-- [ ] Support for Coinbase Wallet
+- [-] Fix issues with WalletConnect on mobile
+- [-] Support for Coinbase Wallet
 - [ ] Native support for Ledger
 - [ ] Support for Magic Wallet
 - [ ] Support for gasless mints
 - [ ] Support for buying with credit card: MoonPay / CrossMint
 - [ ] Support for Via Cross-Chain widget
 - [ ] Support for token-gating
-- [ ] Better support for Wix
+- [ ] Better guide for Wix
 - [ ] "Disconnect wallet"
 - [ ] View wallet's NFTs via rainbow.me
 
 ## Contributing
 Fork the repo and clone it
 ```
-git clone ...
+git clone https://github.com/buildship-dev/webflow-nft-components.git
 ```
 
 Install dependencies with `yarn` (`node v14+` required)
 ```
-yarn i
+yarn install
 ```
 
 Start server on `localhost:3000`
