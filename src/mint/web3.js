@@ -135,6 +135,8 @@ export const mint = async (nTokens, ref, tier) => {
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
     const mintPrice = await getMintPrice(tier);
+    if (mintPrice === undefined)
+        return { tx: undefined }
 
     const txParams = {
         from: wallet,

@@ -4,7 +4,6 @@ import { getDefaultMaxTokensPerMint, getMaxSupply, getMaxTokensPerMint, getMinte
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
-import { getCurrentNetwork } from '../wallet';
 
 export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHash }) => {
     const [quantityValue, setQuantityValue] = useState(1)
@@ -29,19 +28,22 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
         }))
 
     const onSuccess = async () => {
-        if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
-            setStep(2)
-            return
-        }
+        // if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
+        //     setStep(2)
+        //     return
+        // }
 
         setIsLoading(true)
         const { tx } = await mint(quantityValue)
-        tx.on("transactionHash", (hash) => {
+        if (tx === undefined) {
+            setIsLoading(false)
+        }
+        tx?.on("transactionHash", (hash) => {
             setTxHash(hash)
-        }).on("confirmation", async () => {
+        })?.on("confirmation", async () => {
             setIsLoading(false)
             showAlert(`Successfully minted ${quantityValue} NFTs`, "success")
-        }).on("error", (e) => {
+        })?.on("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {

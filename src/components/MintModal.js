@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useState } from "react";
+import React, { useImperativeHandle, useState } from "react";
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
@@ -31,13 +31,6 @@ export const MintModal = (props, ref) => {
     const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1)
-
-    useEffect(() => {
-        // TODO: Remove this after merging to main
-        if (window.location.href.includes("ameegos.io")) {
-            setStep(2)
-        }
-    }, [])
 
     const handleClose = () => {
         setIsOpen(false);
