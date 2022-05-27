@@ -17,8 +17,9 @@ const sendAnonymousAnalytics = () => {
         amplitude.getInstance().init("e2aff4bf282355999267edb40276222a")
         amplitude.getInstance().setOptOut(window.DEFAULTS?.analyticsOptOut ?? false)
         amplitude.getInstance().logEvent("Opened minting website", {
-            "url": window.location.host
+            "url": window.location.host.replace('www.', '')
         })
+        amplitude.getInstance().setDomain(window.location.host.replace('www.', ''))
     } catch (e) {
         console.log("Error in sendAnonymousAnalytics()")
     }
