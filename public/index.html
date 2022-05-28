@@ -5,7 +5,7 @@
     <meta name="google-site-verification" content="Tnjp7Daj6b_E9C-oawRCXOL6DFI87tsfJPMhdrqiQeE" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <script>
-      CONTRACT_ADDRESS = "0xf344b75Bf38Ea6c5f80Af963Bb191c659Cf9c46d"
+      CONTRACT_ADDRESS = "0x236b9163bDccEA57be199f531CAFA8b0902929Fb"
       NETWORK_ID = 4
       // insert Buildship whitelist ID to enable "Join whitelist"
       JOIN_WHITELIST_ID = undefined
@@ -30,11 +30,18 @@
     <title>React App</title>
   </head>
   <body>
-    <button id="mint-whitelist">Mint whitelist</button>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <button id="mint-whitelist">Mint whitelist</button>
     <button id="join-whitelist">Join whitelist</button>
     <button id="mint-button">Mint</button>
+    <script>
+      if (!window.location.host.includes("localhost")) {
+        document.getElementById("mint-whitelist").style.display = "none";
+        document.getElementById("join-whitelist").style.display = "none";
+        document.getElementById("mint-button").style.display = "none";
+      }
+    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
