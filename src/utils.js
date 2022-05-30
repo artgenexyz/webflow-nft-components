@@ -34,5 +34,5 @@ export const formatValue = (v) => v.toLocaleString('fullwide', {
 // Puts "custom-metamask" provider as the first option
 export const dirtyFixConnectWalletUI = () => {
     const web3ModalElem = document.querySelector(".web3modal-modal-card")
-    web3ModalElem.insertBefore(web3ModalElem.lastChild, web3ModalElem.firstChild)
+    web3ModalElem?.insertBefore(web3ModalElem.lastChild, web3ModalElem.firstChild)
 }

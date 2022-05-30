@@ -61,11 +61,11 @@ export const updateMintByTierButtons = () => {
             const initialBtnText = element.textContent;
             const tierID = Number(element.getAttribute("tier"))
             const { tx } = await mint(1, getMintReferral(), tierID)
-            tx.on("confirmation", (r) => {
+            tx?.on("confirmation", (r) => {
                 setButtonText(element, initialBtnText);
                 console.log(r);
                 showAlert(`Successfully minted 1 NFTs`, "success")
-            }).on("error", (e) => {
+            })?.on("error", (e) => {
                 console.log(e)
                 setButtonText(element, initialBtnText);
                 const { code, message } = parseTxError(e);
