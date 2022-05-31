@@ -42,6 +42,9 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
 }
 
 const getMintPrice = async (tier) => {
+    if (ExtensionContract?.methods?.price)
+        return await ExtensionContract.methods.price().call()
+
     if (tier)
         return NFTContract.methods.getPrice(tier).call()
 
@@ -88,8 +91,9 @@ export const getMintedNumber = async () => {
 export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
-    if (ExtensionContract?.methods?.maxSupply)
-        return await ExtensionContract.methods.maxSupply().call()
+    // TODO: decide if this is needed or not
+    // if (ExtensionContract?.methods?.maxSupply)
+    //     return await ExtensionContract.methods.maxSupply().call()
     if (NFTContract.methods.maxSupply)
         return await NFTContract.methods.maxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
