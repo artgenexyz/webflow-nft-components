@@ -22,6 +22,7 @@ export const updateMintButton = () => {
                 } catch (e) {
                     console.log("Error on pressing mint")
                     console.error(e)
+                    alert(`Error on mint: ${e}`)
                 }
                 setButtonText(mintButton, initialBtnText)
             }
