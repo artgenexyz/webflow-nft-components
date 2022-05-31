@@ -73,7 +73,8 @@ const getWeb3ModalProviderOptions = ({
                 if (mobileNotInjectedProvider && forceConnect) {
                     const link = window.location.href
                         .replace("https://", "")
-                        .replace("www.", "");
+                        // TODO: add "www." ?
+                        // .replace("www.", "");
                     window.open(`https://metamask.app.link/dapp/${link}`);
                     return undefined
                 }
