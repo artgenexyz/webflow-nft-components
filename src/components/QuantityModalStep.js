@@ -39,23 +39,26 @@ export const QuantityModalStep = ({
         }))
 
     const onSuccess = async () => {
-        if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
-            setStep(2)
-            return
-        }
+        // if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
+        //     setStep(2)
+        //     return
+        // }
 
         sendEvent(window.analytics, 'public-sale-mint-button-click', {})
 
         setIsLoading(true)
         const { tx } = await mintWithLaunchType(quantityValue)
-        tx.on("transactionHash", (hash) => {
+        if (tx === undefined) {
+            setIsLoading(false)
+        }
+        tx?.on("transactionHash", (hash) => {
             setTxHash(hash)
-        }).on("confirmation", async () => {
+        })?.on("confirmation", async () => {
             setIsLoading(false)
             showAlert(`Successfully minted ${quantityValue} NFTs`, "success")
 
             sendEvent(window.analytics, `${launchType}-mint-success`, {})
-        }).on("error", (e) => {
+        })?.on("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {

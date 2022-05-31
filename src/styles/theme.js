@@ -5,6 +5,7 @@ const defaultStyles = {
     primaryColor: "#2986CC",
     primaryTextColor: "#1f1f1f",
     secondaryTextColor: "#9e9e9e",
+    hintBackgroundColor: "#9e9e9e",
     buttonTextColor: "#ffffff",
     theme: "light",
     corners: "rounded"
@@ -16,6 +17,7 @@ const darkDefaultStyles = {
     primaryColor: "#2986CC",
     primaryTextColor: "#ffffff",
     secondaryTextColor: "#9e9e9e",
+    hintBackgroundColor: "#9e9e9e",
     buttonTextColor: "#ffffff",
     theme: "dark",
     corners: "rounded"
@@ -37,6 +39,7 @@ const {
     primaryColor,
     primaryTextColor,
     secondaryTextColor,
+    hintBackgroundColor,
     buttonTextColor,
     backgroundColor,
     buttonRadius,
@@ -96,7 +99,7 @@ export const theme = createTheme({
             styleOverrides: {
                 valueLabel: {
                     color: buttonTextColor,
-                    backgroundColor: secondaryTextColor
+                    backgroundColor: hintBackgroundColor
                 }
             }
         }

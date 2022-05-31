@@ -1,7 +1,4 @@
-import { getMaxSupply, getMintedNumber, mint } from "./web3.js";
-import { parseTxError } from "../utils.js";
-import { sendEvent } from '../analytics';
-import { showAlert } from "../index.js";
+import { getMaxSupply, getMintedNumber } from "./web3.js";
 import { showMintModal } from "../components/MintModal";
 import { getWalletAddressOrConnect } from '../wallet';
 
@@ -52,50 +49,9 @@ export const updateMintedCounter = async () => {
     }
 }
 
-export const updateMintByTierButtons = () => {
-    const tierButtons = document.querySelectorAll('[tier]')
-    if (!tierButtons.length)
-        return
-    tierButtons.forEach((element) => {
-        element.setAttribute('href', '#');
-        element.onclick = async () => {
-            const initialBtnText = element.textContent;
-            const tierID = Number(element.getAttribute("tier"))
-
-            sendEvent(window.analytics, 'public-sale-mint-button-click', { tier: tierID })
-
-            const { tx } = await mint(1, getMintReferral(), tierID)
-            tx.on("confirmation", (r) => {
-                setButtonText(element, initialBtnText);
-                console.log(r);
-                showAlert(`Successfully minted 1 NFTs`, "success")
-
-                sendEvent(window.analytics, 'public-sale-mint-success', { tier: tierID })
-
-            }).on("error", (e) => {
-                console.log(e)
-                setButtonText(element, initialBtnText);
-                const { code, message } = parseTxError(e);
-                if (code !== 4001) {
-                    showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
-
-                    sendEvent(window.analytics, 'public-sale-mint-error', { error: message })
-                } else {
-                    sendEvent(window.analytics, 'public-sale-mint-rejected', { error: message })
-                }
-            })
-        }
-    })
-}
-
 const getMintQuantity = () => {
     const quantity = document.querySelector('#quantity-select')?.value
     return quantity !== '' && quantity !== undefined ? Number(quantity) : undefined;
-}
-
-const getMintReferral = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    return searchParams.get("ref");
 }
 
 export const setButtonText = (btn, text) => {

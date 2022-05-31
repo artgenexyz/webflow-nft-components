@@ -25,11 +25,11 @@ export const PaymentModalStep = ({ quantity }) => {
             sendEvent(window.analytics, 'public-sale-mint-button-click', {})
 
             const { tx } = await mint(quantity ?? 1)
-            tx.on("confirmation", (r) => {
+            tx?.on("confirmation", (r) => {
                 showAlert(`Successfully minted ${1} NFTs`, "success")
 
                 sendEvent(window.analytics, 'public-sale-mint-success', {})
-            }).on("error", (e) => {
+            })?.on("error", (e) => {
                 const { code, message } = parseTxError(e);
                 if (code !== 4001) {
                     showAlert(`Minting error: ${message}. Please try again or contact us`, "error");

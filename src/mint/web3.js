@@ -1,6 +1,6 @@
-import {getWalletAddressOrConnect, web3} from "../wallet.js";
+import { getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
-import {NFTContract, ExtensionContract} from "../contract.js"
+import { NFTContract, ExtensionContract } from "../contract.js"
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -19,7 +19,7 @@ const getCustomMintTx = (numberOfTokens) => {
     return undefined
 }
 
-const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
+const getMintTx = ({ numberOfTokens }) => {
     if (ExtensionContract) {
         return ExtensionContract.methods.mint(numberOfTokens);
     }
@@ -28,11 +28,8 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     if (customMintTx)
         return customMintTx
 
-    if (tier !== undefined) {
-        return NFTContract.methods.mint(tier, numberOfTokens, ref ?? wallet);
-    }
     console.log("Using hardcoded mint method detection")
-    const methodNameVariants = ['mint', 'publicMint']
+    const methodNameVariants = ['mint', 'publicMint', 'mintNFTs', 'mintPublic']
     const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
     if (!name) {
         alert("Buildship widget doesn't know how to mint from your contract. Contact https://buildship.xyz in Discord to resolve this.")
@@ -41,12 +38,24 @@ const getMintTx = ({ numberOfTokens, ref, tier, wallet }) => {
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
-const getMintPrice = async (tier) => {
+const getDefaultMintPrice = () => {
+    // for contracts without exported price variable or method
+    const defaultPrice = window.DEFAULTS?.publicMint?.price
+    if (defaultPrice) {
+        const priceNumber = typeof defaultPrice === "string" ? Number(defaultPrice) : defaultPrice
+        if (isNaN(priceNumber)) {
+            alert("Wrong publicMintPrice format, should be a number in ETH (or native token)")
+            return undefined
+        }
+        console.warn("Using DEFAULTS.publicMint.price as price not found in the smart-contract")
+        return (priceNumber * 1e18).toString()
+    }
+    return undefined
+}
+
+const getMintPrice = async () => {
     if (ExtensionContract?.methods?.price)
         return await ExtensionContract.methods.price().call()
-
-    if (tier)
-        return NFTContract.methods.getPrice(tier).call()
 
     const matches = Object.keys(NFTContract.methods).filter(key =>
         !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
@@ -58,15 +67,22 @@ const getMintPrice = async (tier) => {
             console.log("Using price method auto-detection")
             return NFTContract.methods[matches[0]]().call()
         case 0:
-            alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            return undefined
+            const defaultMintPrice = getDefaultMintPrice()
+            if (defaultMintPrice === undefined) {
+                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+            }
+            return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
             const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
             const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
             if (!name) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-                return undefined
+                const defaultMintPrice = getDefaultMintPrice()
+                console.log("defaultMintPrice", defaultMintPrice)
+                if (defaultMintPrice === undefined) {
+                    alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+                }
+                return defaultMintPrice
             }
             return NFTContract.methods[findMethodByName(name)]().call();
     }
@@ -122,16 +138,18 @@ export const getMaxTokensPerMint = async () => {
     return getDefaultMaxTokensPerMint()
 }
 
-export const mint = async (nTokens, ref, tier) => {
+export const mint = async (nTokens) => {
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
-    const mintPrice = await getMintPrice(tier);
+    const mintPrice = await getMintPrice();
+    if (mintPrice === undefined)
+        return { tx: undefined }
 
     const txParams = {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const estimatedGas = await getMintTx({ numberOfTokens, ref, tier, wallet })
+    const estimatedGas = await getMintTx({ numberOfTokens })
         .estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
@@ -147,7 +165,7 @@ export const mint = async (nTokens, ref, tier) => {
     const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas =  [1, 4].includes(chainID) ? 2e9 : undefined;
 
-    const tx = getMintTx({ numberOfTokens, ref, tier, wallet })
+    const tx = getMintTx({ numberOfTokens })
         .send({
             ...txParams,
             gasLimit: estimatedGas + 5000,
