@@ -19,11 +19,41 @@ const getCustomMintTx = (numberOfTokens) => {
     return undefined
 }
 
-const getMintTx = ({ numberOfTokens }) => {
-    if (ExtensionContract) {
-        return ExtensionContract.methods.mint(numberOfTokens);
+// TODO: use Moralis API to speed this up
+const checkIfExtensionSoldOut = async () => {
+    if (!ExtensionContract?.methods?.totalMinted || !ExtensionContract?.methods?.maxSupply) {
+        return undefined
     }
 
+    const extensionMinted = await ExtensionContract.methods.totalMinted().call()
+    // use cache if already fetched isSoldOut and nothing new was minted
+    const {
+        isSoldOut: isSoldOutCached,
+        extensionMinted: extensionMintedCached,
+        maxSupply: maxSupplyCached
+    } = window.CONTRACT?.extension?.values ?? {}
+    if (isSoldOutCached && extensionMinted === extensionMintedCached) {
+        return isSoldOutCached
+    }
+
+    const reservedLeft = await NFTContract.methods.reserved().call()
+    const extensionTotal = maxSupplyCached
+        ?? await ExtensionContract.methods.maxSupply().call()
+    const isSoldOut = Number(extensionMinted) + Number(reservedLeft) === Number(extensionTotal)
+    window.CONTRACT.extension.values = {
+        totalMinted: extensionMinted,
+        maxSupply: extensionTotal,
+        isSoldOut
+    }
+    console.log("is extension sold out", isSoldOut)
+    return isSoldOut
+}
+
+const getExtensionMintTx = async ({ numberOfTokens }) => {
+    return ExtensionContract.methods.mint(numberOfTokens);
+}
+
+const getPublicMintTx = ({ numberOfTokens }) => {
     const customMintTx = getCustomMintTx(numberOfTokens)
     if (customMintTx)
         return customMintTx
@@ -36,6 +66,16 @@ const getMintTx = ({ numberOfTokens }) => {
         return undefined
     }
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
+}
+
+const getMintTx = async ({ numberOfTokens }) => {
+    if (ExtensionContract) {
+        if (!await checkIfExtensionSoldOut()) {
+            return await getExtensionMintTx(numberOfTokens)
+        }
+    }
+
+    return getPublicMintTx({ numberOfTokens })
 }
 
 const getDefaultMintPrice = () => {
@@ -54,7 +94,7 @@ const getDefaultMintPrice = () => {
 }
 
 const getMintPrice = async () => {
-    if (ExtensionContract?.methods?.price)
+    if (ExtensionContract?.methods?.price && !await checkIfExtensionSoldOut())
         return await ExtensionContract.methods.price().call()
 
     const matches = Object.keys(NFTContract.methods).filter(key =>
@@ -67,11 +107,8 @@ const getMintPrice = async () => {
             console.log("Using price method auto-detection")
             return NFTContract.methods[matches[0]]().call()
         case 0:
-            const defaultMintPrice = getDefaultMintPrice()
-            if (defaultMintPrice === undefined) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            }
-            return defaultMintPrice
+            alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+            return undefined
         default:
             console.log("Using hardcoded price detection")
             const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
@@ -123,7 +160,7 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (ExtensionContract?.methods?.maxPerMint) {
+    if (ExtensionContract?.methods?.maxPerMint && !await checkIfExtensionSoldOut()) {
         return Number(await ExtensionContract.methods.maxPerMint().call())
     }
     if (NFTContract?.methods?.maxPerMint) {
@@ -149,8 +186,9 @@ export const mint = async (nTokens) => {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const estimatedGas = await getMintTx({ numberOfTokens })
-        .estimateGas(txParams).catch((e) => {
+    const txBase = await getMintTx({ numberOfTokens })
+    console.log("txbase", txBase, txParams)
+    const estimatedGas = await txBase.estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
                 return 100000 * numberOfTokens;
@@ -158,6 +196,10 @@ export const mint = async (nTokens) => {
             alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
         })
+    // TODO: build this
+    // if (!estimatedGas) {
+    //     return undefined
+    // }
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Rinkeby (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2e9);
@@ -165,7 +207,7 @@ export const mint = async (nTokens) => {
     const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas =  [1, 4].includes(chainID) ? 2e9 : undefined;
 
-    const tx = getMintTx({ numberOfTokens })
+    const tx = txBase
         .send({
             ...txParams,
             gasLimit: estimatedGas + 5000,
