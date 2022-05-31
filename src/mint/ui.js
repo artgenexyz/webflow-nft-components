@@ -1,6 +1,4 @@
-import { getMaxSupply, getMintedNumber, mint } from "./web3.js";
-import { parseTxError } from "../utils.js";
-import { showAlert } from "../index.js";
+import { getMaxSupply, getMintedNumber} from "./web3.js";
 import { showMintModal } from "../components/MintModal";
 import { getWalletAddressOrConnect } from '../wallet';
 
@@ -51,40 +49,9 @@ export const updateMintedCounter = async () => {
     }
 }
 
-export const updateMintByTierButtons = () => {
-    const tierButtons = document.querySelectorAll('[tier]')
-    if (!tierButtons.length)
-        return
-    tierButtons.forEach((element) => {
-        element.setAttribute('href', '#');
-        element.onclick = async () => {
-            const initialBtnText = element.textContent;
-            const tierID = Number(element.getAttribute("tier"))
-            const { tx } = await mint(1, getMintReferral(), tierID)
-            tx?.on("confirmation", (r) => {
-                setButtonText(element, initialBtnText);
-                console.log(r);
-                showAlert(`Successfully minted 1 NFTs`, "success")
-            })?.on("error", (e) => {
-                console.log(e)
-                setButtonText(element, initialBtnText);
-                const { code, message } = parseTxError(e);
-                if (code !== 4001) {
-                    showAlert(`Minting error: ${message}. Please try again or contact us`, "error");
-                }
-            })
-        }
-    })
-}
-
 const getMintQuantity = () => {
     const quantity = document.querySelector('#quantity-select')?.value
     return quantity !== '' && quantity !== undefined ? Number(quantity) : undefined;
-}
-
-const getMintReferral = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    return searchParams.get("ref");
 }
 
 const setButtonText = (btn, text) => {

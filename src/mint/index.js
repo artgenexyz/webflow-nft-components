@@ -1,4 +1,4 @@
-import { updateMintButton, updateMintByTierButtons, updateMintedCounter } from "./ui.js";
+import { updateMintButton, updateMintedCounter } from "./ui.js";
 import { updateConnectButton, updateWalletStatus } from "../wallet.js";
 import { setContracts } from "../contract.js";
 import { blacklist } from "./blacklist";
@@ -15,7 +15,6 @@ export const init = async () => {
     updateConnectButton();
     updateMintedCounter();
     updateMintButton();
-    updateMintByTierButtons();
 }
 
 init();
