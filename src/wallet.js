@@ -129,8 +129,7 @@ const getWeb3ModalProviderOptions = ({
     return !isMobileOnlyInjectedProvider ? allProviderOptions : {}
 }
 
-const initWeb3Modal = (forceConnect) => {
-    const isMobileOnlyInjectedProvider = isMobile() && window.ethereum
+const initWeb3Modal = (forceConnect, isMobileOnlyInjectedProvider) => {
     const isDesktopNoInjectedProvider =  !isMobile() && !window.ethereum
 
     const web3Modal = new Web3Modal({
@@ -151,19 +150,24 @@ const initWeb3Modal = (forceConnect) => {
 const initWeb3 = async (forceConnect = false) => {
     if (isWeb3Initialized()) return
 
-    const web3Modal = initWeb3Modal(forceConnect)
+    const isMobileOnlyInjectedProvider = isMobile() && window.ethereum
+    const web3Modal = initWeb3Modal(forceConnect, isMobileOnlyInjectedProvider)
 
     if (web3Modal.cachedProvider || forceConnect) {
         if (web3Modal.cachedProvider === "walletconnect") {
+            web3Modal.clearCachedProvider()
+        }
+        // this is for fixing a previous bug
+        if (isMobileOnlyInjectedProvider && web3Modal.cachedProvider !== "injected") {
             web3Modal.clearCachedProvider()
         }
         provider = await web3Modal.connect();
         if (provider) {
             let providerID
             if (provider.isMetaMask)
-                providerID = "custom-metamask"
+                providerID = isMobileOnlyInjectedProvider ? "injected" : "custom-metamask"
             if (provider.isCoinbaseWallet)
-                providerID = "coinbasewallet"
+                providerID = isMobileOnlyInjectedProvider ? "injected" : "coinbasewallet"
 
             if (providerID)
                 web3Modal.setCachedProvider(providerID)
@@ -259,7 +263,12 @@ export const switchNetwork = async (chainID) => {
 
 export const connectWallet = async () => {
     console.log("Connecting Wallet")
-    await initWeb3(true);
+    try {
+        await initWeb3(true);
+    } catch (e) {
+        alert(`Error in initWeb3 in connectWallet: ${e.toString()}`)
+        console.error(e)
+    }
     await updateWalletStatus();
     console.log("Connected Wallet");
 }
@@ -271,7 +280,12 @@ const getConnectButton = () => {
 }
 
 export const updateWalletStatus = async () => {
-    await initWeb3();
+    try {
+        await initWeb3();
+    } catch (e) {
+        alert(`Error in initWeb3: ${e.toString()}`)
+        console.error(e)
+    }
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
