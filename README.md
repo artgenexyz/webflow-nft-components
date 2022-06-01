@@ -39,6 +39,8 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
    ✅ insert your contract address in `CONTRACT_ADDRESS` field 
    
    ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Rinkeby Testnet`.
+
+   ✅ make sure it fits requirements from [Custom smart contract requirements](#custom-smart-contract-requirements)
    
 
 If you **don't have a contract**, [create it via Buildship app](https://app.buildship.xyz)
@@ -60,6 +62,17 @@ Select your button, then on the right side, set Button id to `mint-button`
 If you can't set an ID, you can set a button URL as `mint-button` or `https://<your-website-url>/#mint-button`
 
 7. You're done 🎉
+
+### Custom smart contract requirements
+
+If you are using Webflow widget with a contract not deployed via [https://app.buildship.xyz](https://app.buildship.xyz), it has to be:
+- verified on Etherscan
+- public `price` method outputting price in wei. It could be named `price`, `cost` or `getPrice`
+- public `mint` method accepting `nTokens` as parameter. Alternative names: `mint`, `mintNFT` or `publicMint`
+
+If your contract doesn't fit the requirements, you can fork this repo and open a PR. Vercel will automatically deploy and build your PR and you'll be able to use the changed version.
+
+Here's the file that handles `price` and `mint`: [src/mint/web3.js](src/mint/web3.js)
 
 
 ### Example for testing
