@@ -1,7 +1,7 @@
 {
   "name": "webflow-nft-components",
   "homepage": "https://buildship.xyz",
-  "repository": "github:buildship/webflow-nft-components",
+  "repository": "github:buildship-dev/webflow-nft-components",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
