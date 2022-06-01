@@ -128,7 +128,11 @@ export const getMaxTokensPerMint = async () => {
 export const mint = async (nTokens) => {
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
-    const mintPrice = await getMintPrice();
+    if (NFTContract.methods.FREE_MAX_SUPPLY < NFTContract.methods.totalSupply) {
+        const mintPrice = 0
+    }else{
+        const mintPrice = await getMintPrice(tier);
+    }
     if (mintPrice === undefined)
         return { tx: undefined }
 
