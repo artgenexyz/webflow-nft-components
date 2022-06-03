@@ -267,8 +267,11 @@ export const connectWallet = async () => {
     try {
         await initWeb3(true);
     } catch (e) {
-        alert(`Error in initWeb3 in connectWallet: ${e.toString()}`)
-        console.error(e)
+        if (!e.includes("Modal closed by user")) {
+            alert(`Error in initWeb3 in connectWallet: ${e.toString()}`)
+            console.error(e)
+        }
+        return
     }
     await updateWalletStatus();
     console.log("Connected Wallet");
@@ -284,8 +287,11 @@ export const updateWalletStatus = async () => {
     try {
         await initWeb3();
     } catch (e) {
-        alert(`Error in initWeb3: ${e.toString()}`)
-        console.error(e)
+        if (!e.includes("Modal closed by user")) {
+            alert(`Error in initWeb3: ${e.toString()}`)
+            console.error(e)
+        }
+        return
     }
     const connected = await isWalletConnected();
     const button = getConnectButton();
