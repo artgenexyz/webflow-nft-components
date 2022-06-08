@@ -100,10 +100,10 @@ export const getMintedNumber = async () => {
 export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
-    if (NFTContract.methods.maxSupply)
+    if (NFTContract.methods.COLLECTION_SIZE)
         return await NFTContract.methods.COLLECTION_SIZE().call()
-    if (NFTContract.methods.MAX_SUPPLY)
-        return await NFTContract.methods.MAX_SUPPLY().call()
+    if (NFTContract.methods.COLLECTION_SIZE)
+        return await NFTContract.methods.COLLECTION_SIZE().call()
     alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.xyz to resolve this.")
     return undefined
 }
