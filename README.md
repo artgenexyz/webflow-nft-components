@@ -1,6 +1,9 @@
 # Webflow NFT widgets
 
 Connect web3 to Webflow without coding skills required.
+
+> [Donate on Gitcoin](https://gitcoin.co/grants/5779/buildship) if you like this mint button widget ❤️‍🔥
+
 ## Lazy mint on Webflow
 
 <img src="public/images/screenshot.png" width="300" />
