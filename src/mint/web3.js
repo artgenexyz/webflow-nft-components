@@ -51,7 +51,7 @@ const getDefaultMintPrice = () => {
 
 const getMintPrice = async () => {
     const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
+        !key.includes("()") && (key.toLowerCase().includes('publicCost') || key.toLowerCase().includes('cost'))
     )
     switch (matches.length) {
         // Use auto-detection only when sure
