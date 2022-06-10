@@ -40,10 +40,12 @@ const checkIfExtensionSoldOut = async () => {
     const extensionTotal = maxSupplyCached
         ?? await ExtensionContract.methods.maxSupply().call()
     const isSoldOut = Number(extensionMinted) + Number(reservedLeft) === Number(extensionTotal)
-    window.CONTRACT.extension.values = {
-        totalMinted: extensionMinted,
-        maxSupply: extensionTotal,
-        isSoldOut
+    if (window.CONTRACT.extension) {
+        window.CONTRACT.extension.values = {
+            totalMinted: extensionMinted,
+            maxSupply: extensionTotal,
+            isSoldOut
+        }
     }
     console.log("is extension sold out", isSoldOut)
     return isSoldOut
@@ -71,7 +73,7 @@ const getPublicMintTx = ({ numberOfTokens }) => {
 const getMintTx = async ({ numberOfTokens }) => {
     if (ExtensionContract) {
         if (!await checkIfExtensionSoldOut()) {
-            return await getExtensionMintTx(numberOfTokens)
+            return await getExtensionMintTx({ numberOfTokens })
         }
     }
 
