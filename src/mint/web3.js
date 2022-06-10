@@ -36,9 +36,15 @@ const checkIfExtensionSoldOut = async () => {
         return isSoldOutCached
     }
 
-    const reservedLeft = await NFTContract.methods.reserved().call()
+    let reservedLeft
+    try {
+        reservedLeft = await NFTContract.methods.reserved().call()
+    } catch (e) {
+        reservedLeft = 0
+    }
+
     const extensionTotal = maxSupplyCached
-        ?? await ExtensionContract.methods.maxSupply().call()
+        ?? await ExtensionContract.methods.extensionSupply().call()
     const isSoldOut = Number(extensionMinted) + Number(reservedLeft) === Number(extensionTotal)
     if (window.CONTRACT.extension) {
         window.CONTRACT.extension.values = {
@@ -195,7 +201,7 @@ export const mint = async (nTokens) => {
             if (code === -32000) {
                 return 100000 * numberOfTokens;
             }
-            alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
+            alert(`${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
         })
     // TODO: build this
