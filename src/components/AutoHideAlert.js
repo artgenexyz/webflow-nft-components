@@ -14,7 +14,7 @@ const AutoHideAlert = (props, ref) => {
     return (
         <Snackbar
             open={isOpen}
-            autoHideDuration={10000}
+            autoHideDuration={3000}
             onClose={(event, reason) => {
                 if (reason === 'clickaway') {
                     return;

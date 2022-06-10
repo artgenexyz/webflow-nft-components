@@ -10,14 +10,30 @@ export const objectMap = (object, mapFn) => {
 
 export const normalizeURL = (u) => ((new URL(u).host).replace('www.', ''))
 
+export const parseErrorCode = (error) => {
+    try {
+        return error.code ?? JSON.parse(`{${error.message.split("{")[1]}`).code
+    } catch (e) {
+        console.log("Failed to parse error code")
+        console.log("Parse error:", e)
+        return undefined
+    }
+}
+
+export const parseErrorMessage = (error) => {
+    return error.message.split("{")[0].trim().replace("execution reverted: ", "")
+}
+
 export const parseTxError = (error) => {
     try {
+        console.log(error.message)
         return {
-            code: error.code ?? JSON.parse(`{${error.message.split("{")[1]}`).code,
-            message: error.message.split("{")[0].trim()
+            code: parseErrorCode(error),
+            message: parseErrorMessage(error)
         };
     } catch (parse_error) {
-        console.log("Failed to parse error code and message")
+        console.log("Failed to parse message")
+        console.log("Parse error:", parse_error)
         console.log("Original error:", error)
         return {
             code: undefined, message: error?.toString()

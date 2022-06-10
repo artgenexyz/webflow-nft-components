@@ -203,11 +203,11 @@ export const mint = async (nTokens) => {
             }
             alert(`${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
+            return null
         })
-    // TODO: build this
-    // if (!estimatedGas) {
-    //     return undefined
-    // }
+    if (estimatedGas === null) {
+        return { tx: undefined }
+    }
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Rinkeby (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2e9);
