@@ -21,7 +21,10 @@ const getCustomMintTx = (numberOfTokens) => {
 
 // TODO: use Moralis API to speed this up
 const checkIfExtensionSoldOut = async () => {
-    if (!ExtensionContract?.methods?.totalMinted || !ExtensionContract?.methods?.maxSupply) {
+    // use extensionSupply() method, if it's not there the method is either called maxSupply, or extension supply is unlimited
+    const extensionSupplyMethod = ExtensionContract?.methods?.extensionSupply
+        ?? ExtensionContract?.methods?.maxSupply
+    if (!ExtensionContract?.methods?.totalMinted || !extensionSupplyMethod) {
         return undefined
     }
 
@@ -44,7 +47,7 @@ const checkIfExtensionSoldOut = async () => {
     }
 
     const extensionTotal = maxSupplyCached
-        ?? await ExtensionContract.methods.extensionSupply().call()
+        ?? await extensionSupplyMethod().call()
     const isSoldOut = Number(extensionMinted) + Number(reservedLeft) === Number(extensionTotal)
     if (window.CONTRACT.extension) {
         window.CONTRACT.extension.values = {
