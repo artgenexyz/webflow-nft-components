@@ -202,7 +202,9 @@ export const mint = async (nTokens) => {
     const estimatedGas = await txBase.estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
-                return 100000 * numberOfTokens;
+                // TODO: support default gasLimit estimation for non-ERC721A contracts
+                return 100000
+                // return 100000 * numberOfTokens;
             }
             alert(`${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
