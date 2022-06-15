@@ -17,8 +17,10 @@ export const updateMintButton = () => {
                 setButtonText(mintButton, "Loading...")
                 try {
                     const quantity = getMintQuantity();
-                    await getWalletAddressOrConnect(true)
-                    showMintModal(quantity);
+                    const address = await getWalletAddressOrConnect(true)
+                    if (address) {
+                        showMintModal(quantity);
+                    }
                 } catch (e) {
                     console.log("Error on pressing mint")
                     console.error(e)
