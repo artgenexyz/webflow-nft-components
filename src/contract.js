@@ -45,13 +45,13 @@ export const fetchABI = async (address, chainID) => {
     if (cachedABI)
         return cachedABI
 
-    const abi = await fetch(`https://metadata.buildship.dev/api/info/${address}?network_id=${chainID}`)
+    const abi = await fetch(`https://metadata.buildship.xyz/api/info/${address}?network_id=${chainID}`)
         .then(r => r.json())
         .then(r => r.abi)
         .catch(e => null)
 
     if (!abi) {
-        console.log("No ABI returned from https://metadata.buildship.dev")
+        console.log("No ABI returned from https://metadata.buildship.xyz")
         const savedMainABI = getSavedMainABI(address)
         if (!savedMainABI) {
             alert(`Error: no ABI loaded for ${address}. Please contact support`)
