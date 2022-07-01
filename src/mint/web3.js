@@ -50,11 +50,35 @@ const getDefaultMintPrice = () => {
 }
 
 const getMintPrice = async () => {
-       const prices = await NFTContract.methods.versionParams(1).call();
-
-    console.log('prices', prices)
-
-    return prices.prices.friends;
+    const matches = Object.keys(NFTContract.methods).filter(key =>
+        !key.includes("()") && (key.toLowerCase().includes('publicCost') || key.toLowerCase().includes('cost'))
+    )
+    switch (matches.length) {
+        // Use auto-detection only when sure
+        // Otherwise this code might accidentally use presale price instead of public minting price
+        case 1:
+            console.log("Using price method auto-detection")
+            return NFTContract.methods[matches[0]]().call()
+        case 0:
+            const defaultMintPrice = getDefaultMintPrice()
+            if (defaultMintPrice === undefined) {
+                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+            }
+            return defaultMintPrice
+        default:
+            console.log("Using hardcoded price detection")
+            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
+            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
+            if (!name) {
+                const defaultMintPrice = getDefaultMintPrice()
+                console.log("defaultMintPrice", defaultMintPrice)
+                if (defaultMintPrice === undefined) {
+                    alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+                }
+                return defaultMintPrice
+            }
+            return NFTContract.methods[findMethodByName(name)]().call();
+    }
 }
 
 export const getMintedNumber = async () => {
