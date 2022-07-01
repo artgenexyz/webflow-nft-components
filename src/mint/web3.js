@@ -34,52 +34,7 @@ const getMintTx = ({ numberOfTokens }) => {
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
-const getDefaultMintPrice = () => {
-    // for contracts without exported price variable or method
-    const defaultPrice = window.DEFAULTS?.publicMint?.price
-    if (defaultPrice) {
-        const priceNumber = typeof defaultPrice === "string" ? Number(defaultPrice) : defaultPrice
-        if (isNaN(priceNumber)) {
-            alert("Wrong publicMintPrice format, should be a number in ETH (or native token)")
-            return undefined
-        }
-        console.warn("Using DEFAULTS.publicMint.price as price not found in the smart-contract")
-        return (priceNumber * 1e18).toString()
-    }
-    return undefined
-}
 
-const getMintPrice = async () => {
-    const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
-    )
-    switch (matches.length) {
-        // Use auto-detection only when sure
-        // Otherwise this code might accidentally use presale price instead of public minting price
-        case 1:
-            console.log("Using price method auto-detection")
-            return NFTContract.methods[matches[0]]().call()
-        case 0:
-            const defaultMintPrice = getDefaultMintPrice()
-            if (defaultMintPrice === undefined) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            }
-            return defaultMintPrice
-        default:
-            console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'mintCompliance', 'getPrice']
-            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
-            if (!name) {
-                const defaultMintPrice = getDefaultMintPrice()
-                console.log("defaultMintPrice", defaultMintPrice)
-                if (defaultMintPrice === undefined) {
-                    alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-                }
-                return defaultMintPrice
-            }
-            return NFTContract.methods[findMethodByName(name)]().call();
-    }
-}
 
 export const getMintedNumber = async () => {
     if (!NFTContract)
