@@ -25,7 +25,7 @@ const getMintTx = ({ numberOfTokens }) => {
         return customMintTx
 
     console.log("Using hardcoded mint method detection")
-    const methodNameVariants = ['mint', 'publicMint', 'mintNFTs', 'mintPublic', 'mintSale']
+    const methodNameVariants = ['mint', 'publicMint', 'mintNFTs', 'mintPublic', 'mintSale', 'mintNicMeta']
     const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
     if (!name) {
         alert("Buildship widget doesn't know how to mint from your contract. Contact https://buildship.xyz in Discord to resolve this.")
@@ -67,7 +67,7 @@ const getMintPrice = async () => {
             return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
+            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice', 'mintPrice']
             const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
             if (!name) {
                 const defaultMintPrice = getDefaultMintPrice()
@@ -113,8 +113,8 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (NFTContract?.methods?.maxPerMint) {
-        return Number(await NFTContract.methods.maxPerMint().call())
+    if (NFTContract?.methods?.maxMint) {
+        return Number(await NFTContract.methods.maxMint().call())
     }
     if (NFTContract?.methods?.maxMintAmount) {
         return Number(await NFTContract.methods.maxMintAmount().call())
