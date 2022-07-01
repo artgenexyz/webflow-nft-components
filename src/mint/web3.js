@@ -101,7 +101,7 @@ export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
     if (NFTContract.methods.maxSupply)
-        return await NFTContract.methods.maxSupply().call()
+        return await NFTContract.methods.currentMaxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
         return await NFTContract.methods.MAX_SUPPLY().call()
     alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.xyz to resolve this.")
