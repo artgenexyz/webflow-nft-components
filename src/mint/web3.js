@@ -67,7 +67,7 @@ const getMintPrice = async () => {
             return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
+            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'mintCompliance', 'getPrice']
             const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
             if (!name) {
                 const defaultMintPrice = getDefaultMintPrice()
