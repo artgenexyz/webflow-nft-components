@@ -49,37 +49,6 @@ const getDefaultMintPrice = () => {
     return undefined
 }
 
-const getMintPrice = async () => {
-    const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
-    )
-    switch (matches.length) {
-        // Use auto-detection only when sure
-        // Otherwise this code might accidentally use presale price instead of public minting price
-        case 1:
-            console.log("Using price method auto-detection")
-            return NFTContract.methods[matches[0]]().call()
-        case 0:
-            const defaultMintPrice = getDefaultMintPrice()
-            if (defaultMintPrice === undefined) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            }
-            return defaultMintPrice
-        default:
-            console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
-            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
-            if (!name) {
-                const defaultMintPrice = getDefaultMintPrice()
-                console.log("defaultMintPrice", defaultMintPrice)
-                if (defaultMintPrice === undefined) {
-                    alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-                }
-                return defaultMintPrice
-            }
-            return NFTContract.methods[findMethodByName(name)]().call();
-    }
-}
 
 export const getMintedNumber = async () => {
     if (!NFTContract)
@@ -100,8 +69,8 @@ export const getMintedNumber = async () => {
 export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
-    if (NFTContract.methods.maxSupply)
-        return await NFTContract.methods.maxSupply().call()
+    if (NFTContract.methods.currentMaxSupply)
+        return await NFTContract.methods.currentMaxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)
         return await NFTContract.methods.MAX_SUPPLY().call()
     alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.xyz to resolve this.")
