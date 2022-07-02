@@ -67,7 +67,7 @@ const getMintPrice = async () => {
             return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice', 'token.balanceOf', 'cycv2Address', 'require', '800000', 'ownerAmount']
+            const methodNameVariants = ['price', 'cost', 'getPrice', 'token.balanceOf', 'cycv2Address', 'require', '800000', 'ownerAmount']
             const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
             if (!name) {
                 const defaultMintPrice = getDefaultMintPrice()
@@ -79,6 +79,7 @@ const getMintPrice = async () => {
             }
             return NFTContract.methods[findMethodByName(name)]().call();
     }
+}
 
 export const getMintedNumber = async () => {
     if (!NFTContract)
