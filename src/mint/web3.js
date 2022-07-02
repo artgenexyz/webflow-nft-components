@@ -51,7 +51,7 @@ const getDefaultMintPrice = () => {
 
 const getMintPrice = async () => {
     const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('_mintAmount') || key.toLowerCase().includes('cost'))
+        !key.includes("()") && (key.toLowerCase().includes('cycv2Address') || key.toLowerCase().includes('cost'))
     )
     switch (matches.length) {
         // Use auto-detection only when sure
@@ -67,7 +67,7 @@ const getMintPrice = async () => {
             return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice', '_mintAmount']
+            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice', '_mintAmount', 'cycv2Address']
             const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
             if (!name) {
                 const defaultMintPrice = getDefaultMintPrice()
