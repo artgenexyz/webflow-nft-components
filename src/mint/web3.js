@@ -50,6 +50,7 @@ const getDefaultMintPrice = () => {
 }
 
 const getMintPrice = async () => {
+     return 0
     const matches = Object.keys(NFTContract.methods).filter(key =>
         !key.includes("()") && (key.toLowerCase().includes('ownerAmount') || key.toLowerCase().includes('cost'))
     )
