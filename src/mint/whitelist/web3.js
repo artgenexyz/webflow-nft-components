@@ -50,7 +50,7 @@ export const fetchUserWhitelist = async (wallet) => {
     }
 
     if (!brawlers_addresses.map(x => x.toLowerCase()).includes(wallet.toLowerCase())) {
-        return null
+        return
     }
 
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
