@@ -2,7 +2,7 @@ import { formatValue } from '../../utils';
 import { getWalletAddressOrConnect, web3 } from '../../wallet';
 import { fetchABI, getConfigChainID } from '../../contract';
 import { buildTx } from '../../tx';
-import { getFindWhitelistURL } from './constants';
+import { getFindWhitelistURL, getFindWhitelistURLbyNFT } from './constants';
 import { sendEvent } from '../../analytics';
 import { getDefaultMaxTokensPerMint } from '../web3';
 
