@@ -6,7 +6,7 @@ import { getFindWhitelistURL } from './constants';
 import { sendEvent } from '../../analytics';
 import { getDefaultMaxTokensPerMint } from '../web3';
 
-import brawlers_addresses from './brawlers.json';
+// import brawlers_addresses from './brawlers.json';
 
 let whitelistCache = {}
 let presaleContract
@@ -49,12 +49,22 @@ export const fetchUserWhitelist = async (wallet) => {
         return whitelistCache[wallet]
     }
 
-    if (!brawlers_addresses.map(x => x.toLowerCase()).includes(wallet.toLowerCase())) {
-        return
-    }
+    // if (!brawlers_addresses.map(x => x.toLowerCase()).includes(wallet.toLowerCase())) {
+    //     return
+    // }
 
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
+
+    const nft_r = await fetch(getFindWhitelistURLbyNFT(contractAddress))
+    const nft_info = await nft_r.json()
+
+    if (!nft_info.airdrops
+            .filter(a => a.whitelist.map(x => x.toLowerCase())
+            .includes(wallet.toLowerCase())
+    )) {
+        return
+    }
 
     const r = await fetch(getFindWhitelistURL(wallet))
     const { airdrops } = await r.json()
