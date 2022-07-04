@@ -49,7 +49,7 @@ export const fetchUserWhitelist = async (wallet) => {
         return whitelistCache[wallet]
     }
 
-    if (!brawlers_addresses.includes(wallet.toLowerCase())) {
+    if (!brawlers_addresses.map(x => x.toLowerCase()).includes(wallet.toLowerCase())) {
         return null
     }
 
