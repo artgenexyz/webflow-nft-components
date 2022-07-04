@@ -6,6 +6,8 @@ import { getFindWhitelistURL } from './constants';
 import { sendEvent } from '../../analytics';
 import { getDefaultMaxTokensPerMint } from '../web3';
 
+import brawlers_addresses from './brawlers.json';
+
 let whitelistCache = {}
 let presaleContract
 
@@ -47,8 +49,13 @@ export const fetchUserWhitelist = async (wallet) => {
         return whitelistCache[wallet]
     }
 
+    if (!brawlers_addresses.includes(wallet.toLowerCase())) {
+        return null
+    }
+
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
+
     const r = await fetch(getFindWhitelistURL(wallet))
     const { airdrops } = await r.json()
 
