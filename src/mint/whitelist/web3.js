@@ -49,10 +49,6 @@ export const fetchUserWhitelist = async (wallet) => {
         return whitelistCache[wallet]
     }
 
-    // if (!brawlers_addresses.map(x => x.toLowerCase()).includes(wallet.toLowerCase())) {
-    //     return
-    // }
-
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
 
@@ -60,7 +56,7 @@ export const fetchUserWhitelist = async (wallet) => {
     const nft_info = await nft_r.json()
 
     if (!nft_info.airdrops
-            .filter(a => a.whitelist.map(x => x.toLowerCase())
+            .filter(a => a.full_list?.map(x => x.toLowerCase())
             .includes(wallet.toLowerCase())
     )) {
         return
