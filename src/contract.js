@@ -7,16 +7,21 @@ export let NFTContract;
 export const initContract = async (contract, shouldSwitchNetwork=true) => {
     const host = normalizeURL(window.location.href);
     const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
+
     if (allowedURLs && !allowedURLs?.some(v => v.includes(host))) {
         return undefined;
     }
+
     let currentNetwork = await getCurrentNetwork();
+
     if (shouldSwitchNetwork && !contract.allowedNetworks.includes(currentNetwork)) {
         await switchNetwork(contract.allowedNetworks[0])
         currentNetwork = await getCurrentNetwork();
     }
+
     const address = contract.address[contract.allowedNetworks[0]];
-    const abi = contract.abi ?? await fetchABI(address, currentNetwork);
+    const abi = contract.abi;
+    
     return new web3.eth.Contract(abi, address);
 }
 
@@ -33,7 +38,8 @@ const initContractGlobalObject = async () => {
             address: {
                 [chainID]: window.CONTRACT_ADDRESS,
             },
-            abi: await fetchABI(window.CONTRACT_ADDRESS, chainID),
+            implementationAddress: window.IMPLEMENTATION_ADDRESS,
+            abi: await fetchABI(window.IMPLEMENTATION_ADDRESS, chainID),
             allowedNetworks: [chainID]
         }
     }
@@ -45,10 +51,9 @@ export const fetchABI = async (address, chainID) => {
     if (cachedABI)
         return cachedABI
 
-    const abi = await fetch(`https://metadata.buildship.xyz/api/info/${address}?network_id=${chainID}`)
-        .then(r => r.json())
-        .then(r => r.abi)
-        .catch(e => null)
+    const networkName = window.IS_TESTNET || window.NETWORK_ID == 4 ? "-rinkeby" : "";
+    const abi = await fetch(`http://api${networkName}.etherscan.io/api?module=contract&action=getabi&address=${address}&format=raw&apikey=WBB6MKCCU58DU1ZX2446B915PTURZ4QE78`)
+        .then(res => res.json())
 
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.xyz")

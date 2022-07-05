@@ -49,6 +49,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export { showAlert, showMintModal, renderAppContainer };
-
-
-
