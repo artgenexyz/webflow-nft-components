@@ -296,7 +296,7 @@ export const updateWalletStatus = async () => {
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
-        const walletAddress = await getWalletAddress();
+        const walletAddress = await getWalletAddressOrConnect(false, true);
         button.textContent = window?.DEFAULTS?.labels?.walletConnected ?? "Connected: " + truncate(walletAddress, 10);
     }
 }
