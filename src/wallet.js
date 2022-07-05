@@ -296,7 +296,8 @@ export const updateWalletStatus = async () => {
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
-        button.textContent = window?.DEFAULTS?.labels?.walletConnected ?? "Wallet connected";
+        const walletAddress = await getWalletAddress();
+        button.textContent = window?.DEFAULTS?.labels?.walletConnected ?? "Connected: " + truncate(walletAddress, 10);
     }
 }
 
@@ -310,3 +311,17 @@ export const updateConnectButton = () => {
         }
     });
 }
+
+function truncate(fullStr, strLen, separator) {
+    if (fullStr === undefined) return;
+    if (fullStr.length <= strLen) return fullStr;
+    
+    separator = separator || '...';
+    
+    var sepLen = separator.length,
+        charsToShow = strLen - sepLen,
+        frontChars = Math.ceil(charsToShow/1.5),
+        backChars = Math.floor(charsToShow/2.5);
+    
+    return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
+};
