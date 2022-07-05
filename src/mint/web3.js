@@ -85,7 +85,7 @@ export const getMintedNumber = async () => {
     if (!NFTContract)
         return undefined
     if (NFTContract.methods.totalSupply)
-        return await NFTContract.methods.totalSupply().call()
+        return await NFTContract.methods.totalSupply().call() - 1
     // temporary solution, works only for buildship.xyz contracts
     // totalSupply was removed to save gas when minting
     // but number minted still accessible in the contract as a private variable
@@ -113,6 +113,9 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
+    if(NFTContract?.methods?.maxMintAmountPerTx) {
+        return Number(await NFTContract.methods.maxMintAmountPerTx().call())
+    }
     if (NFTContract?.methods?.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
