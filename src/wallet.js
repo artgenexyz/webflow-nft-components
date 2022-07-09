@@ -131,7 +131,7 @@ const getWeb3ModalProviderOptions = ({
 }
 
 const initWeb3Modal = (forceConnect, isMobileOnlyInjectedProvider) => {
-    const isDesktopNoInjectedProvider =  !isMobile() && !window.ethereum
+    const isDesktopNoInjectedProvider = !isMobile() && !window.ethereum
 
     const web3Modal = new Web3Modal({
         cacheProvider: false,

@@ -2,7 +2,7 @@ import { formatValue } from '../../utils';
 import { getWalletAddressOrConnect, web3 } from '../../wallet';
 import { fetchABI, getConfigChainID } from '../../contract';
 import { buildTx } from '../../tx';
-import { getFindWhitelistURL } from './constants';
+import { getFindWhitelistURL, getMerkleProofURL } from './constants';
 import { sendEvent } from '../../analytics';
 import { getDefaultMaxTokensPerMint } from '../web3';
 
@@ -42,9 +42,34 @@ export const checkWhitelistEligibility = async () => {
     return whitelist !== undefined
 }
 
+export const fetchMerkleProofOptimized = (airdropID, wallet) => {
+    return fetch(getMerkleProofURL(airdropID, wallet))
+        .then(r => r.json())
+        .then(r => {
+            if (r.is_valid &&
+                r.nft_address.toLowerCase() !== window.CONTRACT_ADDRESS.toLowerCase()) {
+                alert("NFT contract addresses don't match between widget config and db")
+                return undefined
+            }
+            if (r.is_valid) {
+                whitelistCache = {
+                    ...whitelistCache,
+                    [wallet]: r
+                }
+            }
+            return r.is_valid ? r : undefined
+        })
+}
+
 export const fetchUserWhitelist = async (wallet) => {
     if (whitelistCache[wallet]) {
         return whitelistCache[wallet]
+    }
+
+    // optimized version for huge drops
+    const airdropID = window.DEFAULTS?.presale?.airdropID
+    if (airdropID) {
+        return fetchMerkleProofOptimized(airdropID, wallet)
     }
 
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
