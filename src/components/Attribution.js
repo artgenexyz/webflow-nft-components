@@ -1,10 +1,11 @@
-import { Box, } from '@mui/material';
+import { Box, Link, } from '@mui/material';
 import { getBaseURL } from '../constants';
 import { useEffect, useState } from 'react';
 import { NFTContract } from '../contract';
 
 export const Attribution = (props) => {
     const [attributionText, setAttributionText] = useState("Widget by Buildship")
+    const [isBuildshipUser, setIsBuildshipUser] = useState(false)
 
     useEffect(() => {
         const updateAttribution = async () => {
@@ -14,6 +15,7 @@ export const Attribution = (props) => {
                     console.log(developer)
                     if (developer.toLowerCase().includes("buildship")) {
                         setAttributionText(_ => "Launched with Buildship")
+                        setIsBuildshipUser(true)
                     }
                 }
             }
@@ -26,15 +28,20 @@ export const Attribution = (props) => {
         updateAttribution()
     }, [])
 
-    return <Box
-        onClick={() => window.open("https://buildship.xyz")}
-        sx={{
-            mt: 4,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            ...props?.sx
+    return <Box sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column"
         }}>
+        <Box
+            onClick={() => window.open("https://buildship.xyz")}
+            sx={{
+                mt: 4,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                ...props?.sx
+            }}>
         {/* for SEO */}
         <a href="https://buildship.xyz" />
         <div style={{
@@ -47,6 +54,7 @@ export const Attribution = (props) => {
         }}>
             <img
                 width={14}
+                height={14}
                 src={`${getBaseURL()}/images/buildship${window.STYLES?.theme === "dark" ? "-white" : ""}.svg`}
             />
         </div>
@@ -58,5 +66,7 @@ export const Attribution = (props) => {
         }}>
             {attributionText}
         </Box>
+    </Box>
+        {isBuildshipUser && <Link sx={{ mt: 2, fontSize: "14px" }} target="_blank" href="https://forms.gle/ytwjDdoGc92YDxhY7">Report fraud</Link>}
     </Box>
 }
