@@ -104,7 +104,7 @@ const getDefaultMintPrice = () => {
     return undefined
 }
 
-const getMintPrice = async () => {
+export const getMintPrice = async () => {
     if (ExtensionContract?.methods?.price && !await checkIfExtensionSoldOut())
         return await ExtensionContract.methods.price().call()
 

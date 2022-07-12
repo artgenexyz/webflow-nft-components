@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Slider } from '@mui/material';
-import { getDefaultMaxTokensPerMint, getMaxSupply, getMaxTokensPerMint, getMintedNumber, mint } from '../mint/web3';
+import {
+    getDefaultMaxTokensPerMint,
+    getMaxSupply,
+    getMaxTokensPerMint,
+    getMintedNumber,
+    getMintPrice,
+    mint
+} from '../mint/web3';
 import { getPresaleMaxPerAddress, mint as mintWhitelist } from '../mint/whitelist/web3'
 import { showAlert } from './AutoHideAlert';
 import { parseTxError } from '../utils';
 import { Attribution } from './Attribution';
 import { sendEvent } from '../analytics';
+import { isEthereumContract } from "../contract";
 
 export const QuantityModalStep = ({
       launchType, setQuantity, setStep,
@@ -13,10 +21,18 @@ export const QuantityModalStep = ({
 }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
+    const [mintPrice, setMintPrice] = useState(undefined)
     const [mintedNumber, setMintedNumber] = useState()
     const [totalNumber, setTotalNumber] = useState()
 
     useEffect(() => {
+        if (isEthereumContract()) {
+            getMintPrice().then(price => {
+                if (price !== undefined)
+                    setMintPrice(Math.round(price / 1e18))
+            })
+        }
+
         (launchType === "whitelist" ? getPresaleMaxPerAddress : getMaxTokensPerMint)()
             .then(setMaxTokens)
 
@@ -39,11 +55,6 @@ export const QuantityModalStep = ({
         }))
 
     const onSuccess = async () => {
-        // if (window.CONTRACT.nft.allowedNetworks[0] === 137) {
-        //     setStep(2)
-        //     return
-        // }
-
         sendEvent(window.analytics, 'public-sale-mint-button-click', {})
 
         setIsLoading(true)
@@ -97,7 +108,9 @@ export const QuantityModalStep = ({
             sx={{ mt: 4, width: "100%" }}
             variant="contained"
         >
-            Mint now
+            {mintPrice !== undefined
+                ? (mintPrice !== 0 ? `Mint for ${mintPrice} ETH` : "Mint for free")
+                : "Mint now"}
         </Button>
         {!window.DEFAULTS?.hideCounter && <Box
             sx={{
