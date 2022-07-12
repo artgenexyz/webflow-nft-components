@@ -105,3 +105,5 @@ export const setContracts = async (shouldSwitchNetwork=true) => {
     NFTContract = await initContract(window.CONTRACT.nft, false);
     console.log("NFTContract", NFTContract)
 }
+
+export const isEthereumContract = () => ([1, 4].includes(window.CONTRACT.nft.allowedNetworks[0]))
