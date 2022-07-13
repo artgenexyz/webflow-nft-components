@@ -115,7 +115,7 @@ export const NETWORKS = {
 
 export const getBaseURL = () => {
     if (window.location.href.includes("localhost")) {
-        return "http://localhost:3000"
+        return window.location.origin
     }
     return "https://nftcomponents.vercel.app"
 }
