@@ -53,8 +53,8 @@ export const Attribution = (props) => {
             borderRadius: 24,
         }}>
             <img
-                width={14}
-                height={14}
+                width={16}
+                height={16}
                 src={`${getBaseURL()}/images/buildship${window.STYLES?.theme === "dark" ? "-white" : ""}.svg`}
             />
         </div>
@@ -67,6 +67,6 @@ export const Attribution = (props) => {
             {attributionText}
         </Box>
     </Box>
-        {isBuildshipUser && <Link sx={{ mt: 2, fontSize: "14px" }} target="_blank" href="https://forms.gle/ytwjDdoGc92YDxhY7">Report fraud</Link>}
+        {isBuildshipUser && <Link sx={{ mt: 1, fontSize: "14px" }} target="_blank" href="https://forms.gle/ytwjDdoGc92YDxhY7">Report fraud</Link>}
     </Box>
 }
