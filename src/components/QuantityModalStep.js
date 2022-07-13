@@ -9,7 +9,7 @@ import {
     mint
 } from '../mint/web3';
 import { showAlert } from './AutoHideAlert';
-import { parseTxError } from '../utils';
+import { parseTxError, roundToDecimal } from '../utils';
 import { Attribution } from './Attribution';
 import { isEthereumContract } from "../contract";
 
@@ -23,8 +23,9 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
     useEffect(() => {
         if (isEthereumContract()) {
             getMintPrice().then(price => {
-                if (price !== undefined)
-                    setMintPrice(Math.round(price / 1e18))
+                if (price !== undefined) {
+                    setMintPrice(roundToDecimal(Number((price) / 1e18), 3))
+                }
             })
         }
         getMaxTokensPerMint().then(setMaxTokens)
@@ -90,7 +91,7 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
             variant="contained"
         >
             {mintPrice !== undefined
-                ? (mintPrice !== 0 ? `Mint for ${mintPrice} ETH` : "Mint for free")
+                ? (mintPrice !== 0 ? `Mint for ${mintPrice * quantityValue} ETH` : "Mint for free")
                 : "Mint now"}
         </Button>
         {!window.DEFAULTS?.hideCounter && <Box
