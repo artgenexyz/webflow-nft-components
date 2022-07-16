@@ -26,7 +26,7 @@ export const QuantityModalStep = ({
     const [totalNumber, setTotalNumber] = useState()
 
     useEffect(() => {
-        if (isEthereumContract()) {
+        if (isEthereumContract() && launchType !== "whitelist") {
             getMintPrice().then(price => {
                 if (price !== undefined) {
                     setMintPrice(roundToDecimal(Number((price) / 1e18), 3))
