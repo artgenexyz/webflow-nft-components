@@ -190,6 +190,12 @@ DEFAULTS = {
 </script>
 ```
 
+### Can I add my own custom analytics?
+
+Check out this guide: https://github.com/buildship-dev/webflow-nft-components/wiki/Custom-Analytics
+
+### Free Template
+
 If that instruction was too complicated, check out our [free clonable NFT website templates for Webflow](https://webflow.com/theshadeth)
 
 
