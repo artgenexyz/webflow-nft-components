@@ -51,7 +51,7 @@ const getDefaultMintPrice = () => {
 
 export const getMintPrice = async () => {
     const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
+        !key.includes("()") && (key.toLowerCase().includes('publicCost') || key.toLowerCase().includes('cost'))
     )
     switch (matches.length) {
         // Use auto-detection only when sure
@@ -100,8 +100,8 @@ export const getMintedNumber = async () => {
 export const getMaxSupply = async () => {
     if (!NFTContract)
         return undefined
-    if (NFTContract.methods.maxSupply)
-        return await NFTContract.methods.maxSupply().call()
+    if (NFTContract.methods.maxSupplyPlusOne)
+        return await NFTContract.methods.maxSupplyPlusOne().call()
     if (NFTContract.methods.MAX_SUPPLY)
         return await NFTContract.methods.MAX_SUPPLY().call()
     alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.xyz to resolve this.")
