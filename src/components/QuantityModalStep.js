@@ -24,7 +24,7 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
         if (isEthereumContract()) {
             getMintPrice().then(price => {
                 if (price !== undefined) {
-                    setMintPrice(roundToDecimal(Number((price) / 1e18), 3))
+                    setMintPrice(Number((price) / 1e18))
                 }
             })
         }
@@ -91,7 +91,7 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
             variant="contained"
         >
             {mintPrice !== undefined
-                ? (mintPrice !== 0 ? `Mint for ${mintPrice * quantityValue} ETH` : "Mint for free")
+                ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
                 : "Mint now"}
         </Button>
         {!window.DEFAULTS?.hideCounter && <Box
