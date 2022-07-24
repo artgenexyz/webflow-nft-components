@@ -6,14 +6,15 @@ const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
         .find(key => key.toLowerCase() === methodName.toLowerCase())
 
-const getCustomMintTx = (numberOfTokens) => {
-    if (window.DEFAULTS?.contractMethods?.mint) {
-        console.log("Using custom mint method name: ", window.DEFAULTS?.contractMethods?.mint)
-        if (NFTContract.methods[window.DEFAULTS?.contractMethods?.mint]) {
-            return NFTContract.methods[window.DEFAULTS?.contractMethods?.mint](numberOfTokens)
+const getMethodWithCustomName = (methodName) => {
+    const method = window.DEFAULTS?.contractMethods ? window.DEFAULTS?.contractMethods[methodName] : undefined
+    if (method) {
+        console.log(`Using custom ${methodName} method name: `, method)
+        if (NFTContract.methods[method]) {
+            return NFTContract.methods[method]
         } else {
-            alert("Custom mint method name isn't present in the ABI, using default parser")
-            console.log("Custom mint method name isn't present in the ABI, using default parser")
+            alert(`Custom ${methodName} name isn't present in the ABI, using default name`)
+            console.log(`Custom ${methodName} name isn't present in the ABI, using default name`)
         }
     }
     return undefined
@@ -65,9 +66,9 @@ const getExtensionMintTx = async ({ numberOfTokens }) => {
 }
 
 const getPublicMintTx = ({ numberOfTokens }) => {
-    const customMintTx = getCustomMintTx(numberOfTokens)
-    if (customMintTx)
-        return customMintTx
+    const customMintMethod = getMethodWithCustomName('mint')
+    if (customMintMethod)
+        return customMintMethod(numberOfTokens)
 
     console.log("Using hardcoded mint method detection")
     const methodNameVariants = ['mint', 'publicMint', 'mintNFTs', 'mintPublic', 'mintSale']
@@ -139,6 +140,11 @@ export const getMintPrice = async () => {
 export const getMintedNumber = async () => {
     if (!NFTContract)
         return undefined
+
+    const customTotalSupplyMethod = getMethodWithCustomName('totalSupply')
+    if (customTotalSupplyMethod)
+        return await customTotalSupplyMethod().call()
+
     if (NFTContract.methods.totalSupply)
         return await NFTContract.methods.totalSupply().call()
     // temporary solution, works only for buildship.xyz contracts
@@ -158,6 +164,11 @@ export const getMaxSupply = async () => {
     // TODO: decide if this is needed or not
     // if (ExtensionContract?.methods?.maxSupply)
     //     return await ExtensionContract.methods.maxSupply().call()
+
+    const customMaxSupplyMethod = getMethodWithCustomName('maxSupply')
+    if (customMaxSupplyMethod)
+        return await customMaxSupplyMethod().call()
+
     if (NFTContract.methods.maxSupply)
         return await NFTContract.methods.maxSupply().call()
     if (NFTContract.methods.MAX_SUPPLY)

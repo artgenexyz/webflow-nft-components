@@ -190,21 +190,28 @@ DEFAULTS = {
 </script>
 ```
 
+### Can I add my own custom analytics?
+
+Check out this guide: https://github.com/buildship-dev/webflow-nft-components/wiki/Custom-Analytics
+
+### Free Template
+
 If that instruction was too complicated, check out our [free clonable NFT website templates for Webflow](https://webflow.com/theshadeth)
 
 
 ## Roadmap
-- [-] Fix issues with WalletConnect on mobile
-- [-] Support for Coinbase Wallet
+- [x] Fix issues with WalletConnect on mobile
+- [x] Support for Coinbase Wallet
 - [ ] Native support for Ledger
 - [ ] Support for Magic Wallet
 - [ ] Support for gasless mints
 - [ ] Support for buying with credit card: MoonPay / CrossMint
 - [ ] Support for Via Cross-Chain widget
 - [ ] Support for token-gating
-- [ ] Better guide for Wix
+- [x] Better guide for Wix
 - [ ] "Disconnect wallet"
 - [ ] View wallet's NFTs via rainbow.me
+- [ ] Migrate to ethers.js
 
 ## Contributing
 Fork the repo and clone it
