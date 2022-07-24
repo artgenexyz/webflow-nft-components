@@ -19,7 +19,7 @@ export const buildTx = async (tx, txData, defaultGasLimit) => {
     }
     const maxFeePerGas = await estimateMaxGasFee(tx);
     const maxPriorityFeePerGas = await estimateMaxPriorityFeePerGas();
-    return {...txData, gasLimit: estimatedGas * 1.3, maxFeePerGas, maxPriorityFeePerGas }
+    return {...txData, gasLimit: Math.floor(estimatedGas * 1.3), maxFeePerGas, maxPriorityFeePerGas }
 }
 
 const estimateGasLimit = (tx, txData, defaultGasLimit) => {
