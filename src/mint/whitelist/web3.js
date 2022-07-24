@@ -5,6 +5,7 @@ import { buildTx } from '../../tx';
 import { getFindWhitelistURL, getMerkleProofURL } from './constants';
 import { sendEvent } from '../../analytics';
 import { getDefaultMaxTokensPerMint } from '../web3';
+import { supabase } from "./supabase";
 
 let whitelistCache = {}
 let presaleContract
@@ -42,23 +43,25 @@ export const checkWhitelistEligibility = async () => {
     return whitelist !== undefined
 }
 
-export const fetchMerkleProofOptimized = (airdropID, wallet) => {
-    return fetch(getMerkleProofURL(airdropID, wallet))
-        .then(r => r.json())
-        .then(r => {
-            if (r.is_valid &&
-                r.nft_address.toLowerCase() !== window.CONTRACT_ADDRESS.toLowerCase()) {
-                alert("NFT contract addresses don't match between widget config and db")
-                return undefined
-            }
-            if (r.is_valid) {
-                whitelistCache = {
-                    ...whitelistCache,
-                    [wallet]: r
-                }
-            }
-            return r.is_valid ? r : undefined
-        })
+export const findWhitelistForAddress = async (address, nft_address) => {
+    const { data, error } = await supabase
+        .from('MerkleTreeAirdropAddress')
+        .select('proof,airdrop_id!inner(id,token_address,whitelist_address)')
+        .ilike('address', address)
+        .eq('airdrop_id.token_address', nft_address.toLowerCase())
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    if (data) {
+        const { airdrop_id: { whitelist_address }, proof } = data
+        const whitelist = { whitelist_address, proof }
+        whitelistCache = {
+            ...whitelistCache,
+            [address]: whitelist
+        }
+        return whitelist
+    }
+    return undefined
 }
 
 export const fetchUserWhitelist = async (wallet) => {
@@ -66,13 +69,13 @@ export const fetchUserWhitelist = async (wallet) => {
         return whitelistCache[wallet]
     }
 
+    const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     // optimized version for huge drops
-    const airdropID = window.DEFAULTS?.presale?.airdropID
-    if (airdropID) {
-        return fetchMerkleProofOptimized(airdropID, wallet)
+    const useOptimized = window.DEFAULTS?.presale?.useOptimized
+    if (useOptimized) {
+        return findWhitelistForAddress(wallet, contractAddress, whitelistCache)
     }
 
-    const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     const wlAddress = window.WHITELIST_ADDRESS?.toLowerCase()
     const r = await fetch(getFindWhitelistURL(wallet))
     const { airdrops } = await r.json()
