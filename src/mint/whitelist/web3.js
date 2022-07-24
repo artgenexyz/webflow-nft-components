@@ -48,7 +48,7 @@ export const findWhitelistForAddress = async (address, nft_address) => {
         .from('MerkleTreeAirdropAddress')
         .select('proof,airdrop_id!inner(id,token_address,whitelist_address)')
         .ilike('address', address)
-        .eq('airdrop_id.token_address', nft_address.toLowerCase())
+        .ilike('airdrop_id.token_address', nft_address)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle()
