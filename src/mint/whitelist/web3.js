@@ -129,6 +129,11 @@ export const mint = async (nTokens) => {
         value: formatValue(Number(mintPrice) * quantity),
     }
     const mintTx = await getMintTx({contract, whitelist, quantity})
-    const tx = mintTx.send(await buildTx(mintTx, txParams, 160000))
+    const tx = mintTx.send(await buildTx(
+        mintTx,
+        txParams,
+        window.DEFAULTS?.presale?.defaultGasLimit ?? 160000,
+        window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000
+    ))
     return Promise.resolve({ tx })
 }

@@ -12,14 +12,15 @@ export const sendTx = async (tx, txData, defaultGasLimit) => {
     return tx.send({...txData, gasLimit: estimatedGas + 5000, maxFeePerGas, maxPriorityFeePerGas });
 }
 
-export const buildTx = async (tx, txData, defaultGasLimit) => {
+export const buildTx = async (tx, txData, defaultGasLimit, gasLimitSlippage = 5000) => {
     const estimatedGas = await estimateGasLimit(tx, txData, defaultGasLimit);
     if (!estimatedGas) {
         return Promise.reject()
     }
     const maxFeePerGas = await estimateMaxGasFee(tx);
     const maxPriorityFeePerGas = await estimateMaxPriorityFeePerGas();
-    return {...txData, gasLimit: Math.floor(estimatedGas * 1.3), maxFeePerGas, maxPriorityFeePerGas }
+    const gasLimit = estimatedGas + gasLimitSlippage
+    return {...txData, gasLimit, maxFeePerGas, maxPriorityFeePerGas }
 }
 
 const estimateGasLimit = (tx, txData, defaultGasLimit) => {
