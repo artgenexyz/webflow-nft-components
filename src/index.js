@@ -38,8 +38,8 @@ const renderAppContainer = () => {
     render(<App />, createDOMElement());
 }
 
-renderAppContainer();
 document.addEventListener("DOMContentLoaded", () => {
+    renderAppContainer();
     init()
 
     // TODO: remove this when migrated to @buildship/web3-login or forked Web3Modal
