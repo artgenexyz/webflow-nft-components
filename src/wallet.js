@@ -262,19 +262,30 @@ export const switchNetwork = async (chainID) => {
     }
 }
 
-export const connectWallet = async () => {
-    console.log("Connecting Wallet")
+const tryInitWeb3 = async (forceConnect) => {
     try {
-        await initWeb3(true);
+        await initWeb3(forceConnect);
     } catch (e) {
-        if (!e.includes("Modal closed by user")) {
-            alert(`Error in initWeb3 in connectWallet: ${e.toString()}`)
+        const message = e?.message ?? e
+        const cancelMessageVariants = [
+            "Modal closed by user",
+            "User rejected the request",
+            "User closed modal",
+            "accounts received is empty"
+        ]
+        if (!cancelMessageVariants.find(s => message.includes(s))) {
+            alert(`Error in initWeb3(${forceConnect}): ${message?.toString()}`)
             console.error(e)
         }
         return
     }
-    await updateWalletStatus();
-    console.log("Connected Wallet");
+}
+
+export const connectWallet = async () => {
+    console.log("Connecting Wallet")
+    await tryInitWeb3(true)
+    await updateWalletStatus()
+    console.log("Connected Wallet")
 }
 
 const getConnectButton = () => {
@@ -284,15 +295,7 @@ const getConnectButton = () => {
 }
 
 export const updateWalletStatus = async () => {
-    try {
-        await initWeb3();
-    } catch (e) {
-        if (!e.includes("Modal closed by user")) {
-            alert(`Error in initWeb3: ${e.toString()}`)
-            console.error(e)
-        }
-        return
-    }
+    await tryInitWeb3(false)
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
