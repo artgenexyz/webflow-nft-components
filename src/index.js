@@ -40,8 +40,8 @@ const renderAppContainer = () => {
     render(<App />, createDOMElement());
 }
 
-renderAppContainer();
 document.addEventListener("DOMContentLoaded", () => {
+    renderAppContainer();
     init()
     initWhitelist()
 
