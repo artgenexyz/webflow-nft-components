@@ -234,7 +234,7 @@ export const mint = async (nTokens) => {
     const tx = txBase
         .send({
             ...txParams,
-            gasLimit: estimatedGas + 5000,
+            gasLimit: estimatedGas + window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000,
             maxPriorityFeePerGas,
             maxFeePerGas
         })
