@@ -230,11 +230,15 @@ export const mint = async (nTokens) => {
     const chainID = await web3.eth.getChainId();
     const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas =  [1, 4].includes(chainID) ? 2e9 : undefined;
-
+    const minGasLimit = window.DEFAULTS?.presale?.minGasLimit
+    const gasLimitSlippage = window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000
+    const gasLimit = minGasLimit ? Math.max(minGasLimit, estimatedGas + gasLimitSlippage) : estimatedGas + gasLimitSlippage
+    console.log('minGasLimit', minGasLimit)
+    console.log('gasLimit', gasLimit)
     const tx = txBase
         .send({
             ...txParams,
-            gasLimit: estimatedGas + window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000,
+            gasLimit,
             maxPriorityFeePerGas,
             maxFeePerGas
         })
