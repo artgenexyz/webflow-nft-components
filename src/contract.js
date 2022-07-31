@@ -53,7 +53,7 @@ const initContractGlobalObject = async () => {
 export const getConfigChainID = () => {
     // Default to Ethereum
     const networkID = window.NETWORK_ID ?? 1;
-    return  window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
+    return window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
 }
 
 export const fetchABI = async (address, chainID) => {

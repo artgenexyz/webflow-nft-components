@@ -71,7 +71,8 @@ export const fetchUserWhitelist = async (wallet) => {
 
     const contractAddress = window.CONTRACT_ADDRESS?.toLowerCase()
     // optimized version for huge drops
-    const useOptimized = window.DEFAULTS?.presale?.useOptimized
+    // const useOptimized = window.DEFAULTS?.presale?.useOptimized
+    const useOptimized = getConfigChainID() === 1
     if (useOptimized) {
         return findWhitelistForAddress(wallet, contractAddress, whitelistCache)
     }
