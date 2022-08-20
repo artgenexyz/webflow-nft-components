@@ -119,7 +119,7 @@ export const mint = async (nTokens) => {
     const whitelist = await fetchUserWhitelist(wallet)
     console.log("WHITELIST", whitelist)
     if (!whitelist) {
-        return Promise.reject("Your wallet is not whitelisted. If this is a mistake, contact our support in Discord")
+        return Promise.reject("Your wallet is not in the allowlist. If this is a mistake, contact our support in Discord")
     }
     const quantity = nTokens ?? 1
     const contract = await fetchPresaleContract(whitelist)

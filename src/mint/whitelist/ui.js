@@ -26,7 +26,7 @@ export const updateMintWhitelistButton = () => {
                 if (isEligible) {
                     showMintModal(defaultQuantity, "whitelist")
                 } else {
-                    showAlert("Your wallet is not whitelisted. If this is a mistake, contact our support in Discord", "error")
+                    showAlert("Your wallet is not in the allowlist. If this is a mistake, contact our support in Discord", "error")
                 }
                 setButtonText(mintButton, initialBtnText)
             }
