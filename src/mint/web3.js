@@ -51,6 +51,9 @@ const getDefaultMintPrice = () => {
 }
 
 export const getMintPrice = async () => {
+    const customPriceMethod = getMethodWithCustomName('price');
+    if(customPriceMethod) return customPriceMethod();
+
     const matches = Object.keys(NFTContract.methods).filter(key =>
         !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
     )
