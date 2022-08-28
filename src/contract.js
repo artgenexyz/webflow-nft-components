@@ -3,8 +3,9 @@ import { normalizeURL } from "./utils.js";
 import { NETWORKS } from "./constants.js";
 
 export let NFTContract;
-
 export let ExtensionContract;
+
+const abiMemoryCache = {};
 
 export const initContract = async (contract, shouldSwitchNetwork=true) => {
     const host = normalizeURL(window.location.href);
@@ -57,28 +58,42 @@ export const getConfigChainID = () => {
 }
 
 export const fetchABI = async (address, chainID) => {
-    const cachedABI = await fetchCachedABI(address)
-    console.log("CACHED ABI", cachedABI)
-    if (cachedABI)
-        return cachedABI
+    if (abiMemoryCache[address])
+        return abiMemoryCache[address]
 
-    const abi = await fetch(`https://metadata.buildship.xyz/api/info/${address}?network_id=${chainID}`)
+    const remoteABI = await fetchRemoteCachedABI(address)
+    console.log("REMOTE CACHED ABI", remoteABI)
+    if (remoteABI)
+        return remoteABI
+
+    const abi = await fetch(`https://metadata.buildship.xyz/api/v1.1/contract/${address}?network_id=${chainID}`)
         .then(r => r.json())
-        .then(r => r.abi)
+        .then(async ({ abi, isProxy, implementation }) => {
+            if (isProxy) {
+                if (implementation) {
+                    return await fetchABI(implementation, chainID)
+                } else {
+                    console.error("Couldn't fetch ABI for proxy with undefined implementation address ")
+                    return null
+                }
+            }
+            return abi
+        })
         .catch(e => null)
 
     if (!abi) {
         console.log("No ABI returned from https://metadata.buildship.xyz")
-        const savedMainABI = getSavedMainABI(address)
-        if (!savedMainABI) {
+        const embeddedMainABI = getEmbeddedMainABI(address)
+        if (!embeddedMainABI) {
             alert(`Error: no ABI loaded for ${address}. Please contact support`)
         }
-        return savedMainABI;
+        return embeddedMainABI;
     }
+    abiMemoryCache[address] = abi;
     return abi;
 }
 
-const fetchCachedABI = async (address) => {
+const fetchRemoteCachedABI = async (address) => {
     if (!window.DEFAULTS?.abiCacheURL) {
         return null
     }
@@ -98,9 +113,9 @@ const fetchCachedABI = async (address) => {
     }
 }
 
-const getSavedMainABI = (address) => {
+const getEmbeddedMainABI = (address) => {
     if (address?.toLowerCase() === window.CONTRACT_ADDRESS?.toLowerCase()) {
-        console.log("Trying to load saved main contract ABI")
+        console.log("Trying to load embedded main contract ABI")
         return typeof window.CONTRACT_ABI === 'string'
             ? JSON.parse(window.CONTRACT_ABI)
             : window.CONTRACT_ABI
