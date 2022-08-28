@@ -2,7 +2,6 @@ import React, { useImperativeHandle, useState } from "react";
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
-import { PaymentModalStep } from './PaymentModalStep';
 import { isMobile } from "../utils";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
@@ -89,7 +88,6 @@ export const MintModal = (props, ref) => {
                     setStep={setStep}
                     setIsLoading={setIsLoading}
                 />}
-                {step === 2 && <PaymentModalStep quantity={quantity} />}
             </DialogContent>
             </>}
         </Dialog>
