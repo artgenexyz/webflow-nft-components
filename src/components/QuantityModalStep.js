@@ -35,10 +35,12 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
         }
     }, [])
 
-    const step = maxTokens <= 5 ? maxTokens : 10
-    const marks = [...Array(Math.floor(maxTokens / step) + 1)]
-        .map((_, i) => 1 + i * step)
-        .map(m => ({
+    const maxTokensTooLarge = maxTokens >= 20
+    const step = !maxTokensTooLarge ? maxTokens : 10
+    const marks = [
+        ...[...Array(Math.floor(maxTokens / step) + 1)].map((_, i) => 1 + i * step),
+        ...(maxTokensTooLarge ? [maxTokens + 1] : [])
+        ].map(m => ({
             value: Math.max(1, m - 1),
             label: (Math.max(1, m - 1)).toString()
         }))

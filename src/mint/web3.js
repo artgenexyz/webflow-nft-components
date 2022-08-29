@@ -120,7 +120,7 @@ export const getMaxSupply = async () => {
 }
 
 export const getDefaultMaxTokensPerMint = () => {
-    return window.MAX_PER_MINT ?? 20
+    return window.MAX_PER_MINT ?? 10
 }
 
 export const getMaxTokensPerMint = async () => {
