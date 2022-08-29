@@ -13,7 +13,7 @@ import { parseTxError, roundToDecimal } from '../utils';
 import { Attribution } from './Attribution';
 import { isEthereumContract } from "../contract";
 
-export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHash }) => {
+export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setStep }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
     const [mintPrice, setMintPrice] = useState(undefined)
@@ -66,11 +66,11 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
     }
 
     return <div style={{ width: "100%" }}>
-        <Box sx={{
+        {maxTokens > 1 && <Box sx={{
             display: "flex",
             alignItems: "flex-end",
             width: "100%",
-            height: 75
+            height: 64
         }}>
             <Slider
                 sx={{ ml: 2 }}
@@ -86,15 +86,15 @@ export const QuantityModalStep = ({ setQuantity, setStep, setIsLoading, setTxHas
                 min={1}
                 max={maxTokens}
             />
-        </Box>
+        </Box>}
         <Button
             onClick={onSuccess}
-            sx={{ mt: 4, width: "100%" }}
+            sx={{ mt: maxTokens > 1 ? 3 : 2, width: "100%" }}
             variant="contained"
         >
             {mintPrice !== undefined
                 ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
-                : "Mint now"}
+                : "Mint"}
         </Button>
         {!window.DEFAULTS?.hideCounter && <Box
             sx={{

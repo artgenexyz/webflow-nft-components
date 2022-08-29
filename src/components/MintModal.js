@@ -6,7 +6,9 @@ import { isMobile } from "../utils";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
-        <Box sx={{ mr: 4 }}>{children}</Box>
+        <Box sx={{ textAlign: "center" }}>
+            {children}
+        </Box>
         {onClose ? (
             <IconButton
                 aria-label="close"
@@ -60,13 +62,15 @@ export const MintModal = (props, ref) => {
                     }}>
                         👀
                     </span>}
-                    <Typography sx={{mt: 3}} variant="subtitle1">{
-                        txHash
-                        ? `Minting ${quantity} NFT...`
-                        : 'Confirm the transaction in your wallet'
-                    }</Typography>
+                    <Typography
+                        sx={{ mt: 3, textAlign: "center" }}
+                        variant="h4">
+                        {txHash
+                            ? `Minting ${quantity} NFT...`
+                            : 'Confirm the transaction in your wallet'}
+                    </Typography>
                     {!txHash && <Typography sx={{
-                        mt: 1,
+                        mt: 3,
                         pl: 3,
                         pr: 3,
                         color: "#757575",
@@ -79,9 +83,9 @@ export const MintModal = (props, ref) => {
             }
             {!isLoading && <>
             <DialogTitleWithClose onClose={handleClose}>
-                {step === 1 ? "Choose how many to mint" : "Pay with"}
+                <Typography variant="h1">Mint now</Typography>
             </DialogTitleWithClose>
-            <DialogContent style={styles.mintModalContent}>
+            <DialogContent className="mintModal-content">
                 {step === 1 && <QuantityModalStep
                     setTxHash={setTxHash}
                     setQuantity={setQuantity}
@@ -104,12 +108,6 @@ export const showMintModal = (quantity) => {
 }
 
 const styles = {
-    mintModalContent: {
-        display: "flex",
-        flexWrap: "wrap",
-        flexDirection: "row",
-        overflow: "visible"
-    },
     mintOption: {
         padding: "16px",
         marginLeft: "12px",
