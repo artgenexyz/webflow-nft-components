@@ -145,7 +145,7 @@ export const theme = createTheme({
         subtitle2: {
             fontWeight: 300,
             fontSize: "1rem",
-            lineHeight: 1.4
+            lineHeight: 1.2
         }
     },
 });
