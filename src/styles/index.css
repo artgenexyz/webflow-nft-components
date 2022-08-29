@@ -1,6 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 .MuiDialog-container {
     font-family: "Inter", BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
+}
+
+.mintModal-content {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    overflow: visible;
+    min-width: 240px;
+}
+
+@media screen and (min-width: 600px) {
+    .mintModal-content {
+        min-width: 280px;
+    }
 }
 
 .web3modal-modal-lightbox {

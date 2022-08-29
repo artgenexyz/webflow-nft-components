@@ -17,9 +17,9 @@ This widget allows minting NFTs on your website.
 
 To start, you need an Ethereum NFT contract. [Create it via Buildship app](https://app.buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
 
-**MetaverseNFT** contract by [buildship.xyz](https://buildship.xyz) is used by **40+** collections with **1000ETH+** in total volume.
-It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bullet-proof security and extensions like presale lists, mint passes, etc.
-
+**ERC721Community** contract by [buildship.xyz](https://buildship.xyz) is used by **150+** NFT communities with **5M$+** in total volume.
+It uses ERC721A, allowing for **50-100% lower** minting gas fees, costs **~10-20$ in gas to deploy**, bullet-proof security and extensions like allow lists, mint passes, etc.
+[Create your contract now](https://app.buildship.xyz)
 
 ## How to use?
 1. Open Webflow website editor
@@ -29,7 +29,6 @@ It features **40% lower** mint gas fees, costs **~100$ in gas to deploy**, bulle
 <script>
    CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    IS_TESTNET = false
-   MAX_PER_MINT = 20
    // if your contract is NOT VERIFIED on Etherscan
    // put here: CONTRACT_ABI = [{...}]
    // don't do anything if unsure
@@ -68,22 +67,23 @@ If you can't set an ID, you can set a button URL as `mint-button` or `https://<y
 
 ### Custom smart contract requirements
 
-If you are using Webflow widget with a contract not deployed via [https://app.buildship.xyz](https://app.buildship.xyz), it has to be:
+If you are using mint widget with a contract not deployed via [https://app.buildship.xyz](https://app.buildship.xyz), it has to be:
 - verified on Etherscan
 - public `price` method outputting price in wei. It could be named `price`, `cost` or `getPrice`
 - public `mint` method accepting `nTokens` as parameter. Alternative names: `mint`, `mintNFT` or `publicMint`
+- public `maxSupply` method outputting collection size
+- public `totalSupply` method outputting total number of minted NFTs
 
 If your contract doesn't fit the requirements, you can fork this repo and open a PR. Vercel will automatically deploy and build your PR and you'll be able to use the changed version.
 
-Here's the file that handles `price` and `mint`: [src/mint/web3.js](src/mint/web3.js)
+Here's the code that handles this: [src/mint/web3.js](src/mint/web3.js)
 
 
 ### Example for testing
 ```html
 <script>
-   CONTRACT_ADDRESS = "0x8Fac2e25DFF0B248A19A66Ae8D530613c8Ff670B"
+   CONTRACT_ADDRESS = "0x200ad889ef4a9d41910609c88ef3a7b095107b53"
    IS_TESTNET = true
-   MAX_PER_MINT = 20
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
@@ -202,16 +202,19 @@ If that instruction was too complicated, check out our [free clonable NFT websit
 ## Roadmap
 - [x] Fix issues with WalletConnect on mobile
 - [x] Support for Coinbase Wallet
+- [x] Guide for Wix
+- [ ] Guide for Wordpress
+- [ ] Guide for Squarespace
 - [ ] Native support for Ledger
 - [ ] Support for Magic Wallet
 - [ ] Support for gasless mints
 - [ ] Support for buying with credit card: MoonPay / CrossMint
-- [ ] Support for Via Cross-Chain widget
-- [ ] Support for token-gating
-- [x] Better guide for Wix
+- [ ] Migrate to RainbowKit or ConnectKit
+- [ ] Migrate to ethers.js
+- [ ] Refactor code
 - [ ] "Disconnect wallet"
 - [ ] View wallet's NFTs via rainbow.me
-- [ ] Migrate to ethers.js
+- [ ] Support for token-gating
 
 ## Contributing
 Fork the repo and clone it

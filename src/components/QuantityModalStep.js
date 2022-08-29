@@ -47,10 +47,12 @@ export const QuantityModalStep = ({
         return launchType === "whitelist" ? mintWhitelist(quantity) : mint(quantity)
     }
 
-    const step = maxTokens <= 5 ? maxTokens : 10
-    const marks = [...Array(Math.floor(maxTokens / step) + 1)]
-        .map((_, i) => 1 + i * step)
-        .map(m => ({
+    const maxTokensTooLarge = maxTokens >= 20
+    const step = !maxTokensTooLarge ? maxTokens : 10
+    const marks = [
+        ...[...Array(Math.floor(maxTokens / step) + 1)].map((_, i) => 1 + i * step),
+        ...(maxTokensTooLarge ? [maxTokens + 1] : [])
+        ].map(m => ({
             value: Math.max(1, m - 1),
             label: (Math.max(1, m - 1)).toString()
         }))
@@ -83,11 +85,11 @@ export const QuantityModalStep = ({
     }
 
     return <div style={{ width: "100%" }}>
-        <Box sx={{
+        {maxTokens > 1 && <Box sx={{
             display: "flex",
             alignItems: "flex-end",
             width: "100%",
-            height: 75
+            height: 64
         }}>
             <Slider
                 sx={{ ml: 2 }}
@@ -103,15 +105,15 @@ export const QuantityModalStep = ({
                 min={1}
                 max={maxTokens}
             />
-        </Box>
+        </Box>}
         <Button
             onClick={onSuccess}
-            sx={{ mt: 4, width: "100%" }}
+            sx={{ mt: maxTokens > 1 ? 3 : 2, width: "100%" }}
             variant="contained"
         >
             {mintPrice !== undefined
                 ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
-                : "Mint now"}
+                : "Mint"}
         </Button>
         {!window.DEFAULTS?.hideCounter && <Box
             sx={{

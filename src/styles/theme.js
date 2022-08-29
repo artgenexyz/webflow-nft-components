@@ -65,10 +65,12 @@ export const theme = createTheme({
                     color: primaryTextColor
                 },
                 paper: {
+                    // to avoid horizontal scrolls
+                    overflowY: "unset",
                     backgroundImage: "inherit",
                     backgroundColor: backgroundColor,
                     borderRadius: dialogRadius,
-                    padding: "16px",
+                    padding: "16px 24px",
                     margin: "16px"
                 }
             }
@@ -77,6 +79,13 @@ export const theme = createTheme({
             styleOverrides: {
                 root: {
                     color: primaryTextColor
+                }
+            }
+        },
+        MuiDialogContent: {
+            styleOverrides: {
+                root: {
+                    overflowY: "visible"
                 }
             }
         },
@@ -112,22 +121,31 @@ export const theme = createTheme({
         }
     },
     typography: {
-        fontFamily: "Inter, San Francisco, Roboto, Helvetica, sans-serif",
+        fontFamily: '"Inter", San Francisco, Roboto, Helvetica, sans-serif',
         button: {
             color: buttonTextColor,
             fontSize: "1rem !important",
             textTransform: "none",
         },
+        h1: {
+            color: primaryTextColor,
+            fontWeight: 700,
+            lineHeight: 1.4,
+            fontSize: "2rem"
+        },
         h4: {
             color: primaryTextColor,
-            fontWeight: 600
+            fontWeight: 600,
+            fontSize: "1.3rem",
+            lineHeight: 1.4
         },
         subtitle1: {
             color: primaryTextColor,
         },
         subtitle2: {
             fontWeight: 300,
-            lineHeight: 1.3
+            fontSize: "1rem",
+            lineHeight: 1.4
         }
     },
 });
