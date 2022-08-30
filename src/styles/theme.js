@@ -102,7 +102,7 @@ export const theme = createTheme({
                     boxShadow: "none"
                 },
                 contained: {
-                    padding: "0.5rem 1.5rem",
+                    padding: "8px 24px",
                     color: buttonTextColor,
                     borderRadius: buttonRadius,
                     "&:hover": {
@@ -124,19 +124,19 @@ export const theme = createTheme({
         fontFamily: '"Inter", San Francisco, Roboto, Helvetica, sans-serif',
         button: {
             color: buttonTextColor,
-            fontSize: "1rem !important",
+            fontSize: "16px !important",
             textTransform: "none",
         },
         h1: {
             color: primaryTextColor,
             fontWeight: 700,
             lineHeight: 1.4,
-            fontSize: "2rem"
+            fontSize: "30px"
         },
         h4: {
             color: primaryTextColor,
             fontWeight: 600,
-            fontSize: "1.3rem",
+            fontSize: "18px",
             lineHeight: 1.4
         },
         subtitle1: {
@@ -144,8 +144,8 @@ export const theme = createTheme({
         },
         subtitle2: {
             fontWeight: 300,
-            fontSize: "1rem",
-            lineHeight: 1.4
+            fontSize: "16px",
+            lineHeight: 1.2
         }
     },
 });

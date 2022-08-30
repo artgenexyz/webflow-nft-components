@@ -89,7 +89,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
         </Box>}
         <Button
             onClick={onSuccess}
-            sx={{ mt: maxTokens > 1 ? 3 : 2, width: "100%" }}
+            sx={{ mt: maxTokens > 1 ? 4 : 2, width: "100%" }}
             variant="contained"
         >
             {mintPrice !== undefined
