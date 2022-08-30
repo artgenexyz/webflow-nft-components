@@ -10,12 +10,12 @@
     flex-wrap: wrap;
     flex-direction: row;
     overflow: visible;
-    min-width: 240px;
+    min-width: 280px;
 }
 
 @media screen and (min-width: 600px) {
     .mintModal-content {
-        min-width: 280px;
+        min-width: 300px;
     }
 }
 
