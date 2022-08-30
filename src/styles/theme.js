@@ -116,6 +116,9 @@ export const theme = createTheme({
                 valueLabel: {
                     color: buttonTextColor,
                     backgroundColor: hintBackgroundColor
+                },
+                markLabel: {
+                    fontSize: "14px"
                 }
             }
         }
