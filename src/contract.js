@@ -18,7 +18,7 @@ export const initContract = async (contract, shouldSwitchNetwork=true) => {
         currentNetwork = await getCurrentNetwork();
     }
     const address = contract.address[contract.allowedNetworks[0]];
-    const abi = contract.abi ?? await fetchABI(address, currentNetwork);
+    const abi = contract.abi;
     return new web3.eth.Contract(abi, address);
 }
 
@@ -28,12 +28,13 @@ const initContractGlobalObject = async () => {
         return
     }
     const chainID = getConfigChainID()
+    const implementationAddress = window.IMPLEMENTATION_ADDRESS ?? window.CONTRACT_ADDRESS
     window.CONTRACT = {
         nft: {
             address: {
                 [chainID]: window.CONTRACT_ADDRESS,
             },
-            abi: await fetchABI(window.CONTRACT_ADDRESS, chainID),
+            abi: await fetchABI(implementationAddress, chainID),
             allowedNetworks: [chainID]
         }
     }
