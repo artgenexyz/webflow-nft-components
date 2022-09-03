@@ -10,7 +10,10 @@ import { supabase } from "./supabase";
 let whitelistCache = {}
 let presaleContract
 
-const getMintPrice = async (contract) => {
+const getMintPrice = async (contract, nTokens) => {
+    if (contract.methods["price(uint256)"]) {
+        return contract.methods.price(nTokens).call()
+    }
     return contract.methods.price().call()
 }
 
@@ -123,7 +126,7 @@ export const mint = async (nTokens) => {
     }
     const quantity = nTokens ?? 1
     const contract = await fetchPresaleContract(whitelist)
-    const mintPrice = await getMintPrice(contract)
+    const mintPrice = await getMintPrice(contract, nTokens)
 
     const txParams = {
         from: wallet,
