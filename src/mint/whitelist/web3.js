@@ -33,9 +33,13 @@ export const getPresaleMaxPerAddress = async () => {
     const contract = await fetchPresaleContract(whitelistCache[wallet])
 
     if (contract?.methods?.maxPerAddress) {
-        console.log(await contract.methods.maxPerAddress().call())
-        return await contract.methods.maxPerAddress().call()
+        const maxPerAddress = await contract.methods.maxPerAddress().call()
+        console.log('presale list max per address', contract._address, '=', maxPerAddress)
+        return maxPerAddress
+    } else {
+        console.log('presale list max per address is not available')
     }
+
     return getDefaultMaxTokensPerMint()
 }
 
