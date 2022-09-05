@@ -40,7 +40,7 @@ export const getPresaleMaxPerAddress = async () => {
     if (contract?.methods?.maxPerAddress) {
         const maxPerAddress = await contract.methods.maxPerAddress().call()
         console.log('presale list max per address', contract._address, '=', maxPerAddress)
-        return maxPerAddress
+        return Number(maxPerAddress)
     } else {
         console.log('presale list max per address is not available')
     }
