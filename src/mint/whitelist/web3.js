@@ -12,9 +12,14 @@ let presaleContract
 
 const getMintPrice = async (contract, nTokens) => {
     if (contract.methods["price(uint256)"]) {
-        return contract.methods.price(nTokens).call()
+        const total = await contract.methods.price(nTokens).call()
+
+        return total
     }
-    return contract.methods.price().call()
+
+    const price = await contract.methods.price().call()
+
+    return Number(price) * nTokens
 }
 
 const fetchPresaleContract = async (whitelist) => {
@@ -134,7 +139,7 @@ export const mint = async (nTokens) => {
 
     const txParams = {
         from: wallet,
-        value: formatValue(Number(mintPrice) * quantity),
+        value: formatValue(Number(mintPrice)),
     }
     const mintTx = await getMintTx({contract, whitelist, quantity})
     const tx = mintTx.send(await buildTx(
