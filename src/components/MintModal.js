@@ -103,14 +103,12 @@ export const MintModal = (props, ref) => {
 
 export const modalRef = React.createRef();
 
-export const showMintModal = (quantity, launchType) => {
+export const showMintModal = (quantity, launchType = "public") => {
     if (quantity) {
         modalRef.current?.setQuantity(quantity)
     }
-    if (launchType) {
-        modalRef.current?.setLaunchType(launchType)
-    }
-    modalRef.current?.setIsOpen(true);
+    modalRef.current?.setLaunchType(launchType)
+    modalRef.current?.setIsOpen(true)
 }
 
 const styles = {
