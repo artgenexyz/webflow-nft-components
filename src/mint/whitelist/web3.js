@@ -10,15 +10,14 @@ import { supabase } from "./supabase";
 let whitelistCache = {}
 let presaleContract
 
-const getMintPrice = async (contract, nTokens) => {
+const getMintPrice = async (contract, nTokens, wallet) => {
     if (contract.methods["price(uint256)"]) {
-        const total = await contract.methods.price(nTokens).call()
-
-        return total
+        const claimed = contract?.methods?.claimedByAddress
+            ? Number(await contract.methods.claimedByAddress(wallet).call())
+            : 0
+        return await contract.methods.price(claimed + nTokens).call()
     }
-
     const price = await contract.methods.price().call()
-
     return Number(price) * nTokens
 }
 
@@ -38,13 +37,14 @@ export const getPresaleMaxPerAddress = async () => {
     const contract = await fetchPresaleContract(whitelistCache[wallet])
 
     if (contract?.methods?.maxPerAddress) {
-        const maxPerAddress = await contract.methods.maxPerAddress().call()
-        console.log('presale list max per address', contract._address, '=', maxPerAddress)
-        return Number(maxPerAddress)
-    } else {
-        console.log('presale list max per address is not available')
+        const claimedPromise = contract?.methods?.claimedByAddress
+            ? contract.methods.claimedByAddress(wallet).call().then(v => Number(v))
+            : Promise.resolve(0)
+        const maxPerAddressPromise = contract.methods.maxPerAddress().call().then(v => Number(v))
+        const [maxPerAddress, claimed] = await Promise.all([maxPerAddressPromise, claimedPromise])
+        console.log('Allowlist maxPerAddress, claimed', maxPerAddress, claimed)
+        return Math.max(maxPerAddress - claimed, 0)
     }
-
     return getDefaultMaxTokensPerMint()
 }
 
@@ -135,7 +135,7 @@ export const mint = async (nTokens) => {
     }
     const quantity = nTokens ?? 1
     const contract = await fetchPresaleContract(whitelist)
-    const mintPrice = await getMintPrice(contract, nTokens)
+    const mintPrice = await getMintPrice(contract, nTokens, wallet)
 
     const txParams = {
         from: wallet,
