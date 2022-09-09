@@ -99,12 +99,7 @@ export const fetchUserWhitelist = async (wallet) => {
             && a.nft_address.toLowerCase() === contractAddress
             && (!wlAddress || a.whitelist_address.toLowerCase() === wlAddress)
         )
-        .sort((a,b) => a.created_at > b.created_at)
-
-    // sorted by creation date, newest last
-    // we take newest whitelist
-
-    const newestList = validLists.pop()
+    const newestList = validLists?.length > 0 ? validLists[0] : undefined
 
     whitelistCache = {
         ...whitelistCache,
