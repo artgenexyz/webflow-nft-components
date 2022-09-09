@@ -55,7 +55,13 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
             setTxHash(hash)
         })?.on("confirmation", async () => {
             setIsLoading(false)
-            showAlert(`Successfully minted ${quantityValue} NFTs`, "success")
+            showAlert(`Successfully minted ${quantityValue} NFTs${window.DEFAULTS?.redirectURL ? ". You will be redirected in less than a second" : ""}`, "success")
+            // TODO: show success state in the modal
+            if (window.DEFAULTS?.redirectURL) {
+                setTimeout(() => {
+                    window.location.href = window.DEFAULTS?.redirectURL
+                }, 800)
+            }
         })?.on("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
