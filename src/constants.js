@@ -121,6 +121,7 @@ export const NETWORKS = {
         },
         tesnetID:568,
         blockExplorerURL: "https://explorer-testnet.dogechain.dog/"
+    }
 }
 
 export const getBaseURL = () => {
