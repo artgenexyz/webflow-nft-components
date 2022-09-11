@@ -110,7 +110,17 @@ export const NETWORKS = {
         },
         testnetID: 1287,
         blockExplorerURL: "https://moonbase-blockscout.testnet.moonbeam.network"
-    }
+    },
+    2000: {
+        name: "Dogechain",
+        rpcURL: "https://explorer.dogechain.dog/",
+        currency: {
+            name: "DOGE",
+            symbol: "DOGE",
+            decimal: 18,
+        },
+        tesnetID:568,
+        blockExplorerURL: "https://explorer-testnet.dogechain.dog/"
 }
 
 export const getBaseURL = () => {
