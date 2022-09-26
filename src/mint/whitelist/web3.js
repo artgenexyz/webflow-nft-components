@@ -15,8 +15,18 @@ const getMintPrice = async (contract, nTokens, wallet) => {
         const claimed = contract?.methods?.claimedByAddress
             ? Number(await contract.methods.claimedByAddress(wallet).call())
             : 0
-        return await contract.methods.price(claimed + nTokens).call()
+
+        const totalAmount = await contract.methods.price(claimed + nTokens).call()
+
+        if (claimed == 0) {
+            return Number(totalAmount)
+        }
+
+        const alreadyPaid = await contract.methods.price(claimed).call()
+
+        return Number(totalAmount) - Number(alreadyPaid)
     }
+
     const price = await contract.methods.price().call()
     return Number(price) * nTokens
 }
