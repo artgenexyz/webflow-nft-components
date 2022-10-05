@@ -65,19 +65,7 @@ export const getMintedNumber = async () => {
 }
 
 export const getMaxSupply = async () => {
-    if (!NFTContract)
-        return undefined
-
-    const customMaxSupplyMethod = getMethodWithCustomName('maxSupply')
-    if (customMaxSupplyMethod)
-        return await customMaxSupplyMethod().call()
-
-    if (NFTContract.methods.maxSupply)
-        return await NFTContract.methods.maxSupply().call()
-    if (NFTContract.methods.MAX_SUPPLY)
-        return await NFTContract.methods.MAX_SUPPLY().call()
-    alert("Widget doesn't know how to fetch maxSupply from your contract. Contact https://buildship.xyz to resolve this.")
-    return undefined
+    return 1000
 }
 
 export const getDefaultMaxTokensPerMint = () => {
