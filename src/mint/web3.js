@@ -21,7 +21,7 @@ const getMethodWithCustomName = (methodName) => {
 }
 
 const getMintTx = ({ numberOfTokens }) => {
-    return NFTContract.methods.mint(numberOfTokens);
+    return NFTContract.methods.mint();
 }
 
 const getDefaultMintPrice = () => {
