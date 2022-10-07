@@ -31,7 +31,7 @@ export const NETWORKS = {
         },
         testnetID: 5,
         blockExplorerURL: "https://goerli.etherscan.io"
-    }
+    },
     137: {
         name: "Polygon",
         rpcURL: "https://polygon-rpc.com/",
