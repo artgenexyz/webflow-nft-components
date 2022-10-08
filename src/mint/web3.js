@@ -20,7 +20,9 @@ const getMethodWithCustomName = (methodName) => {
     return undefined
 }
 
-const getMintTx = ({ numberOfTokens }) => {
+const getMintTx = ({ numberOfTokens, mintFunctionOverride }) => {
+    const overridingMintMethod = getMethodWithCustomName('mint')
+    if(overridingMintMethod) return overridingMintMethod(numberOfTokens);
     const customMintMethod = getMethodWithCustomName('mint')
     if (customMintMethod)
         return customMintMethod(numberOfTokens)
@@ -50,7 +52,10 @@ const getDefaultMintPrice = () => {
     return undefined
 }
 
-export const getMintPrice = async () => {
+export const getMintPrice = async (priceFunctionOverride) => {
+    if(priceFunctionOverride) return getMethodWithCustomName(priceFunctionOverride)();
+    if(getMethodWithCustomName('price')) return  getMethodWithCustomName('price')();
+
     const matches = Object.keys(NFTContract.methods).filter(key =>
         !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
     )
@@ -136,10 +141,11 @@ export const getMaxTokensPerMint = async () => {
     return getDefaultMaxTokensPerMint()
 }
 
-export const mint = async (nTokens) => {
+export const mint = async (nTokens, mintFunctionOverride, priceFunctionOverride) => {
     const wallet = await getWalletAddressOrConnect(true);
     const numberOfTokens = nTokens ?? 1;
-    const mintPrice = await getMintPrice();
+    console.log("in mint function, priceFunctionOverride: ", priceFunctionOverride, " mintFunctionOverride: ", mintFunctionOverride);
+    const mintPrice = await getMintPrice(priceFunctionOverride);
     if (mintPrice === undefined)
         return { tx: undefined }
 
@@ -147,7 +153,7 @@ export const mint = async (nTokens) => {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const estimatedGas = await getMintTx({ numberOfTokens })
+    const estimatedGas = await getMintTx({ numberOfTokens, mintFunctionOverride })
         .estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
@@ -163,7 +169,7 @@ export const mint = async (nTokens) => {
     const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas =  [1, 4].includes(chainID) ? 2e9 : undefined;
 
-    const tx = getMintTx({ numberOfTokens })
+    const tx = getMintTx({ numberOfTokens, mintFunctionOverride })
         .send({
             ...txParams,
             gasLimit: estimatedGas + 5000,

@@ -32,6 +32,8 @@ export const MintModal = (props, ref) => {
     const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1)
+    const [mintFunction, setMintfunction] = useState(1)
+    const [priceFunction, setPriceFunction] = useState(1)
 
     const handleClose = () => {
         setIsOpen(false);
@@ -89,6 +91,9 @@ export const MintModal = (props, ref) => {
                 {step === 1 && <QuantityModalStep
                     setTxHash={setTxHash}
                     setQuantity={setQuantity}
+                    setPriceFunction={setPriceFunction}
+                    setMintfunction={setMintfunction}
+                    setQuantity={setQuantity}
                     setStep={setStep}
                     setIsLoading={setIsLoading}
                 />}
@@ -100,9 +105,15 @@ export const MintModal = (props, ref) => {
 
 export const modalRef = React.createRef();
 
-export const showMintModal = (quantity) => {
+export const showMintModal = (quantity, mintFunction, priceFunction) => {
     if (quantity) {
         modalRef.current?.setQuantity(quantity)
+    }
+    if (mintFunction) {
+        modalRef.current?.setMintfunction(mintFunction)
+    }
+    if (priceFunction) {
+        modalRef.current?.setPriceFunction(priceFunction)
     }
     modalRef.current?.setIsOpen(true);
 }

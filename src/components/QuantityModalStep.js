@@ -15,6 +15,8 @@ import { isEthereumContract } from "../contract";
 
 export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setStep }) => {
     const [quantityValue, setQuantityValue] = useState(1)
+    const [priceFunction, setPriceFunction] = useState()
+    const [mintFunction, setMintedFunction] = useState()
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
     const [mintPrice, setMintPrice] = useState(undefined)
     const [mintedNumber, setMintedNumber] = useState()
@@ -22,7 +24,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
 
     useEffect(() => {
         if (isEthereumContract()) {
-            getMintPrice().then(price => {
+            getMintPrice(priceFunction).then(price => {
                 if (price !== undefined) {
                     setMintPrice(Number((price) / 1e18))
                 }
@@ -47,7 +49,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
 
     const onSuccess = async () => {
         setIsLoading(true)
-        const { tx } = await mint(quantityValue)
+        const { tx } = await mint(quantityValue, mintFunction, priceFunction)
         if (tx === undefined) {
             setIsLoading(false)
         }

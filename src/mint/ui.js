@@ -16,10 +16,9 @@ export const updateMintButton = () => {
                 const initialBtnText = mintButton.textContent;
                 setButtonText(mintButton, "Loading...")
                 try {
-                    const quantity = getMintQuantity();
                     const address = await getWalletAddressOrConnect(true)
                     if (address) {
-                        showMintModal(quantity);
+                        showMintModal(getMintQuantity(), getMintFunction(), getPriceFunction());
                     }
                 } catch (e) {
                     console.log("Error on pressing mint")
@@ -55,6 +54,15 @@ export const updateMintedCounter = async () => {
 const getMintQuantity = () => {
     const quantity = document.querySelector('#quantity-select')?.value
     return quantity !== '' && quantity !== undefined ? Number(quantity) : undefined;
+}
+const getMintFunction = (element) => {
+    const f = element.dataset?.mint;
+    return f !== '' && f !== undefined ? String(f) : undefined;
+}
+
+const getPriceFunction = (element) => {
+    const f = element.dataset?.mint;
+    return f !== '' && f !== undefined ? String(f) : undefined;
 }
 
 const setButtonText = (btn, text) => {
