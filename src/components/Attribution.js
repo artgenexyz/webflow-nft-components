@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { NFTContract } from '../contract';
 
 export const Attribution = (props) => {
-    const [attributionText, setAttributionText] = useState("Widget by Buildship")
+    const [attributionText, setAttributionText] = useState("")
     const [isBuildshipUser, setIsBuildshipUser] = useState(false)
 
     useEffect(() => {
@@ -33,17 +33,6 @@ export const Attribution = (props) => {
                 alignItems: "center",
                 flexDirection: "column"
         }}>
-        <Box
-            onClick={() => window.open("https://buildship.xyz")}
-            sx={{
-                mt: 4,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                ...props?.sx
-            }}>
-        {/* for SEO */}
-        <a href="https://buildship.xyz" />
         <div style={{
             display: "flex",
             justifyContent: "center",
@@ -52,11 +41,6 @@ export const Attribution = (props) => {
             height: 24,
             borderRadius: 24,
         }}>
-            <img
-                width={16}
-                height={16}
-                src={`${getBaseURL()}/images/buildship${window.STYLES?.theme === "dark" ? "-white" : ""}.svg`}
-            />
         </div>
         <Box sx={{
             marginLeft: "2px",
