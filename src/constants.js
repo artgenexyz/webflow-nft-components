@@ -21,6 +21,17 @@ export const NETWORKS = {
         testnetID: 4,
         blockExplorerURL: "https://rinkeby.etherscan.io"
     },
+    5: {
+        name: "Goerli",
+        rpcURL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+        currency: {
+            name: "Ether",
+            symbol: "ETH",
+            decimals: 18
+        },
+        testnetID: 5,
+        blockExplorerURL: "https://goerli.etherscan.io"
+    },
     137: {
         name: "Polygon",
         rpcURL: "https://polygon-rpc.com/",
