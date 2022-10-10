@@ -23,8 +23,8 @@ export const initContract = async (contract, shouldSwitchNetwork=true) => {
 }
 
 const initContractGlobalObject = async () => {
-    if (window.CONTRACT_ADDRESS === "YOUR CONTRACT ADDRESS HERE") {
-        alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.xyz")
+    if (!window.CONTRACT_ADDRESS?.length || window.CONTRACT_ADDRESS === "YOUR CONTRACT ADDRESS HERE") {
+        alert("You forgot to insert your NFT contract address in your embed code. Insert your contract address, publish the website and try again. If you don't have it, create it at https://app.buildship.xyz")
         return
     }
     const chainID = getConfigChainID()
