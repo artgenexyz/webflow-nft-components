@@ -1,6 +1,6 @@
 import { getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
-import { NFTContract, ExtensionContract } from "../contract.js"
+import { isEthereum, NFTContract, ExtensionContract } from "../contract.js"
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -225,11 +225,11 @@ export const mint = async (nTokens) => {
         return { tx: undefined }
     }
     const gasPrice = await web3.eth.getGasPrice();
-    // Math.max is for Rinkeby (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
-    const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 2e9);
+    // Math.max is for Goerli (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
+    const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 5e9);
     const chainID = await web3.eth.getChainId();
-    const maxFeePerGas = [1, 4].includes(chainID) ? formatValue(maxGasPrice) : undefined;
-    const maxPriorityFeePerGas =  [1, 4].includes(chainID) ? 2e9 : undefined;
+    const maxFeePerGas = isEthereum(chainID) ? formatValue(maxGasPrice) : undefined;
+    const maxPriorityFeePerGas =  isEthereum(chainID) ? 2e9 : undefined;
     const minGasLimit = window.DEFAULTS?.presale?.minGasLimit
     const gasLimitSlippage = window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000
     const gasLimit = minGasLimit ? Math.max(minGasLimit, estimatedGas + gasLimitSlippage) : estimatedGas + gasLimitSlippage

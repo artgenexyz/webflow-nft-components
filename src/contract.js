@@ -24,8 +24,8 @@ export const initContract = async (contract, shouldSwitchNetwork=true) => {
 }
 
 const initContractGlobalObject = async () => {
-    if (window.CONTRACT_ADDRESS === "YOUR CONTRACT ADDRESS HERE") {
-        alert("You forgot to insert your NFT contract address in your Webflow Embed code. Insert your contract address, publish the website and try again. If you don't have it, contact https://buildship.xyz")
+    if (!window.CONTRACT_ADDRESS?.length || window.CONTRACT_ADDRESS === "YOUR CONTRACT ADDRESS HERE") {
+        alert("You forgot to insert your NFT contract address in your embed code. Insert your contract address, publish the website and try again. If you don't have it, create it at https://app.buildship.xyz")
         return
     }
     const chainID = getConfigChainID()
@@ -144,4 +144,6 @@ export const setContracts = async (shouldSwitchNetwork=true) => {
     console.log("NFTContract", NFTContract)
 }
 
-export const isEthereumContract = () => ([1, 4].includes(window.CONTRACT.nft.allowedNetworks[0]))
+export const isEthereumContract = () => isEthereum(getConfigChainID())
+
+export const isEthereum = (chainID) => NETWORKS[chainID] && NETWORKS[chainID].chain === "ethereum"
