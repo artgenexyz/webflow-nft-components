@@ -7,7 +7,7 @@ export const NETWORKS = {
             symbol: "ETH",
             decimals: 18
         },
-        testnetID: 4,
+        testnetID: 5,
         blockExplorerURL: "https://etherscan.io"
     },
     4: {
