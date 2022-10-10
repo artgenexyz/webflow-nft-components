@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { WinterCheckout } from '@usewinter/checkout';
 import { getConfigChainID, isEthereumContract } from "../contract";
 
-export const isWinterCheckoutEnabled = () => {
-    return !!window.WINTER_PROJECT_ID && isEthereumContract()
+export const isWinterCheckoutEnabled = (launchType) => {
+    return !!window.WINTER_PROJECT_ID && isEthereumContract() && launchType !== "whitelist"
 }
 
 export const WinterModal = ({ mintQuantity, showWinter, setShowWinter }) => {

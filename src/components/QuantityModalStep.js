@@ -122,7 +122,7 @@ export const QuantityModalStep = ({
                 ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
                 : "Mint"}
         </Button>
-        {isWinterCheckoutEnabled() && <>
+        {isWinterCheckoutEnabled(launchType) && <>
             <Button
                 onClick={() => setShowWinter(true)}
                 sx={{ mt: 2, width: "100%" }}
