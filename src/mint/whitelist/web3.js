@@ -18,7 +18,7 @@ const getMintPrice = async (contract, nTokens, wallet) => {
 
         const totalAmount = await contract.methods.price(claimed + nTokens).call()
 
-        if (claimed == 0) {
+        if (claimed === 0) {
             return Number(totalAmount)
         }
 

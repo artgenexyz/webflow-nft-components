@@ -14,6 +14,7 @@ import { parseTxError, roundToDecimal } from '../utils';
 import { Attribution } from './Attribution';
 import { sendEvent } from '../analytics';
 import { isEthereumContract } from "../contract";
+import WinterModal, { isWinterCheckoutEnabled } from "./WinterCheckout";
 
 export const QuantityModalStep = ({
       launchType, setQuantity, setStep,
@@ -24,6 +25,7 @@ export const QuantityModalStep = ({
     const [mintPrice, setMintPrice] = useState(undefined)
     const [mintedNumber, setMintedNumber] = useState()
     const [totalNumber, setTotalNumber] = useState()
+    const [showWinter, setShowWinter] = useState(false)
 
     useEffect(() => {
         if (isEthereumContract() && launchType !== "whitelist") {
@@ -120,6 +122,18 @@ export const QuantityModalStep = ({
                 ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
                 : "Mint"}
         </Button>
+        {isWinterCheckoutEnabled() && <>
+            <Button
+                onClick={() => setShowWinter(true)}
+                sx={{ mt: 2, width: "100%" }}
+                variant="contained">
+                Mint with card
+            </Button>
+            <WinterModal
+                mintQuantity={quantityValue}
+                showWinter={showWinter}
+                setShowWinter={setShowWinter} />
+        </>}
         {!window.DEFAULTS?.hideCounter && <Box
             sx={{
                 color: (theme) => theme.palette.grey[500],
