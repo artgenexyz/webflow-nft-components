@@ -127,4 +127,6 @@ export const setContracts = async (shouldSwitchNetwork=true) => {
     console.log("NFTContract", NFTContract)
 }
 
-export const isEthereumContract = () => ([1, 4].includes(window.CONTRACT.nft.allowedNetworks[0]))
+export const isEthereumContract = () => isEthereum(getConfigChainID())
+
+export const isEthereum = (chainID) => NETWORKS[chainID] && NETWORKS[chainID].chain === "ethereum"

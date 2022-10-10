@@ -1,6 +1,7 @@
 export const NETWORKS = {
     1: {
         name: "Ethereum",
+        chain: "ethereum",
         rpcURL: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
         currency: {
             name: "Ether",
@@ -12,6 +13,7 @@ export const NETWORKS = {
     },
     4: {
         name: "Rinkeby",
+        chain: "ethereum",
         rpcURL: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
         currency: {
             name: "Ether",
@@ -23,6 +25,7 @@ export const NETWORKS = {
     },
     5: {
         name: "Goerli",
+        chain: "ethereum",
         rpcURL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
         currency: {
             name: "Ether",
@@ -34,6 +37,7 @@ export const NETWORKS = {
     },
     137: {
         name: "Polygon",
+        chain: "polygon",
         rpcURL: "https://polygon-rpc.com/",
         currency: {
             name: "Matic",
@@ -45,6 +49,7 @@ export const NETWORKS = {
     },
     80001: {
         name: "Mumbai (Polygon Testnet)",
+        chain: "polygon",
         rpcURL: "https://rpc-mumbai.maticvigil.com/",
         currency: {
             name: "Matic",
@@ -56,6 +61,7 @@ export const NETWORKS = {
     },
     56: {
         name: "Binance",
+        chain: "binance",
         rpcURL: "https://bsc-dataseed1.binance.org",
         currency: {
             name: "Binance Coin",
@@ -67,6 +73,7 @@ export const NETWORKS = {
     },
     97: {
         name: "Binance Smart Chain Testnet",
+        chain: "binance",
         rpcURL: "https://data-seed-prebsc-1-s1.binance.org:8545",
         currency: {
             name: "Binance Coin",
@@ -76,9 +83,9 @@ export const NETWORKS = {
         testnetID: 97,
         blockExplorerURL: "https://testnet.bscscan.com",
     },
-
     25: {
         name: "Cronos Blockchain",
+        chain: "cronos",
         rpcURL: "https://evm-cronos.crypto.org",
         currency: {
             name: "Cronos",
@@ -90,6 +97,7 @@ export const NETWORKS = {
     },
     338: {
         name: "Cronos Testnet",
+        chain: "cronos",
         rpcURL: "https://cronos-testnet-3.crypto.org:8545/",
         currency: {
             name: "Cronos",
@@ -99,9 +107,9 @@ export const NETWORKS = {
         testnetID: 338,
         blockExplorerURL: "https://cronos.crypto.org/explorer/testnet3/",
     },
-
     1285: {
         name: "Moonriver",
+        chain: "moonriver",
         rpcURL: "https://rpc.moonriver.moonbeam.network",
         currency: {
             name: "MOVR",
@@ -113,6 +121,7 @@ export const NETWORKS = {
     },
     1287: {
         name: "Moonbase Alpha",
+        chain: "moonriver",
         rpcURL: "https://rpc.testnet.moonbeam.network",
         currency: {
             name: "DEV",
