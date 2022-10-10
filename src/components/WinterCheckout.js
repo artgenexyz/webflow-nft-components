@@ -1,14 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { WinterCheckout } from '@usewinter/checkout';
-import { getConfigChainID, isEthereumContract } from "../contract";
+import { getConfigChainID, isEthereumContract, isTestnet } from "../contract";
 
-export const isWinterCheckoutEnabled = (launchType) => {
-    return !!window.WINTER_PROJECT_ID && isEthereumContract() && launchType !== "whitelist"
+const getWinterProjectID = (project) => {
+    if (!project) {
+        return undefined
+    }
+    const configChainID = getConfigChainID()
+    return isTestnet(configChainID) ? project?.winter_project_id_testnet : project?.winter_project_id
 }
 
-export const WinterModal = ({ mintQuantity, showWinter, setShowWinter }) => {
-    const winterProjectID = window.WINTER_PROJECT_ID
+export const isWinterCheckoutEnabled = (project, launchType) => {
+    return getWinterProjectID(project) && isEthereumContract() && launchType !== "whitelist"
+}
+
+export const WinterModal = ({ project, mintQuantity, showWinter, setShowWinter }) => {
     const configChainID = getConfigChainID()
+    const winterProjectID = getWinterProjectID(project)
 
     const handleWindowEvent = (event) => {
         if (event.data.name === "closeWinterCheckoutModal") {

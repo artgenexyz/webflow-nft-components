@@ -147,3 +147,5 @@ export const setContracts = async (shouldSwitchNetwork=true) => {
 export const isEthereumContract = () => isEthereum(getConfigChainID())
 
 export const isEthereum = (chainID) => NETWORKS[chainID] && NETWORKS[chainID].chain === "ethereum"
+
+export const isTestnet = (chainID) => NETWORKS[chainID] && NETWORKS[chainID].testnetID === chainID

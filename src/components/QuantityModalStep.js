@@ -15,6 +15,8 @@ import { Attribution } from './Attribution';
 import { sendEvent } from '../analytics';
 import { isEthereumContract } from "../contract";
 import WinterModal, { isWinterCheckoutEnabled } from "./WinterCheckout";
+import { useProject } from "../hooks/useProject";
+import { getBaseURL } from "../constants";
 
 export const QuantityModalStep = ({
       launchType, setQuantity, setStep,
@@ -26,6 +28,7 @@ export const QuantityModalStep = ({
     const [mintedNumber, setMintedNumber] = useState()
     const [totalNumber, setTotalNumber] = useState()
     const [showWinter, setShowWinter] = useState(false)
+    const project = useProject()
 
     useEffect(() => {
         if (isEthereumContract() && launchType !== "whitelist") {
@@ -122,14 +125,15 @@ export const QuantityModalStep = ({
                 ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
                 : "Mint"}
         </Button>
-        {isWinterCheckoutEnabled(launchType) && <>
+        {isWinterCheckoutEnabled(project, launchType) && <>
             <Button
                 onClick={() => setShowWinter(true)}
                 sx={{ mt: 2, width: "100%" }}
                 variant="contained">
-                Mint with card
+                <img src={`${getBaseURL()}/images/winter.png`} style={{ width: 16, marginRight: 4 }} /> Mint with card
             </Button>
             <WinterModal
+                project={project}
                 mintQuantity={quantityValue}
                 showWinter={showWinter}
                 setShowWinter={setShowWinter} />
