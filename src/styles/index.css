@@ -3,6 +3,7 @@
 .MuiDialog-container {
     font-family: "Inter", BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
+    line-height: 1.2 !important;
 }
 
 .mintModal-content {
