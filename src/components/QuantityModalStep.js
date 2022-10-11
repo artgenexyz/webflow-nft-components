@@ -14,9 +14,8 @@ import { parseTxError, roundToDecimal } from '../utils';
 import { Attribution } from './Attribution';
 import { sendEvent } from '../analytics';
 import { isEthereumContract } from "../contract";
-import WinterModal, { isWinterCheckoutEnabled } from "./WinterCheckout";
 import { useProject } from "../hooks/useProject";
-import { getBaseURL } from "../constants";
+import { WinterButton } from "./WinterButton";
 
 export const QuantityModalStep = ({
       launchType, setQuantity, setStep,
@@ -27,7 +26,6 @@ export const QuantityModalStep = ({
     const [mintPrice, setMintPrice] = useState(undefined)
     const [mintedNumber, setMintedNumber] = useState()
     const [totalNumber, setTotalNumber] = useState()
-    const [showWinter, setShowWinter] = useState(false)
     const project = useProject()
 
     useEffect(() => {
@@ -116,28 +114,17 @@ export const QuantityModalStep = ({
                 max={maxTokens}
             />
         </Box>}
-        <Button
-            onClick={onSuccess}
-            sx={{ mt: maxTokens > 1 ? 4 : 2, width: "100%" }}
-            variant="contained"
-        >
-            {mintPrice !== undefined
-                ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
-                : "Mint"}
-        </Button>
-        {isWinterCheckoutEnabled(project, launchType) && <>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Button
-                onClick={() => setShowWinter(true)}
-                sx={{ mt: 2, width: "100%" }}
+                onClick={onSuccess}
+                sx={{ mt: maxTokens > 1 ? 4 : 2, width: "100%" }}
                 variant="contained">
-                <img src={`${getBaseURL()}/images/winter.png`} style={{ width: 16, marginRight: 4 }} /> Mint with card
+                {mintPrice !== undefined
+                    ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
+                    : "Mint"}
             </Button>
-            <WinterModal
-                project={project}
-                mintQuantity={quantityValue}
-                showWinter={showWinter}
-                setShowWinter={setShowWinter} />
-        </>}
+            <WinterButton project={project} quantity={quantityValue} />
+        </Box>
         {!window.DEFAULTS?.hideCounter && <Box
             sx={{
                 color: (theme) => theme.palette.grey[500],

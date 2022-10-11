@@ -14,7 +14,7 @@ export const isWinterCheckoutEnabled = (project, launchType) => {
     return getWinterProjectID(project) && isEthereumContract() && launchType !== "whitelist"
 }
 
-export const WinterModal = ({ project, mintQuantity, showWinter, setShowWinter }) => {
+export const WinterModal = ({ project, mintQuantity, showWinter, setShowWinter, onClose }) => {
     const configChainID = getConfigChainID()
     const winterProjectID = getWinterProjectID(project)
 
@@ -40,7 +40,10 @@ export const WinterModal = ({ project, mintQuantity, showWinter, setShowWinter }
                 production={configChainID === 1 || configChainID === 137}
                 showModal={showWinter}
                 testnet={configChainID === 5 ? 'goerli' : 'rinkeby'}
-                onClose={() => setShowWinter(false)}
+                onClose={() => {
+                    if (onClose) onClose()
+                    setShowWinter(false)
+                }}
                 extraMintParams={{ data: '0x' }}
                 mintQuantity={mintQuantity}
     />
