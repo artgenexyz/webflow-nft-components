@@ -137,7 +137,7 @@ export const getBaseURL = () => {
     if (window.location.href.includes("localhost")) {
         return window.location.origin
     }
-    return "https://nftcomponents.vercel.app"
+    return "https://widget-allowlist.buildship.xyz"
 }
 
 export const BUILDSHIP_API_BASE = "https://metadata.buildship.xyz/api"
