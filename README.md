@@ -40,7 +40,7 @@ It uses ERC721A, allowing for **50-100% lower** minting gas fees, costs **~10-20
 
    ✅ insert your contract address in `CONTRACT_ADDRESS` field 
    
-   ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Rinkeby Testnet`.
+   ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Goerli Testnet`.
 
    ✅ make sure it fits requirements from [Custom smart contract requirements](#custom-smart-contract-requirements)
    
@@ -82,7 +82,7 @@ Here's the code that handles this: [src/mint/web3.js](src/mint/web3.js)
 ### Example for testing
 ```html
 <script>
-   CONTRACT_ADDRESS = "0x200ad889ef4a9d41910609c88ef3a7b095107b53"
+   CONTRACT_ADDRESS = "0xb1db0dbad7a14370872a7e5327c8ad7c9951a661"
    IS_TESTNET = true
 </script>
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
@@ -120,7 +120,7 @@ It's easy! Set `NETWORK_ID` instead of `IS_TESTNET` in the code snippet
 
 Some of the network IDs you might use:
 - Ethereum Mainnet: `NETWORK_ID = 1`
-- Ethereum Rinkeby Testnet: `NETWORK_ID = 4`
+- Ethereum Goerli Testnet: `NETWORK_ID = 5`
 - Polygon: `NETWORK_ID = 137`
 - Binance: `NETWORK_ID = 56`
 - For other IDs visit [Chainlist](https://chainlist.org)
@@ -150,7 +150,7 @@ Here's a list of all available parameters for customization. If you need help wi
    CONTRACT_ADDRESS = "YOUR CONTRACT ADDRESS HERE"
    CONTRACT_ABI = []                   // needed for non-verified contracts only
    NETWORK_ID = 4                      // defaults to 1: Ethereum network
-   IS_TESTNET = true                   // true defaults to 4: Rinkeby network
+   IS_TESTNET = true                   // true defaults to 5: Goerli network
    MAX_PER_MINT = 5                    // max value of NFT quantity slider in the modal, default is 20
    DEFAULTS = {
       labels: {
