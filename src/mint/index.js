@@ -16,5 +16,3 @@ export const init = async () => {
     updateMintedCounter();
     updateMintButton();
 }
-
-init();
