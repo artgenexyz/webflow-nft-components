@@ -40,7 +40,7 @@ const getDefaultMintPrice = () => {
 }
 
 export const getMintPrice = async () => {
-    return 1e18.toString()
+    return .25e18.toString()
 }
 
 export const getMintedNumber = async () => {
