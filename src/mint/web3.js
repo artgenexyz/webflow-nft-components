@@ -159,6 +159,9 @@ export const mint = async (nTokens) => {
             alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
             console.log(e);
         })
+    if (estimatedGas === undefined) {
+        return { tx: undefined }
+    }
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Goerli (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 5e9);
