@@ -54,10 +54,11 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, state,
         if (tx === undefined) {
             setIsLoading(false)
         }
-        tx?.on("transactionHash", (hash) => {
+        tx?.once("transactionHash", (hash) => {
             setTxHash(hash)
-        })?.on("confirmation", async () => {
+        })?.once("confirmation", async () => {
             setIsLoading(false)
+            setTxHash(undefined)
             showAlert(`Successfully minted ${quantityValue} NFTs${window.DEFAULTS?.redirectURL ? ". You will be redirected in less than a second" : ""}`, "success")
             // TODO: show success state in the modal
             if (window.DEFAULTS?.redirectURL) {
@@ -65,7 +66,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, state,
                     window.location.href = window.DEFAULTS?.redirectURL
                 }, 800)
             }
-        })?.on("error", (e) => {
+        })?.once("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {
