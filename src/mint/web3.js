@@ -21,7 +21,7 @@ const getMethodWithCustomName = (methodName) => {
 }
 
 const getMintTx = ({ numberOfTokens }) => {
-    return NFTContract.methods.mint();
+    return NFTContract.methods.whitelistmint();
 }
 
 const getDefaultMintPrice = () => {
@@ -40,7 +40,7 @@ const getDefaultMintPrice = () => {
 }
 
 export const getMintPrice = async () => {
-    return 1e18.toString()
+    return 1e17.toString()
 }
 
 export const getMintedNumber = async () => {
@@ -69,20 +69,11 @@ export const getMaxSupply = async () => {
 }
 
 export const getDefaultMaxTokensPerMint = () => {
-    return window.MAX_PER_MINT ?? 10
+    return 1
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (NFTContract?.methods?.maxPerMint) {
-        return Number(await NFTContract.methods.maxPerMint().call())
-    }
-    if (NFTContract?.methods?.maxMintAmount) {
-        return Number(await NFTContract.methods.maxMintAmount().call())
-    }
-    if (NFTContract?.methods?.MAX_TOKENS_PER_MINT) {
-        return Number(await NFTContract.methods.MAX_TOKENS_PER_MINT().call())
-    }
-    return getDefaultMaxTokensPerMint()
+    return 1
 }
 
 export const mint = async (nTokens) => {
