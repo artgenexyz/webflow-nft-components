@@ -1,17 +1,12 @@
 import { getCurrentNetwork, isWeb3Initialized, switchNetwork, web3 } from './wallet.js';
-import { normalizeURL } from "./utils.js";
 import { NETWORKS } from "./constants.js";
+import { getConfigChainID, readOnlyWeb3 } from "./web3";
 
 export let NFTContract;
 
 const abiMemoryCache = {};
 
-export const initContract = async (contract, shouldSwitchNetwork=true) => {
-    const host = normalizeURL(window.location.href);
-    const allowedURLs = contract?.allowedURLs?.map(u => normalizeURL(u));
-    if (allowedURLs && !allowedURLs?.some(v => v.includes(host))) {
-        return undefined;
-    }
+export const initContract = async (_web3, contract, shouldSwitchNetwork=true) => {
     let currentNetwork = await getCurrentNetwork();
     if (shouldSwitchNetwork && !contract.allowedNetworks.includes(currentNetwork)) {
         await switchNetwork(contract.allowedNetworks[0])
@@ -19,7 +14,7 @@ export const initContract = async (contract, shouldSwitchNetwork=true) => {
     }
     const address = contract.address[contract.allowedNetworks[0]];
     const abi = contract.abi;
-    return new web3.eth.Contract(abi, address);
+    return new _web3.eth.Contract(abi, address);
 }
 
 const initContractGlobalObject = async () => {
@@ -38,12 +33,6 @@ const initContractGlobalObject = async () => {
             allowedNetworks: [chainID]
         }
     }
-}
-
-export const getConfigChainID = () => {
-    // Default to Ethereum
-    const networkID = window.NETWORK_ID ?? 1;
-    return window.IS_TESTNET ? NETWORKS[networkID].testnetID : networkID;
 }
 
 export const fetchABI = async (address, chainID) => {
@@ -114,16 +103,11 @@ const getEmbeddedMainABI = (address) => {
 
 export const setContracts = async (shouldSwitchNetwork=true) => {
     await initContractGlobalObject();
-    if (!isWeb3Initialized()) {
-        return
-    }
+    const _web3 = isWeb3Initialized() ? web3 : readOnlyWeb3
     if (shouldSwitchNetwork) {
         await switchNetwork(window.CONTRACT.nft.allowedNetworks[0]);
     }
-    if (NFTContract) {
-        return
-    }
-    NFTContract = await initContract(window.CONTRACT.nft, false);
+    NFTContract = await initContract(_web3, window.CONTRACT.nft, false);
     console.log("NFTContract", NFTContract)
 }
 
