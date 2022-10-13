@@ -131,7 +131,7 @@ const getWeb3ModalProviderOptions = ({
 }
 
 const initWeb3Modal = (forceConnect, isMobileOnlyInjectedProvider) => {
-    const isDesktopNoInjectedProvider =  !isMobile() && !window.ethereum
+    const isDesktopNoInjectedProvider = !isMobile() && !window.ethereum
 
     const web3Modal = new Web3Modal({
         cacheProvider: false,
@@ -148,10 +148,12 @@ const initWeb3Modal = (forceConnect, isMobileOnlyInjectedProvider) => {
     return web3Modal
 }
 
+export const isMobileOnlyInjectedProviderValue = () => isMobile() && window.ethereum
+
 const initWeb3 = async (forceConnect = false) => {
     if (isWeb3Initialized()) return
 
-    const isMobileOnlyInjectedProvider = isMobile() && window.ethereum
+    const isMobileOnlyInjectedProvider = isMobileOnlyInjectedProviderValue()
     const web3Modal = initWeb3Modal(forceConnect, isMobileOnlyInjectedProvider)
 
     if (web3Modal.cachedProvider || forceConnect) {
@@ -299,6 +301,9 @@ const getConnectButton = () => {
 }
 
 export const updateWalletStatus = async () => {
+    if (isMobileOnlyInjectedProviderValue()) {
+        await tryInitWeb3(false)
+    }
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
