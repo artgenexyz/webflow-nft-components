@@ -1,6 +1,7 @@
 import { getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import { isEthereum, NFTContract } from "../contract.js"
+import { safeGetChainID } from "../web3";
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -138,6 +139,9 @@ export const getMaxTokensPerMint = async () => {
 
 export const mint = async (nTokens) => {
     const wallet = await getWalletAddressOrConnect(true);
+    if (!wallet) {
+        return { tx: undefined }
+    }
     const numberOfTokens = nTokens ?? 1;
     const mintPrice = await getMintPrice();
     if (mintPrice === undefined)
@@ -159,7 +163,7 @@ export const mint = async (nTokens) => {
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Goerli (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 5e9);
-    const chainID = await web3.eth.getChainId();
+    const chainID = await safeGetChainID()
     const maxFeePerGas = isEthereum(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas = isEthereum(chainID) ? 2e9 : undefined;
 
