@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import { NETWORKS } from "./constants";
 import { toHex } from "./utils";
+import { isWeb3Initialized, web3 } from "./wallet";
 
 export const getConfigChainID = () => {
     // Default to Ethereum
@@ -14,9 +15,10 @@ export const isCorrectNetwork = (provider) => {
     }
     const isHex = String(provider?.chainId)?.startsWith("0x")
     const configChain = isHex ? toHex(getConfigChainID()) : getConfigChainID()
-    console.log("isCorrectNetwork", provider?.chainId, configChain)
     return String(configChain) === String(provider?.chainId)
 }
+
+export const getWeb3Instance = () => isWeb3Initialized() ? web3 : readOnlyWeb3
 
 const initReadOnlyWeb3 = () => {
     const configChainID = getConfigChainID()
