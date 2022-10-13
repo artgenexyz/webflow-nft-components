@@ -136,8 +136,13 @@ export const getMaxTokensPerMint = async () => {
     return getDefaultMaxTokensPerMint()
 }
 
-export const mint = async (nTokens) => {
-    const wallet = await getWalletAddressOrConnect(true);
+export const mint = async (nTokens, { onConnectSuccess, setState }) => {
+    const wallet = await getWalletAddressOrConnect({
+        shouldSwitchNetwork: true,
+        onConnectSuccess
+    })
+    const chainID = await getCurrentNetwork()
+    setState(wallet, chainID)
     if (!wallet) {
         return { tx: undefined }
     }
@@ -165,7 +170,6 @@ export const mint = async (nTokens) => {
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Goerli (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 5e9);
-    const chainID = await getCurrentNetwork()
     const maxFeePerGas = isEthereum(chainID) ? formatValue(maxGasPrice) : undefined;
     const maxPriorityFeePerGas = isEthereum(chainID) ? 2e9 : undefined;
 

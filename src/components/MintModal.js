@@ -1,8 +1,9 @@
-import React, { useImperativeHandle, useState } from "react";
-import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import React, { useContext, useImperativeHandle, useState } from "react";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
-import { isMobile } from "../utils";
+import { ConfirmTxStep } from "./ConfirmTxStep";
+import { Web3Context } from "./Web3Context";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -32,9 +33,14 @@ export const MintModal = (props, ref) => {
     const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1)
+    // TODO: migrate to hooks and global state / Context
+    // this is a hack
+    const [state, setState] = useContext(Web3Context)
+    const { wallet, chainID } = state
 
     const handleClose = () => {
-        setIsOpen(false);
+        setIsOpen(false)
+        setIsLoading(false)
     }
 
     useImperativeHandle(ref, () => ({
@@ -46,53 +52,27 @@ export const MintModal = (props, ref) => {
         <Dialog
             open={isOpen}
             onClose={handleClose}>
-            {isLoading &&
-                <Box sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: 300,
-                    height: 300,
-                }}>
-                    {txHash ? <CircularProgress /> : <span style={{
-                        fontSize: 60,
-                        lineHeight: 1,
-                        margin: 0
-                    }}>
-                        👀
-                    </span>}
-                    <Typography
-                        sx={{ mt: 3, textAlign: "center" }}
-                        variant="h4">
-                        {txHash
-                            ? `Minting ${quantity} NFT...`
-                            : 'Confirm the transaction in your wallet'}
-                    </Typography>
-                    {!txHash && <Typography sx={{
-                        mt: 3,
-                        pl: 3,
-                        pr: 3,
-                        color: "#757575",
-                        textAlign: "center"
-                    }} variant="subtitle2">
-                        Wait up to 2-3 sec until the transaction appears in your wallet
-                        <br/><br/>
-                        {!isMobile() && "If you don't see the Confirm button, scroll down ⬇️"}</Typography>}
-                </Box>
-            }
+            {isLoading && <ConfirmTxStep
+                wallet={wallet}
+                chainID={chainID}
+                txHash={txHash}
+                quantity={quantity}
+                setIsLoading={setIsLoading}
+            />}
             {!isLoading && <>
-            <DialogTitleWithClose onClose={handleClose}>
-                <Typography variant="h1">Mint now</Typography>
-            </DialogTitleWithClose>
-            <DialogContent className="mintModal-content">
-                {step === 1 && <QuantityModalStep
-                    setTxHash={setTxHash}
-                    setQuantity={setQuantity}
-                    setStep={setStep}
-                    setIsLoading={setIsLoading}
-                />}
-            </DialogContent>
+                <DialogTitleWithClose onClose={handleClose}>
+                    <Typography variant="h1">Mint now</Typography>
+                </DialogTitleWithClose>
+                <DialogContent className="mintModal-content">
+                    {step === 1 && <QuantityModalStep
+                        setTxHash={setTxHash}
+                        setQuantity={setQuantity}
+                        setStep={setStep}
+                        setIsLoading={setIsLoading}
+                        state={state}
+                        setState={setState}
+                    />}
+                </DialogContent>
             </>}
         </Dialog>
     )

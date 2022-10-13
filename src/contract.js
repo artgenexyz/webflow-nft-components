@@ -1,4 +1,4 @@
-import { getCurrentNetwork, isWeb3Initialized, switchNetwork, web3 } from './wallet.js';
+import { isWeb3Initialized, switchNetwork, web3 } from './wallet.js';
 import { NETWORKS } from "./constants.js";
 import { getConfigChainID, readOnlyWeb3 } from "./web3";
 
@@ -6,12 +6,7 @@ export let NFTContract;
 
 const abiMemoryCache = {};
 
-export const initContract = async (_web3, contract, shouldSwitchNetwork=true) => {
-    let currentNetwork = await getCurrentNetwork();
-    if (shouldSwitchNetwork && !contract.allowedNetworks.includes(currentNetwork)) {
-        await switchNetwork(contract.allowedNetworks[0])
-        currentNetwork = await getCurrentNetwork();
-    }
+export const initContract = async (_web3, contract) => {
     const address = contract.address[contract.allowedNetworks[0]];
     const abi = contract.abi;
     return new _web3.eth.Contract(abi, address);
@@ -101,13 +96,13 @@ const getEmbeddedMainABI = (address) => {
     return undefined
 }
 
-export const setContracts = async (shouldSwitchNetwork=true) => {
+export const setContracts = async ({ shouldSwitchNetwork = true, onNetworkSwitch } = {}) => {
     await initContractGlobalObject();
     const _web3 = isWeb3Initialized() ? web3 : readOnlyWeb3
     if (shouldSwitchNetwork) {
-        await switchNetwork(window.CONTRACT.nft.allowedNetworks[0]);
+        await switchNetwork(window.CONTRACT.nft.allowedNetworks[0], onNetworkSwitch);
     }
-    NFTContract = await initContract(_web3, window.CONTRACT.nft, false);
+    NFTContract = await initContract(_web3, window.CONTRACT.nft);
     console.log("NFTContract", NFTContract)
 }
 

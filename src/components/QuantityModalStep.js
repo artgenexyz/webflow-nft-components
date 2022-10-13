@@ -13,7 +13,7 @@ import { parseTxError, roundToDecimal } from '../utils';
 import { Attribution } from './Attribution';
 import { isEthereumContract } from "../contract";
 
-export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setStep }) => {
+export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, state, setState }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
     const [mintPrice, setMintPrice] = useState(undefined)
@@ -47,7 +47,10 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
 
     const onSuccess = async () => {
         setIsLoading(true)
-        const { tx } = await mint(quantityValue)
+        const { tx } = await mint(quantityValue, {
+            onConnectSuccess: (wallet) => setState({ ...state, wallet }),
+            setState: (wallet, chainID) => setState({ wallet, chainID })
+        })
         if (tx === undefined) {
             setIsLoading(false)
         }
