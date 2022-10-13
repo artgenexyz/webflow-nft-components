@@ -48,7 +48,7 @@ export const ConfirmTxStep = ({ txHash, quantity, setIsLoading }) => {
         width: 300,
         height: 300,
     }}>
-        <IconButton
+        {!txHash && <IconButton
             sx={{
                 position: "absolute",
                 top: 16,
@@ -60,7 +60,7 @@ export const ConfirmTxStep = ({ txHash, quantity, setIsLoading }) => {
             }}
             onClick={() => setIsLoading(false)}>
             <ChevronLeft />
-        </IconButton>
+        </IconButton>}
         {txHash ? <CircularProgress /> : <span style={{
             fontSize: 60,
             lineHeight: 1,
