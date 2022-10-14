@@ -34,6 +34,6 @@ const estimateMaxGasFee = async (tx) => {
 }
 
 const estimateMaxPriorityFeePerGas = async () => {
-    const chainID = await web3.eth.getChainId();
+    const chainID = await getCurrentNetwork()
     return isEthereum(chainID) ? 2e9 : undefined;
 }

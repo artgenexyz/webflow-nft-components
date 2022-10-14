@@ -12,7 +12,7 @@ import { parseTxError, roundToDecimal } from '../utils';
 import { Attribution } from './Attribution';
 import { isEthereumContract } from "../contract";
 
-export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setStep }) => {
+export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, state, setState }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(undefined)
     const [mintPrice, setMintPrice] = useState(undefined)
@@ -49,14 +49,18 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
 
     const onSuccess = async () => {
         setIsLoading(true)
-        const { tx } = await mint(quantityValue)
+        const { tx } = await mint(quantityValue, {
+            onConnectSuccess: (wallet) => setState({ ...state, wallet }),
+            setState: (wallet, chainID) => setState({ wallet, chainID })
+        })
         if (tx === undefined) {
             setIsLoading(false)
         }
-        tx?.on("transactionHash", (hash) => {
+        tx?.once("transactionHash", (hash) => {
             setTxHash(hash)
-        })?.on("confirmation", async () => {
+        })?.once("confirmation", async () => {
             setIsLoading(false)
+            setTxHash(undefined)
             showAlert(`Successfully minted ${quantityValue} NFTs${window.DEFAULTS?.redirectURL ? ". You will be redirected in less than a second" : ""}`, "success")
             // TODO: show success state in the modal
             if (window.DEFAULTS?.redirectURL) {
@@ -64,7 +68,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
                     window.location.href = window.DEFAULTS?.redirectURL
                 }, 800)
             }
-        })?.on("error", (e) => {
+        })?.once("error", (e) => {
             setIsLoading(false)
             const { code, message } = parseTxError(e);
             if (code !== 4001) {

@@ -15,22 +15,26 @@ export const isWeb3Initialized = () => {
     return web3 && provider;
 }
 
-const getWeb3ModalProviderOptions = ({
-    forceConnect,
-    isMobileOnlyInjectedProvider,
-    isDesktopNoInjectedProvider
-}) => {
+export const getIsMobileOnlyInjectedProvider = () => isMobile() && window.ethereum
+
+export const getIsDesktopNoInjectedProvider = () => !isMobile() && !window.ethereum
+
+const getWeb3ModalProviderOptions = ({ forceConnect }) => {
+    const isMobileOnlyInjectedProvider = getIsMobileOnlyInjectedProvider()
+    const isDesktopNoInjectedProvider = getIsDesktopNoInjectedProvider()
     const walletConnectOptions = {
         rpc: objectMap(NETWORKS, (value) => (value.rpcURL)),
         qrcodeModalOptions: {
             mobileLinks: [
                 "rainbow",
+                "zerion",
                 "trust",
                 "ledger",
                 "gnosis"
             ],
             desktopLinks: [
                 "rainbow",
+                "zerion",
                 "trust",
                 "ledger",
                 "gnosis"
@@ -130,19 +134,15 @@ const getWeb3ModalProviderOptions = ({
     return !isMobileOnlyInjectedProvider ? allProviderOptions : {}
 }
 
-const initWeb3Modal = (forceConnect, isMobileOnlyInjectedProvider) => {
-    const isDesktopNoInjectedProvider =  !isMobile() && !window.ethereum
+const initWeb3Modal = (forceConnect) => {
+    const isMobileOnlyInjectedProvider = getIsMobileOnlyInjectedProvider()
 
     const web3Modal = new Web3Modal({
         cacheProvider: false,
         // Use custom Metamask provider because of conflicts with Coinbase injected provider
         // On mobile apps with injected web3, use ONLY injected providers
         disableInjectedProvider: !isMobileOnlyInjectedProvider,
-        providerOptions: getWeb3ModalProviderOptions({
-            forceConnect,
-            isMobileOnlyInjectedProvider,
-            isDesktopNoInjectedProvider
-        })
+        providerOptions: getWeb3ModalProviderOptions({ forceConnect })
     });
 
     return web3Modal
@@ -151,7 +151,7 @@ const initWeb3Modal = (forceConnect, isMobileOnlyInjectedProvider) => {
 const initWeb3 = async (forceConnect = false) => {
     if (isWeb3Initialized()) return
 
-    const isMobileOnlyInjectedProvider = isMobile() && window.ethereum
+    const isMobileOnlyInjectedProvider = getIsMobileOnlyInjectedProvider()
     const web3Modal = initWeb3Modal(forceConnect, isMobileOnlyInjectedProvider)
 
     if (web3Modal.cachedProvider || forceConnect) {
@@ -193,36 +193,39 @@ export const isWalletConnected = async () => {
     return accounts?.length > 0;
 }
 
-export const getWalletAddressOrConnect = async (shouldSwitchNetwork, refresh) => {
-    const currentAddress = async () => {
-        if (!isWeb3Initialized()) {
-            return undefined;
-        }
-        try {
-            return (await provider?.request({ method: 'eth_requestAccounts' }))[0];
-        } catch {
-            await provider.enable();
-            return (await web3.eth.getAccounts())[0];
-        }
+export const currentAddress = async () => {
+    if (!isWeb3Initialized()) {
+        return undefined;
     }
+    try {
+        return (await provider?.request({ method: 'eth_requestAccounts' }))[0];
+    } catch {
+        await provider.enable();
+        return (await web3.eth.getAccounts())[0];
+    }
+}
+
+export const getWalletAddressOrConnect = async ({ shouldSwitchNetwork, onConnectSuccess, onNetworkSwitch }) => {
     if (!isWeb3Initialized()) {
         await connectWallet();
-        if (refresh) {
-            window.location.reload();
-        }
     }
-    // For multi-chain dapps (multi-chain contracts on the same page)
+    const address = await currentAddress();
+    if (onConnectSuccess)
+        onConnectSuccess(address)
     if (shouldSwitchNetwork ?? true) {
-        await setContracts(shouldSwitchNetwork ?? true);
+        await setContracts({
+            shouldSwitchNetwork: shouldSwitchNetwork ?? true,
+            onNetworkSwitch: onNetworkSwitch
+        })
     }
-    return await currentAddress();
+    return address
 }
 
 export const getCurrentNetwork = async () => {
     return Number(await provider?.request({ method: 'net_version' }));
 }
 
-export const switchNetwork = async (chainID) => {
+export const switchNetwork = async (chainID, onSwitch) => {
     if (!provider) {
         return
     }
@@ -236,6 +239,7 @@ export const switchNetwork = async (chainID) => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: chainIDHex }],
         });
+        if (onSwitch) onSwitch()
     } catch (error) {
         // This error code indicates that the chain has not been added to MetaMask
         // if it is not, then install it into the user MetaMask
@@ -295,6 +299,9 @@ const getConnectButton = () => {
 }
 
 export const updateWalletStatus = async () => {
+    if (getIsMobileOnlyInjectedProvider()) {
+        await tryInitWeb3(false)
+    }
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
@@ -307,7 +314,7 @@ export const updateConnectButton = () => {
     walletBtn?.addEventListener('click', async () => {
         await connectWallet()
         if (window.CONTRACT_ADDRESS && !window?.DISABLE_MINT) {
-            await setContracts(true)
+            await setContracts({ shouldSwitchNetwork: true })
             await updateMintedCounter()
         }
     });

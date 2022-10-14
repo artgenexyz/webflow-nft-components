@@ -1,4 +1,5 @@
-import { getWalletAddressOrConnect, web3 } from "../wallet.js";
+import { getConfigChainID, getWeb3Instance } from "../web3";
+import { getCurrentNetwork, getWalletAddressOrConnect } from "../wallet.js";
 import { formatValue} from "../utils.js";
 import { NFTContract } from "../contract.js"
 import { buildTx } from "../tx";
@@ -97,11 +98,12 @@ export const getMintedNumber = async () => {
     // totalSupply was removed to save gas when minting
     // but number minted still accessible in the contract as a private variable
     // TODO: remove this in NFTFactory v1.1
-    const minted = await web3.eth.getStorageAt(
+    const web3Instance = getWeb3Instance()
+    const minted = await web3Instance.eth.getStorageAt(
         NFTContract._address,
         '0x00000000000000000000000000000000000000000000000000000000000000fb'
     )
-    return web3.utils.hexToNumber(minted)
+    return web3Instance.utils.hexToNumber(minted)
 }
 
 export const getMaxSupply = async () => {
@@ -142,9 +144,14 @@ export const getMaxTokensPerMint = async () => {
     return getDefaultMaxTokensPerMint()
 }
 
-export const mint = async (nTokens) => {
-    const wallet = await getWalletAddressOrConnect(true);
-    if (!wallet) {
+export const mint = async (nTokens, { onConnectSuccess, setState }) => {
+    const wallet = await getWalletAddressOrConnect({
+        shouldSwitchNetwork: true,
+        onConnectSuccess
+    })
+    const chainID = await getCurrentNetwork()
+    setState(wallet, chainID)
+    if (!wallet || chainID !== getConfigChainID()) {
         return { tx: undefined }
     }
     const numberOfTokens = nTokens ?? 1;

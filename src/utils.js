@@ -1,6 +1,8 @@
 export const isMobile = () => /Mobi/i.test(window.navigator.userAgent)
     || /iPhone|iPod|iPad/i.test(navigator.userAgent);
 
+export const isMetaMaskDesktop = (provider) => !isMobile() && provider?.isMetaMask
+
 export const objectMap = (object, mapFn) => {
     return Object.keys(object).reduce((result, key) => {
         result[key] = mapFn(object[key]);
@@ -8,7 +10,7 @@ export const objectMap = (object, mapFn) => {
     }, {})
 }
 
-export const normalizeURL = (u) => ((new URL(u).host).replace('www.', ''))
+export const toHex = (number) => number ? `0x${number.toString(16)}` : undefined
 
 export const parseErrorCode = (error) => {
     try {
