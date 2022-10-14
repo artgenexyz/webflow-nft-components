@@ -1,7 +1,8 @@
-import { getCurrentNetwork, getWalletAddressOrConnect, web3 } from "../wallet.js";
-import { formatValue, parseTxError } from "../utils.js";
-import { isEthereum, NFTContract } from "../contract.js"
 import { getConfigChainID, getWeb3Instance } from "../web3";
+import { getCurrentNetwork, getWalletAddressOrConnect } from "../wallet.js";
+import { formatValue} from "../utils.js";
+import { NFTContract } from "../contract.js"
+import { buildTx } from "../tx";
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -122,7 +123,12 @@ export const getMaxSupply = async () => {
 }
 
 export const getDefaultMaxTokensPerMint = () => {
-    return window.MAX_PER_MINT ?? 10
+    const defaultMaxPerMintConfig = window.DEFAULTS?.publicMint?.maxPerMint || window.MAX_PER_MINT
+    if (!defaultMaxPerMintConfig || isNaN(Number(defaultMaxPerMintConfig))) {
+        console.error("Can't read maxPerMint from your contract & config, using default value: 10")
+        return 10
+    }
+    return Number(defaultMaxPerMintConfig)
 }
 
 export const getMaxTokensPerMint = async () => {
@@ -157,31 +163,21 @@ export const mint = async (nTokens, { onConnectSuccess, setState }) => {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const estimatedGas = await getMintTx({ numberOfTokens })
-        .estimateGas(txParams).catch((e) => {
-            const { code, message } = parseTxError(e);
-            if (code === -32000) {
-                return 100000 * numberOfTokens;
-            }
-            alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
-            console.log(e);
-        })
-    if (estimatedGas === undefined) {
+    const mintTx = await getMintTx({ numberOfTokens })
+    if (!mintTx) {
         return { tx: undefined }
     }
-    const gasPrice = await web3.eth.getGasPrice();
-    // Math.max is for Goerli (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
-    const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 5e9);
-    const maxFeePerGas = isEthereum(chainID) ? formatValue(maxGasPrice) : undefined;
-    const maxPriorityFeePerGas = isEthereum(chainID) ? 2e9 : undefined;
-
-    const tx = getMintTx({ numberOfTokens })
-        .send({
-            ...txParams,
-            gasLimit: estimatedGas + 5000,
-            maxPriorityFeePerGas,
-            maxFeePerGas
-        })
+    const txBuilder = await buildTx(
+        mintTx,
+        txParams,
+        // TODO: use different limits for ERC721A / ERC721
+        window.DEFAULTS?.publicMint?.defaultGasLimit ?? (100000 * numberOfTokens),
+        window.DEFAULTS?.publicMint?.gasLimitSlippage ?? 5000
+    )
+    if (!txBuilder) {
+        return { tx: undefined }
+    }
+    const tx = mintTx.send(txBuilder)
     // https://github.com/ChainSafe/web3.js/issues/1547
     return Promise.resolve({ tx })
 }
