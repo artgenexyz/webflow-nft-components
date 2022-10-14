@@ -147,12 +147,19 @@ export const mint = async (nTokens) => {
         from: wallet,
         value: formatValue(Number(mintPrice)),
     }
-    const mintTx = await getMintTx({contract, whitelist, quantity})
-    const tx = mintTx.send(await buildTx(
+    const mintTx = await getMintTx({ contract, whitelist, quantity })
+    if (!mintTx) {
+        return { tx: undefined }
+    }
+    const txBuilder = await buildTx(
         mintTx,
         txParams,
         window.DEFAULTS?.presale?.defaultGasLimit ?? 160000,
         window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000
-    ))
+    )
+    if (!txBuilder) {
+        return { tx: undefined }
+    }
+    const tx = mintTx.send(txBuilder)
     return Promise.resolve({ tx })
 }
