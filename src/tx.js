@@ -20,7 +20,7 @@ const estimateGasLimit = (tx, txData, defaultGasLimit) => {
         if (code === -32000) {
             return defaultGasLimit;
         }
-        showAlert(`${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`, "error");
+        showAlert(`${message}. Check if you connected the correct wallet, try again or contact us to resolve`, "error");
         console.log(e);
     })
 }
