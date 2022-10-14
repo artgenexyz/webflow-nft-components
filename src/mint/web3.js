@@ -1,7 +1,7 @@
 import { getCurrentNetwork, getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import { isEthereum, NFTContract } from "../contract.js"
-import { getWeb3Instance } from "../web3";
+import { getConfigChainID, getWeb3Instance } from "../web3";
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -145,7 +145,7 @@ export const mint = async (nTokens, { onConnectSuccess, setState }) => {
     })
     const chainID = await getCurrentNetwork()
     setState(wallet, chainID)
-    if (!wallet) {
+    if (!wallet || chainID !== getConfigChainID()) {
         return { tx: undefined }
     }
     const numberOfTokens = nTokens ?? 1;
