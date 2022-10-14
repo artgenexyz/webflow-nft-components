@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Slider } from '@mui/material';
+import { Box, Button, Skeleton, Slider } from '@mui/material';
 import {
-    getDefaultMaxTokensPerMint,
     getMaxSupply,
     getMaxTokensPerMint,
     getMintedNumber,
@@ -15,7 +14,7 @@ import { isEthereumContract } from "../contract";
 
 export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setStep }) => {
     const [quantityValue, setQuantityValue] = useState(1)
-    const [maxTokens, setMaxTokens] = useState(getDefaultMaxTokensPerMint())
+    const [maxTokens, setMaxTokens] = useState(undefined)
     const [mintPrice, setMintPrice] = useState(undefined)
     const [mintedNumber, setMintedNumber] = useState()
     const [totalNumber, setTotalNumber] = useState()
@@ -35,14 +34,17 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
         }
     }, [])
 
-    const maxTokensTooLarge = maxTokens >= 20
-    const step = !maxTokensTooLarge ? maxTokens : 10
+    const maxRange = maxTokens ?? 10
+    const maxTokensTooLarge = maxRange >= 20
+    const step = !maxTokensTooLarge ? Math.max(maxRange, 1) : 10
     const marks = [
-        ...[...Array(Math.floor(maxTokens / step) + 1)].map((_, i) => 1 + i * step),
-        ...(maxTokensTooLarge ? [maxTokens + 1] : [])
+        ...[...Array(Math.floor(maxRange / step) + 1)].map((_, i) => 1 + i * step),
+        ...(maxTokensTooLarge ? [maxRange + 1] : [])
         ].map(m => ({
             value: Math.max(1, m - 1),
-            label: (Math.max(1, m - 1)).toString()
+            label: (maxTokens !== undefined || m === 1)
+                ? (Math.max(1, m - 1)).toString()
+                : <Skeleton width="10px" height="30px" sx={{ mt: -2 }} />
         }))
 
     const onSuccess = async () => {
@@ -72,7 +74,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
     }
 
     return <div style={{ width: "100%" }}>
-        {maxTokens > 1 && <Box sx={{
+        {maxRange > 1 && <Box sx={{
             display: "flex",
             alignItems: "flex-end",
             width: "100%",
@@ -80,6 +82,7 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
         }}>
             <Slider
                 sx={{ ml: 2 }}
+                disabled={maxTokens === undefined}
                 aria-label="Quantity"
                 defaultValue={1}
                 valueLabelDisplay="auto"
@@ -90,12 +93,12 @@ export const QuantityModalStep = ({ setQuantity, setIsLoading, setTxHash, setSte
                 step={1}
                 marks={marks}
                 min={1}
-                max={maxTokens}
+                max={maxRange}
             />
         </Box>}
         <Button
             onClick={onSuccess}
-            sx={{ mt: maxTokens > 1 ? 4 : 2, width: "100%" }}
+            sx={{ mt: maxRange > 1 ? 4 : 2, width: "100%" }}
             variant="contained"
         >
             {mintPrice !== undefined

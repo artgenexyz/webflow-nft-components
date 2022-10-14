@@ -120,7 +120,12 @@ export const getMaxSupply = async () => {
 }
 
 export const getDefaultMaxTokensPerMint = () => {
-    return window.MAX_PER_MINT ?? 10
+    const defaultMaxPerMintConfig = window.DEFAULTS?.publicMint?.maxPerMint || window.MAX_PER_MINT
+    if (!defaultMaxPerMintConfig || isNaN(Number(defaultMaxPerMintConfig))) {
+        console.error("Can't read maxPerMint from your contract & config, using default value: 10")
+        return 10
+    }
+    return Number(defaultMaxPerMintConfig)
 }
 
 export const getMaxTokensPerMint = async () => {
@@ -150,8 +155,7 @@ export const mint = async (nTokens) => {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const estimatedGas = await getMintTx({ numberOfTokens })
-        .estimateGas(txParams).catch((e) => {
+    const estimatedGas = await getMintTx({ numberOfTokens })?.estimateGas(txParams).catch((e) => {
             const { code, message } = parseTxError(e);
             if (code === -32000) {
                 return 100000 * numberOfTokens;
