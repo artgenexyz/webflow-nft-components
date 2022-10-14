@@ -9,6 +9,7 @@ const defaultContext = {
 
 export const Web3Context = createContext([defaultContext, () => defaultContext]);
 
+// TODO: remove this dirty hooks hack when migrate to RainbowKit + ethers or similar
 export const Web3ContextProvider = (props) => {
     const [state, setState] = useState(defaultContext)
     const [web3, provider] = useWeb3([state.wallet, state.chainID])
@@ -16,18 +17,6 @@ export const Web3ContextProvider = (props) => {
     useEffect(() => {
         if (!provider)
             return
-
-        // if (provider.chainId) {
-        //     currentAddress().then((address) => {
-        //         setState({
-        //             ...state,
-        //             wallet: address,
-        //             chainID: provider.chainId
-        //                 ? Number(String(provider.chainId).replace("0x", ""))
-        //                 : undefined
-        //         })
-        //     })
-        // }
 
         provider.on("chainChanged", (chainId) => {
             console.log("chainChanged", chainId)
