@@ -1,4 +1,4 @@
-import { getWalletAddressOrConnect, web3 } from "../wallet.js";
+import { getCurrentNetwork, getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue, parseTxError } from "../utils.js";
 import { isEthereum, NFTContract, ExtensionContract } from "../contract.js"
 
@@ -119,8 +119,11 @@ export const getMintPrice = async () => {
             console.log("Using price method auto-detection")
             return NFTContract.methods[matches[0]]().call()
         case 0:
-            alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            return undefined
+            const defaultMintPrice = getDefaultMintPrice()
+            if (defaultMintPrice === undefined) {
+                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+            }
+            return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
             const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
@@ -199,6 +202,9 @@ export const getMaxTokensPerMint = async () => {
 
 export const mint = async (nTokens) => {
     const wallet = await getWalletAddressOrConnect(true);
+    if (!wallet) {
+        return { tx: undefined }
+    }
     const numberOfTokens = nTokens ?? 1;
     const mintPrice = await getMintPrice();
     if (mintPrice === undefined)
@@ -227,9 +233,9 @@ export const mint = async (nTokens) => {
     const gasPrice = await web3.eth.getGasPrice();
     // Math.max is for Goerli (low gas price), 2.5 Gwei is Metamask default for maxPriorityFeePerGas
     const maxGasPrice = Math.max(Math.round(Number(gasPrice) * 1.2), 5e9);
-    const chainID = await web3.eth.getChainId();
+    const chainID = await getCurrentNetwork()
     const maxFeePerGas = isEthereum(chainID) ? formatValue(maxGasPrice) : undefined;
-    const maxPriorityFeePerGas =  isEthereum(chainID) ? 2e9 : undefined;
+    const maxPriorityFeePerGas = isEthereum(chainID) ? 2e9 : undefined;
     const minGasLimit = window.DEFAULTS?.presale?.minGasLimit
     const gasLimitSlippage = window.DEFAULTS?.presale?.gasLimitSlippage ?? 5000
     const gasLimit = minGasLimit ? Math.max(minGasLimit, estimatedGas + gasLimitSlippage) : estimatedGas + gasLimitSlippage

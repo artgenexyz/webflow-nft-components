@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { WinterCheckout } from '@usewinter/checkout';
-import { getConfigChainID, isEthereumContract, isTestnet } from "../contract";
+import { isEthereumContract, isTestnet } from "../contract";
+import { getConfigChainID } from "../web3";
 
 const getWinterProjectID = (project) => {
     if (!project) {

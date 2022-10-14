@@ -40,8 +40,16 @@ const renderAppContainer = () => {
     render(<App />, createDOMElement());
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    renderAppContainer();
+const isRendered = () => {
+    return !!document.getElementById("root")
+}
+
+const renderAndInit = () => {
+    renderAppContainer()
+    if (!isRendered()) {
+        console.error("React not rendered, returning")
+        return
+    }
     init()
     initWhitelist()
 
@@ -49,6 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Puts "custom-metamask" provider as the first option
     dirtyFixConnectWalletUI()
     sendAnonymousAnalytics()
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderAndInit()
 });
+
+window.onload = () => {
+    if (!isRendered()) {
+        console.warn("React re-rendering in window.onload")
+        renderAndInit()
+    }
+}
 
 export { showAlert, showMintModal, showJoinWhitelistModal, renderAppContainer };

@@ -295,7 +295,6 @@ const getConnectButton = () => {
 }
 
 export const updateWalletStatus = async () => {
-    await tryInitWeb3(false)
     const connected = await isWalletConnected();
     const button = getConnectButton();
     if (button && connected) {
