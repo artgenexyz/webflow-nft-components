@@ -35,6 +35,54 @@ export const NETWORKS = {
         testnetID: 5,
         blockExplorerURL: "https://goerli.etherscan.io"
     },
+    10: {
+        name: "Optimism",
+        chain: "ethereum",
+        rpcURL: "https://mainnet.optimism.io/",
+        currency: {
+            "name": "Ether",
+            "symbol": "ETH",
+            "decimals": 18
+        },
+        testnetID: 420,
+        blockExplorerURL: "https://optimistic.etherscan.io"
+    },
+    420: {
+        name: "Optimism Goerli",
+        chain: "ethereum",
+        rpcURL: "https://goerli.optimism.io/",
+        currency: {
+            "name": "Goerli Ether",
+            "symbol": "ETH",
+            "decimals": 18
+        },
+        testnetID: 420,
+        blockExplorerURL: "https://goerli-optimism.etherscan.io"
+    },
+    42161: {
+        name: "Arbitrum One",
+        chain: "ethereum",
+        currency: {
+            "name": "Ether",
+            "symbol": "ETH",
+            "decimals": 18
+        },
+        testnetID: 421613,
+        rpcURL: "https://arb1.arbitrum.io/rpc/",
+        blockExplorerURL: "https://arbiscan.io",
+    },
+    421613: {
+        "name": "Arbitrum Görli",
+        "chain": "ethereum",
+        currency: {
+            "name": "Goerli Ether",
+            "symbol": "ETH",
+            "decimals": 18
+        },
+        testnetID: 421613,
+        rpcURL: "https://goerli-rollup.arbitrum.io/rpc/",
+        blockExplorerURL: "https://goerli.arbiscan.io"
+    },
     137: {
         name: "Polygon",
         chain: "polygon",
@@ -82,6 +130,30 @@ export const NETWORKS = {
         },
         testnetID: 97,
         blockExplorerURL: "https://testnet.bscscan.com",
+    },
+    43114: {
+        name: "Avalanche",
+        chain: "AVAX",
+        rpcURL: "https://api.avax.network/ext/bc/C/rpc/",
+        currency: {
+            "name": "Avalanche",
+            "symbol": "AVAX",
+            "decimals": 18
+        },
+        testnetID: 43113,
+        blockExplorerURL: "https://snowtrace.io"
+    },
+    43113: {
+        name: "Avalanche Fuji",
+        chain: "AVAX",
+        rpcURL: "https://api.avax-test.network/ext/bc/C/rpc/",
+        currency: {
+            "name": "Avalanche",
+            "symbol": "AVAX",
+            "decimals": 18
+        },
+        testnetID: 43113,
+        blockExplorerURL: "https://cchain.explorer.avax-test.network"
     },
     25: {
         name: "Cronos Blockchain",

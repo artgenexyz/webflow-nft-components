@@ -25,12 +25,14 @@ const getWeb3ModalProviderOptions = ({
         qrcodeModalOptions: {
             mobileLinks: [
                 "rainbow",
+                "zerion",
                 "trust",
                 "ledger",
                 "gnosis"
             ],
             desktopLinks: [
                 "rainbow",
+                "zerion",
                 "trust",
                 "ledger",
                 "gnosis"
