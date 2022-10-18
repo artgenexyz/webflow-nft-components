@@ -2,6 +2,7 @@ import { getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue} from "../utils.js";
 import { NFTContract } from "../contract.js"
 import { buildTx } from "../tx";
+import { readOnlyWeb3 } from "../web3";
 
 const findMethodByName = (methodName) =>
     Object.keys(NFTContract.methods)
@@ -97,11 +98,11 @@ export const getMintedNumber = async () => {
     // totalSupply was removed to save gas when minting
     // but number minted still accessible in the contract as a private variable
     // TODO: remove this in NFTFactory v1.1
-    const minted = await web3.eth.getStorageAt(
+    const minted = await readOnlyWeb3.eth.getStorageAt(
         NFTContract._address,
         '0x00000000000000000000000000000000000000000000000000000000000000fb'
     )
-    return web3.utils.hexToNumber(minted)
+    return readOnlyWeb3.utils.hexToNumber(minted)
 }
 
 export const getMaxSupply = async () => {
