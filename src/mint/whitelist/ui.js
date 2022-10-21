@@ -8,10 +8,14 @@ import { showMintModal } from '../../index';
 import { parseTxError } from '../../utils';
 
 export const updateMintWhitelistButton = () => {
-    const mintButtons = [
-        ...document.querySelectorAll('#mint-whitelist'),
-        ...document.querySelectorAll("a[href*='#mint-whitelist']")
-    ]
+    const variants = ["#mint-allowlist", "#mint-whitelist"]
+    const mintButtons = variants.reduce((prev, name) => {
+        return [
+            ...prev,
+            ...document.querySelectorAll(name),
+            ...document.querySelectorAll(`a[href*='${name}']`),
+        ]
+    }, [])
     if (mintButtons) {
         console.log("mint WL buttons", mintButtons)
         mintButtons.forEach((mintButton) => {
