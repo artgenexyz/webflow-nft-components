@@ -202,6 +202,30 @@ export const NETWORKS = {
         },
         testnetID: 1287,
         blockExplorerURL: "https://moonbase-blockscout.testnet.moonbeam.network"
+    },
+    40: {
+        name: "Telos Mainnet",
+        chain: "telos",
+        rpcURL: "https://rpc1.us.telos.net/evm",
+        currency: {
+            name: "TLOS",
+            symbol: "TLOS",
+            decimals: 18,
+        },
+        testnetID: 41,
+        blockExplorerURL: "https://teloscan.io"
+    },
+    41: {
+        name: "Telos Testnet",
+        chain: "telos",
+        rpcURL: "https://testnet.telos.net/evm",
+        currency: {
+            name: "TLOS",
+            symbol: "TLOS",
+            decimals: 18,
+        },
+        testnetID: 41,
+        blockExplorerURL: "https://testnet.teloscan.io"
     }
 }
 
