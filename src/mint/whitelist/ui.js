@@ -19,6 +19,7 @@ export const updateMintWhitelistButton = () => {
     if (mintButtons) {
         console.log("mint WL buttons", mintButtons)
         mintButtons.forEach((mintButton) => {
+            mintButton.href = "#"
             mintButton.onclick = async () => {
                 const initialBtnText = mintButton.textContent;
                 setButtonText(mintButton, "Loading...")
