@@ -37,7 +37,7 @@ const getMintTx = ({ numberOfTokens }) => {
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
-const getDefaultMintPrice = () => {
+const getMintPriceConstant = () => {
     // for contracts without exported price variable or method
     const defaultPrice = window.DEFAULTS?.publicMint?.price
     if (defaultPrice) {
@@ -53,6 +53,17 @@ const getDefaultMintPrice = () => {
 }
 
 export const getMintPrice = async () => {
+    const customMintPriceMethod = getMethodWithCustomName('price')
+    if (customMintPriceMethod) {
+        return customMintPriceMethod().call()
+    }
+
+    const mintPriceConstant = getMintPriceConstant()
+    if (mintPriceConstant !== undefined) {
+        console.log("Using constant mint price specified in DEFAULTS")
+        return mintPriceConstant
+    }
+
     const matches = Object.keys(NFTContract.methods).filter(key =>
         !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
     )
@@ -62,23 +73,13 @@ export const getMintPrice = async () => {
         case 1:
             console.log("Using price method auto-detection")
             return NFTContract.methods[matches[0]]().call()
-        case 0:
-            const defaultMintPrice = getDefaultMintPrice()
-            if (defaultMintPrice === undefined) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-            }
-            return defaultMintPrice
         default:
             console.log("Using hardcoded price detection")
             const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice']
             const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
             if (!name) {
-                const defaultMintPrice = getDefaultMintPrice()
-                console.log("defaultMintPrice", defaultMintPrice)
-                if (defaultMintPrice === undefined) {
-                    alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-                }
-                return defaultMintPrice
+                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+                return undefined
             }
             return NFTContract.methods[findMethodByName(name)]().call();
     }
@@ -131,6 +132,10 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
+    const customMaxPerMintMethod = getMethodWithCustomName('maxPerMint')
+    if (customMaxPerMintMethod)
+        return await customMaxPerMintMethod().call().then(Number)
+
     if (NFTContract?.methods?.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
     }
