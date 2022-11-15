@@ -34,6 +34,8 @@ const makeStyles = () => ({
     dialogRadius: getStyles().corners === "squared" ? "2px" : "24px",
 })
 
+export const getIsDarkTheme = () => makeStyles().theme === "dark"
+
 const {
     theme: mode,
     primaryColor,
@@ -54,6 +56,10 @@ export const theme = createTheme({
             contrastText: buttonTextColor
         },
         grey: {
+            main: mode === "light" ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.12)",
+            light: mode === "light" ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)",
+            dark: mode === "light" ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.18)",
+            contrastText: mode === "light" ? "rgba(0,0,0,0.5) !important" : "rgba(255,255,255) !important",
             500: secondaryTextColor
         }
     },
@@ -70,7 +76,7 @@ export const theme = createTheme({
                     backgroundImage: "inherit",
                     backgroundColor: backgroundColor,
                     borderRadius: dialogRadius,
-                    padding: "16px 24px",
+                    padding: "24px 32px",
                     margin: "16px"
                 }
             }
@@ -99,7 +105,10 @@ export const theme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    boxShadow: "none"
+                    boxShadow: "none",
+                    "&.Mui-disabled": {
+                        color: mode === "light" ? "rgba(0, 0, 0, 0.15)" : "rgba(255, 255, 255, 0.15)"
+                    }
                 },
                 contained: {
                     padding: "8px 24px",
@@ -146,9 +155,10 @@ export const theme = createTheme({
             color: primaryTextColor,
         },
         subtitle2: {
-            fontWeight: 300,
+            fontWeight: 400,
             fontSize: "16px",
-            lineHeight: 1.2
+            lineHeight: 1.2,
+            opacity: 0.4
         }
     },
 });

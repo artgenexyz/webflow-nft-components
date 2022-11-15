@@ -4,8 +4,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { isMobile } from "../utils";
 import { useProject } from "../hooks/useProject";
+import { VerificationModalStep } from "./VerificationModalStep";
 
-const DialogTitleWithClose = ({ children, onClose }) => {
+export const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
         <Box sx={{ textAlign: "center" }}>
             {children}
@@ -16,9 +17,9 @@ const DialogTitleWithClose = ({ children, onClose }) => {
                 onClick={onClose}
                 sx={{
                     position: 'absolute',
-                    right: 16,
+                    right: 12,
                     top: 16,
-                    ml: 4,
+                    ml: 5,
                     color: (theme) => theme.palette.grey[500],
                 }}
             >
@@ -44,6 +45,12 @@ export const MintModal = (props, ref) => {
             setIsOpen, setQuantity, setLaunchType
         })
     )
+
+    return <Dialog
+        open={isOpen}
+        onClose={handleClose}>
+        <VerificationModalStep onClose={handleClose} />
+    </Dialog>
 
     if (project?.is_blocked) {
         return (
