@@ -3,6 +3,7 @@ import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, 
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { isMobile } from "../utils";
+import { useProject } from "../hooks/useProject";
 
 const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -33,6 +34,7 @@ export const MintModal = (props, ref) => {
     const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1)
+    const project = useProject()
 
     const handleClose = () => {
         setIsOpen(false);
@@ -42,6 +44,29 @@ export const MintModal = (props, ref) => {
             setIsOpen, setQuantity, setLaunchType
         })
     )
+
+    if (project?.is_blocked) {
+        return (
+            <Dialog
+                open={isOpen}
+                onClose={handleClose}>
+            <Box sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                width: 300,
+                height: 300,
+            }}>
+                <Typography variant="h4">Project is blocked</Typography>
+                <Typography variant="subtitle2" sx={{ mt: 3 }}>
+                    This project has violated our terms of service and is no longer available for minting.
+                </Typography>
+            </Box>
+            </Dialog>
+        )
+    }
 
     return (
         <Dialog
