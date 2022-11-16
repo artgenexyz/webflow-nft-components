@@ -206,7 +206,7 @@ export const NETWORKS = {
 }
 
 export const getBaseURL = () => {
-    if (window.location.href.includes("localhost")) {
+    if (window.location.href.includes("localhost") || window.location.href.includes("buildship.vercel.app")) {
         return window.location.origin
     }
     return "https://widget-allowlist.buildship.xyz"
