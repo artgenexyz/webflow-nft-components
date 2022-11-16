@@ -8,6 +8,7 @@ import { VerifyAPI } from "../services/VerifyAPI";
 import { showAlert } from "./AutoHideAlert";
 import { useIsDiscordConnected } from "../hooks/useIsDiscordConnected";
 import { useIsTwitterConnected } from "../hooks/useIsTwitterConnected";
+import { SignInWithEth } from "../services/SIWE";
 
 export const VerificationModalStep = ({ onClose }) => {
     const [discordConnectState, setDiscordConnectState] = useState(LoadingState.NOT_STARTED)
@@ -23,6 +24,24 @@ export const VerificationModalStep = ({ onClose }) => {
             setTwitterConnectState(LoadingState.SUCCESS)
         }
     }, [isDiscordConnected, isTwitterConnected])
+
+    const submitAndSign = async () => {
+        const { signature, encodedMessage, error: signError } = await SignInWithEth.signMessage()
+        if (signError) {
+            showAlert(`Ethereum sign-in error: ${signError.message}`, "error")
+            return
+        }
+        console.log("signature", signature, encodedMessage)
+        const { data, error } = await VerifyAPI.getMintSignature({
+            signature,
+            encodedMessage
+        })
+        if (error) {
+            showAlert(`Mint verification error: ${error}`, "error")
+            return
+        }
+        console.log("Returned in submitAndSign: ", data)
+    }
 
     return <>
         <DialogTitleWithClose onClose={onClose}>
@@ -85,7 +104,8 @@ export const VerificationModalStep = ({ onClose }) => {
             <Button
                 disabled={!isDiscordConnected || !isTwitterConnected}
                 variant="contained"
-                sx={{ mt: "auto", borderRadius: "10px" }}>
+                sx={{ mt: "auto", borderRadius: "10px" }}
+                onClick={submitAndSign}>
                 Continue to mint
             </Button>
         </DialogContent>

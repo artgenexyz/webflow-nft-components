@@ -1,7 +1,9 @@
 import { nanoid } from "nanoid/async";
+import { getConfigChainID } from "../web3";
 
 class VerifyAPI_ {
-    API_URL = 'https://verification-api.buildship.xyz/api'
+    API_URL = 'http://localhost:3000/api'
+    // API_URL = 'https://verification-api.buildship.xyz/api'
 
     _headers = async () => ({
         'Content-Type': 'application/json',
@@ -37,7 +39,7 @@ class VerifyAPI_ {
         }).then(async r =>  {
             const data = await r.json()
             if (r.status !== 200 && r.status !== 201) {
-                throw new Error(data.error)
+                throw new Error(data.error?.message ?? data.error)
             }
             return { data }
         }).catch(e => {
@@ -66,6 +68,15 @@ class VerifyAPI_ {
     loginToTwitter = async () => {
         return this._get("auth/twitter/login", {
             redirectUrl: window.location.href
+        })
+    }
+
+    getMintSignature = async ({ signature, encodedMessage }) => {
+        return this._get("mintSignature", {
+            chain: String(getConfigChainID()),
+            contract: window.CONTRACT_ADDRESS,
+            signature,
+            encodedMessage
         })
     }
 }
