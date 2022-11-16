@@ -2,8 +2,8 @@ import { nanoid } from "nanoid/async";
 import { getConfigChainID } from "../web3";
 
 class VerifyAPI_ {
-    API_URL = 'http://localhost:3000/api'
-    // API_URL = 'https://verification-api.buildship.xyz/api'
+    // API_URL = 'http://localhost:3000/api'
+    API_URL = 'https://verification-api.buildship.xyz/api'
 
     _headers = async () => ({
         'Content-Type': 'application/json',
