@@ -34,7 +34,7 @@ const makeStyles = () => ({
     dialogRadius: getStyles().corners === "squared" ? "2px" : "24px",
 })
 
-export const getIsDarkTheme = () => makeStyles().theme === "dark"
+export const getIsDarkTheme = () => window.STYLES?.theme === "dark"
 
 const {
     theme: mode,

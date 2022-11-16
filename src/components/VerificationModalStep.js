@@ -71,10 +71,10 @@ export const VerificationModalStep = ({ onClose }) => {
                     })
                 }}>
                 {discordConnectState === LoadingState.SUCCESS ? <>
-                    <img src={`${getBaseURL()}/images/checkmark${getIsDarkTheme() ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} />
+                    <img src={`${getBaseURL()}/images/checkmark${getIsDarkTheme() ? "-white" : "-black"}.svg`} style={{ width: 20, marginRight: 6 }} />
                     Discord connected
                 </> : <>
-                    <img src={`${getBaseURL()}/images/discord${getIsDarkTheme() ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} />
+                    <img src={`${getBaseURL()}/images/discord${getIsDarkTheme() ? "-white" : "-black"}.svg`} style={{ width: 20, marginRight: 6 }} />
                     Connect Discord
                 </>}
             </AwaitingButton>
@@ -94,10 +94,10 @@ export const VerificationModalStep = ({ onClose }) => {
                     })
                 }}>
                 {twitterConnectState === LoadingState.SUCCESS ? <>
-                    <img src={`${getBaseURL()}/images/checkmark${getIsDarkTheme ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} />
+                    <img src={`${getBaseURL()}/images/checkmark${getIsDarkTheme() ? "-white" : "-black"}.svg`} style={{ width: 20, marginRight: 6 }} />
                     Twitter connected
                 </> : <>
-                    <img src={`${getBaseURL()}/images/twitter${getIsDarkTheme ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} />
+                    <img src={`${getBaseURL()}/images/twitter${getIsDarkTheme() ? "-white" : "-black"}.svg`} style={{ width: 20, marginRight: 6 }} />
                     Connect Twitter
                 </>}
             </AwaitingButton>
