@@ -7,17 +7,22 @@ import { getIsDarkTheme } from "../styles/theme";
 import { VerifyAPI } from "../services/VerifyAPI";
 import { showAlert } from "./AutoHideAlert";
 import { useIsDiscordConnected } from "../hooks/useIsDiscordConnected";
+import { useIsTwitterConnected } from "../hooks/useIsTwitterConnected";
 
 export const VerificationModalStep = ({ onClose }) => {
     const [discordConnectState, setDiscordConnectState] = useState(LoadingState.NOT_STARTED)
     const [twitterConnectState, setTwitterConnectState] = useState(LoadingState.NOT_STARTED)
     const isDiscordConnected = useIsDiscordConnected()
+    const isTwitterConnected = useIsTwitterConnected()
 
     useEffect(() => {
         if (isDiscordConnected) {
             setDiscordConnectState(LoadingState.SUCCESS)
         }
-    }, [isDiscordConnected])
+        if (isTwitterConnected) {
+            setTwitterConnectState(LoadingState.SUCCESS)
+        }
+    }, [isDiscordConnected, isTwitterConnected])
 
     return <>
         <DialogTitleWithClose onClose={onClose}>
@@ -33,13 +38,12 @@ export const VerificationModalStep = ({ onClose }) => {
         }}>
             <AwaitingButton
                 color="grey"
+                disabled={discordConnectState === LoadingState.SUCCESS}
                 variant="contained"
                 sx={{ mt: 2, borderRadius: "10px" }}
                 loadingState={discordConnectState}
                 setLoadingState={setDiscordConnectState}
                 onClick={() => {
-                    if (isDiscordConnected)
-                        return
                     VerifyAPI.loginToDiscord().then(({ data, error }) => {
                         if (!data?.authUrl || error) {
                             showAlert(`Error connecting to Discord: ${error ?? "unknown error"}`, "error")
@@ -57,12 +61,29 @@ export const VerificationModalStep = ({ onClose }) => {
             </AwaitingButton>
             <AwaitingButton
                 color="grey"
+                disabled={twitterConnectState === LoadingState.SUCCESS}
                 variant="contained"
-                sx={{ mt: 2, borderRadius: "10px" }}>
-                <img src={`${getBaseURL()}/images/twitter${getIsDarkTheme ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} /> Connect Twitter
+                sx={{ mt: 2, borderRadius: "10px" }}
+                loadingState={twitterConnectState}
+                setLoadingState={setTwitterConnectState}
+                onClick={() => {
+                    VerifyAPI.loginToTwitter().then(({ data, error }) => {
+                        if (!data?.authUrl || error) {
+                            showAlert(`Error connecting to Twitter: ${error ?? "unknown error"}`, "error")
+                        }
+                        window.location.href = data.authUrl
+                    })
+                }}>
+                {twitterConnectState === LoadingState.SUCCESS ? <>
+                    <img src={`${getBaseURL()}/images/checkmark${getIsDarkTheme ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} />
+                    Twitter connected
+                </> : <>
+                    <img src={`${getBaseURL()}/images/twitter${getIsDarkTheme ? "-black" : "-white"}.svg`} style={{ width: 20, marginRight: 6 }} />
+                    Connect Twitter
+                </>}
             </AwaitingButton>
             <Button
-                disabled={true}
+                disabled={!isDiscordConnected || !isTwitterConnected}
                 variant="contained"
                 sx={{ mt: "auto", borderRadius: "10px" }}>
                 Continue to mint

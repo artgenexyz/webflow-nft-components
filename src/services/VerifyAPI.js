@@ -62,6 +62,12 @@ class VerifyAPI_ {
             redirectUrl: window.location.href
         })
     }
+
+    loginToTwitter = async () => {
+        return this._get("auth/twitter/login", {
+            redirectUrl: window.location.href
+        })
+    }
 }
 
 export const VerifyAPI = new VerifyAPI_();
