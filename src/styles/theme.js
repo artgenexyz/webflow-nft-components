@@ -158,7 +158,7 @@ export const theme = createTheme({
             fontWeight: 400,
             fontSize: "16px",
             lineHeight: 1.2,
-            opacity: 0.4
+            color: "#757575",
         }
     },
 });

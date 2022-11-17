@@ -1,5 +1,6 @@
 // TODO: use Moralis API to speed this up
 import { ExtensionContract, NFTContract } from "../contract";
+import { VerifyAPI } from "../services/VerifyAPI";
 
 export const checkIfExtensionSoldOut = async () => {
     // use extensionSupply() method, if it's not there the method is either called maxSupply, or extension supply is unlimited
@@ -42,5 +43,13 @@ export const checkIfExtensionSoldOut = async () => {
 }
 
 export const getExtensionMintTx = async ({ numberOfTokens }) => {
-    return ExtensionContract.methods.mint(numberOfTokens);
+    const mintSignatureObject = VerifyAPI.getSavedMintSignatureObject()
+
+    const getMethod = (amount) => mintSignatureObject
+        ? ExtensionContract.methods.mint(amount, [mintSignatureObject.wallet, mintSignatureObject.allowance, mintSignatureObject.mintSignature])
+        : ExtensionContract.methods.mint(amount)
+
+    console.log("Using extension mint method: ", getMethod(numberOfTokens))
+
+    return getMethod(numberOfTokens)
 }

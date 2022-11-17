@@ -10,9 +10,10 @@ import { useIsDiscordConnected } from "../hooks/useIsDiscordConnected";
 import { useIsTwitterConnected } from "../hooks/useIsTwitterConnected";
 import { SignInWithEth } from "../services/SIWE";
 
-export const VerificationModalStep = ({ onClose }) => {
+export const VerificationModalStep = ({ onClose, setShowModal }) => {
     const [discordConnectState, setDiscordConnectState] = useState(LoadingState.NOT_STARTED)
     const [twitterConnectState, setTwitterConnectState] = useState(LoadingState.NOT_STARTED)
+    const [signMessageState, setSignMessageState] = useState(LoadingState.NOT_STARTED)
     const isDiscordConnected = useIsDiscordConnected()
     const isTwitterConnected = useIsTwitterConnected()
 
@@ -41,6 +42,11 @@ export const VerificationModalStep = ({ onClose }) => {
             return
         }
         console.log("Returned in submitAndSign: ", data)
+        if (data?.mintSignature) {
+            VerifyAPI.saveMintSignatureObject(data)
+            setSignMessageState(LoadingState.SUCCESS)
+            setShowModal(false)
+        }
     }
 
     return <>
@@ -101,13 +107,16 @@ export const VerificationModalStep = ({ onClose }) => {
                     Connect Twitter
                 </>}
             </AwaitingButton>
-            <Button
+            <AwaitingButton
                 disabled={!isDiscordConnected || !isTwitterConnected}
+                loadingState={signMessageState}
+                setLoadingState={setSignMessageState}
+                loadingText="Sign in your wallet..."
                 variant="contained"
                 sx={{ mt: "auto", borderRadius: "10px" }}
                 onClick={submitAndSign}>
-                Continue to mint
-            </Button>
+                {(!isDiscordConnected || !isTwitterConnected) ? "Complete tasks to mint" : "Continue to mint"}
+            </AwaitingButton>
         </DialogContent>
     </>
 }

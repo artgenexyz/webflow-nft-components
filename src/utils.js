@@ -56,3 +56,7 @@ export const dirtyFixConnectWalletUI = () => {
     const web3ModalElem = document.querySelector(".web3modal-modal-card")
     web3ModalElem?.insertBefore(web3ModalElem.lastChild, web3ModalElem.firstChild)
 }
+
+export const getContractHashID = (chainID, address) => {
+    return `${chainID}:${address.toLowerCase()}`
+}

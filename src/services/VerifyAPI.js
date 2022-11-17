@@ -1,5 +1,7 @@
 import { nanoid } from "nanoid/async";
 import { getConfigChainID } from "../web3";
+import { getContractHashID } from "../utils";
+import { showAlert } from "../components/AutoHideAlert";
 
 class VerifyAPI_ {
     // API_URL = 'http://localhost:3000/api'
@@ -79,6 +81,41 @@ class VerifyAPI_ {
             encodedMessage
         })
     }
+
+    _getSavedMintSignatures = () => {
+        try {
+            const signatures = window.localStorage.getItem("mintSignatures")
+            return signatures ? JSON.parse(signatures) : {}
+        } catch (e) {
+            console.error("Error getting saved mint signatures", e)
+            return {}
+        }
+    }
+
+    getSavedMintSignatureObject = () => {
+        try {
+            const savedSignature = this._getSavedMintSignatures()[this.getContractHashKey()]
+            console.log("Saved signature", savedSignature)
+            return savedSignature ? JSON.parse(savedSignature) : null
+        } catch (e) {
+            console.error("Error getting saved mint signature object", e)
+            return null
+        }
+    }
+
+    saveMintSignatureObject = (signatureObject) => {
+        try {
+            window.localStorage.setItem("mintSignatures", JSON.stringify({
+                [this.getContractHashKey()]: JSON.stringify(signatureObject)
+            }))
+        } catch (e) {
+            console.error("Error saving mint signature object", e)
+            showAlert(`Error saving mint signature: ${e?.message}`, "error")
+            return null
+        }
+    }
+
+    getContractHashKey = () => getContractHashID(getConfigChainID(), window.CONTRACT_ADDRESS)
 }
 
-export const VerifyAPI = new VerifyAPI_();
+export const VerifyAPI = new VerifyAPI_()

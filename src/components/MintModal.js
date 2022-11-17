@@ -1,10 +1,11 @@
-import React, { useImperativeHandle, useState } from "react";
+import React, { useEffect, useImperativeHandle, useState } from "react";
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { QuantityModalStep } from './QuantityModalStep';
 import { isMobile } from "../utils";
 import { useProject } from "../hooks/useProject";
 import { VerificationModalStep } from "./VerificationModalStep";
+import { VerifyAPI } from "../services/VerifyAPI";
 
 export const DialogTitleWithClose = ({ children, onClose }) => {
     return <DialogTitle>
@@ -30,27 +31,41 @@ export const DialogTitleWithClose = ({ children, onClose }) => {
 
 export const MintModal = (props, ref) => {
     const [launchType, setLaunchType] = useState("public")
+    const [showVerificationModal, setShowVerificationModal] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [txHash, setTxHash] = useState(undefined)
     const [isLoading, setIsLoading] = useState(false)
     const [step, setStep] = useState(1)
     const [quantity, setQuantity] = useState(1)
     const project = useProject()
+    const mintVerificationEnabled = project?.mint_verification_enabled
+
+    useEffect(() => {
+        console.log("mintVerificationEnabled", mintVerificationEnabled)
+        const savedMintSignature = VerifyAPI.getSavedMintSignatureObject()
+        if (mintVerificationEnabled && !savedMintSignature && !showVerificationModal) {
+            setShowVerificationModal(true)
+        }
+    }, [project])
 
     const handleClose = () => {
         setIsOpen(false);
     }
 
     useImperativeHandle(ref, () => ({
-            setIsOpen, setQuantity, setLaunchType
+            setIsOpen, setQuantity, setLaunchType, setShowVerificationModal
         })
     )
 
-    return <Dialog
-        open={isOpen}
-        onClose={handleClose}>
-        <VerificationModalStep onClose={handleClose} />
-    </Dialog>
+    if (showVerificationModal) {
+        return <Dialog
+            open={isOpen}
+            onClose={handleClose}>
+            <VerificationModalStep
+                onClose={handleClose}
+                setShowModal={setShowVerificationModal} />
+        </Dialog>
+    }
 
     if (project?.is_blocked) {
         return (
@@ -106,7 +121,6 @@ export const MintModal = (props, ref) => {
                         mt: 3,
                         pl: 3,
                         pr: 3,
-                        color: "#757575",
                         textAlign: "center"
                     }} variant="subtitle2">
                         Wait up to 2-3 sec until the transaction appears in your wallet

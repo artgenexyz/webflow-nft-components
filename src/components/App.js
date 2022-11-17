@@ -6,13 +6,19 @@ import {theme} from "../styles/theme.js";
 import JoinWhitelistModal, { joinWhitelistRef } from './JoinWhitelistModal';
 import { useIsDiscordConnected } from "../hooks/useIsDiscordConnected";
 import { useIsTwitterConnected } from "../hooks/useIsTwitterConnected";
+import { VerifyAPI } from "../services/VerifyAPI";
 
 export const App = () => {
     const isDiscordConnected = useIsDiscordConnected()
     const isTwitterConnected = useIsTwitterConnected()
 
     useEffect(() => {
+        const savedMintSignature = VerifyAPI.getSavedMintSignatureObject()
+        if (savedMintSignature)
+            return
+
         if (isDiscordConnected || isTwitterConnected) {
+            modalRef?.current?.setShowVerificationModal(true)
             showMintModal()
         }
     }, [isDiscordConnected, isTwitterConnected])
