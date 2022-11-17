@@ -115,7 +115,7 @@ class VerifyAPI_ {
         }
     }
 
-    getContractHashKey = () => getContractHashID(getConfigChainID(), window.CONTRACT_ADDRESS)
+    getContractHashKey = () => getContractHashID(getConfigChainID(), window.EXTENSION_ADDRESS)
 }
 
 export const VerifyAPI = new VerifyAPI_()
