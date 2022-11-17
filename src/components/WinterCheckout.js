@@ -12,6 +12,10 @@ const getWinterProjectID = (project) => {
 }
 
 export const isWinterCheckoutEnabled = (project, launchType) => {
+    // TODO: support Winter for Verified Mint drops
+    if (project?.mint_verification_enabled) {
+        return false
+    }
     return getWinterProjectID(project) && isEthereumContract() && launchType !== "whitelist"
 }
 
