@@ -46,7 +46,7 @@ export const getExtensionMintTx = async ({ numberOfTokens }) => {
     const mintSignatureObject = VerifyAPI.getSavedMintSignatureObject()
 
     const getMethod = (amount) => mintSignatureObject
-        ? ExtensionContract.methods.mint(amount, [mintSignatureObject.wallet, mintSignatureObject.allowance, mintSignatureObject.mintSignature])
+        ? ExtensionContract.methods.mint(amount, [mintSignatureObject.wallet, mintSignatureObject.extension, mintSignatureObject.allowance, mintSignatureObject.mintSignature])
         : ExtensionContract.methods.mint(amount)
 
     console.log("Using extension mint method: ", getMethod(numberOfTokens))
