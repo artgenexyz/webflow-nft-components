@@ -15,6 +15,8 @@ import { sendEvent } from '../analytics';
 import { isEthereumContract } from "../contract";
 import { useProject } from "../hooks/useProject";
 import { WinterButton } from "./WinterButton";
+import { MintPassExtensionHandler } from "../mint/mint-pass";
+import { getWalletAddressOrConnect } from "../wallet";
 
 export const QuantityModalStep = ({
       launchType, setQuantity, setStep,
@@ -22,6 +24,7 @@ export const QuantityModalStep = ({
 }) => {
     const [quantityValue, setQuantityValue] = useState(1)
     const [maxTokens, setMaxTokens] = useState(undefined)
+    const [mintButtonText, setMintButtonText] = useState("Mint for")
     const [mintPrice, setMintPrice] = useState(undefined)
     const [mintedNumber, setMintedNumber] = useState()
     const [totalNumber, setTotalNumber] = useState()
@@ -34,6 +37,7 @@ export const QuantityModalStep = ({
                     setMintPrice(Number((price) / 1e18))
                 }
             })
+            updateMintButtonText()
         }
 
         (launchType === "whitelist" ? getPresaleMaxPerAddress : getMaxTokensPerMint)()
@@ -47,6 +51,15 @@ export const QuantityModalStep = ({
 
     const mintWithLaunchType = (quantity) => {
         return launchType === "whitelist" ? mintWhitelist(quantity) : mint(quantity)
+    }
+
+    const updateMintButtonText = async () => {
+        if (MintPassExtensionHandler.isExtensionMintPass()) {
+            const wallet = await getWalletAddressOrConnect(true)
+            if (await MintPassExtensionHandler.hasMintPasses(wallet)) {
+                setMintButtonText("Redeem passes for")
+            }
+        }
     }
 
     const maxRange = maxTokens ?? 10
@@ -123,7 +136,7 @@ export const QuantityModalStep = ({
                 sx={{ mt: maxTokens > 1 ? 4 : 2, width: "100%" }}
                 variant="contained">
                 {mintPrice !== undefined
-                    ? (mintPrice !== 0 ? `Mint for ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : "Mint for free")
+                    ? (mintPrice !== 0 ? `${mintButtonText} ${roundToDecimal(mintPrice * quantityValue, 4)} ETH` : `${mintButtonText} free`)
                     : "Mint"}
             </Button>
             <WinterButton project={project} quantity={quantityValue} launchType={launchType} />
