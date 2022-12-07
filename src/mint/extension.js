@@ -1,5 +1,8 @@
 // TODO: use Moralis API to speed this up
 import { ExtensionContract, NFTContract } from "../contract";
+import { MintPassExtensionHandler } from "./mint-pass";
+import { getWalletAddressOrConnect } from "../wallet";
+import { modalRef } from "../components/MintModal";
 
 export const checkIfExtensionSoldOut = async () => {
     // use extensionSupply() method, if it's not there the method is either called maxSupply, or extension supply is unlimited
@@ -41,6 +44,32 @@ export const checkIfExtensionSoldOut = async () => {
     return isSoldOut
 }
 
-export const getExtensionMintTx = async ({ numberOfTokens }) => {
-    return ExtensionContract.methods.mint(numberOfTokens);
+export const canMintViaExtension = async () => {
+    if (MintPassExtensionHandler.isExtensionMintPass()) {
+        const wallet = await getWalletAddressOrConnect(true)
+        return MintPassExtensionHandler.hasMintPasses(wallet)
+    }
+    return !(await checkIfExtensionSoldOut())
+}
+
+export const getExtensionMintTx = async ({ wallet, numberOfTokens }) => {
+    if (MintPassExtensionHandler.isExtensionMintPass()) {
+        return MintPassExtensionHandler.getMintTx({ wallet, numberOfTokens })
+    }
+    return ExtensionContract.methods.mint(numberOfTokens)
+}
+
+export const getExtensionMaxPerTx = async () => {
+    if (MintPassExtensionHandler.isExtensionMintPass()) {
+        const wallet = await getWalletAddressOrConnect(true)
+        if (!wallet) {
+            modalRef.current.setIsOpen(false)
+            return null
+        }
+        return MintPassExtensionHandler.getMaxPerTx(wallet)
+    }
+    if (ExtensionContract?.methods?.maxPerMint) {
+        return Number(await ExtensionContract.methods.maxPerMint().call())
+    }
+    return null
 }

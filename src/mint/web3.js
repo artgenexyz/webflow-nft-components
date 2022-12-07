@@ -2,7 +2,7 @@ import { getWalletAddressOrConnect, web3 } from "../wallet.js";
 import { formatValue} from "../utils.js";
 import { ExtensionContract, NFTContract } from "../contract.js"
 import { buildTx } from "../tx";
-import { checkIfExtensionSoldOut, getExtensionMintTx } from "./extension";
+import { canMintViaExtension, getExtensionMaxPerTx, getExtensionMintTx } from "./extension";
 import { readOnlyWeb3 } from "../web3";
 
 const findMethodByName = (methodName) =>
@@ -38,10 +38,10 @@ const getPublicMintTx = ({ numberOfTokens }) => {
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
 }
 
-const getMintTx = async ({ numberOfTokens }) => {
+const getMintTx = async ({ wallet, numberOfTokens }) => {
     if (ExtensionContract) {
-        if (!await checkIfExtensionSoldOut()) {
-            return await getExtensionMintTx({ numberOfTokens })
+        if (await canMintViaExtension()) {
+            return await getExtensionMintTx({ wallet, numberOfTokens })
         }
     }
 
@@ -64,7 +64,7 @@ const getDefaultMintPrice = () => {
 }
 
 export const getMintPrice = async () => {
-    if (ExtensionContract?.methods?.price && !await checkIfExtensionSoldOut())
+    if (ExtensionContract?.methods?.price && await canMintViaExtension())
         return await ExtensionContract.methods.price().call()
 
     const matches = Object.keys(NFTContract.methods).filter(key =>
@@ -148,8 +148,8 @@ export const getDefaultMaxTokensPerMint = () => {
 }
 
 export const getMaxTokensPerMint = async () => {
-    if (ExtensionContract?.methods?.maxPerMint && !await checkIfExtensionSoldOut()) {
-        return Number(await ExtensionContract.methods.maxPerMint().call())
+    if (await canMintViaExtension()) {
+        return await getExtensionMaxPerTx()
     }
     if (NFTContract?.methods?.maxPerMint) {
         return Number(await NFTContract.methods.maxPerMint().call())
@@ -177,7 +177,7 @@ export const mint = async (nTokens) => {
         from: wallet,
         value: formatValue(Number(mintPrice) * numberOfTokens),
     }
-    const mintTx = await getMintTx({ numberOfTokens })
+    const mintTx = await getMintTx({ wallet, numberOfTokens })
     if (!mintTx) {
         return { tx: undefined }
     }
