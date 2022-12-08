@@ -24,7 +24,7 @@ class _MintPassExtensionHandler {
         const abi = await fetchABI(contract_address, getConfigChainID())
         const contract = new readOnlyWeb3.eth.Contract(abi, contract_address)
         if (contract.methods.walletOfOwner) {
-            return contract.methods.walletOfOwner().call()
+            return contract.methods.walletOfOwner(wallet).call()
         }
         return this._getNFTsOfOwnerMoralis({
             wallet,
