@@ -12,7 +12,8 @@ const getWinterProjectID = (project) => {
 }
 
 export const isWinterCheckoutEnabled = (project, launchType) => {
-    return getWinterProjectID(project) && isEthereumContract() && launchType !== "whitelist"
+    const isEnabled = !!project?.winter_enabled || project?.winter_enabled === null
+    return isEnabled && getWinterProjectID(project) && isEthereumContract() && launchType !== "whitelist"
 }
 
 export const WinterModal = ({ project, mintQuantity, showWinter, setShowWinter, onClose }) => {
