@@ -1,27 +1,39 @@
-# Webflow NFT widgets
-
-Connect web3 to Webflow without coding skills required.
-
-> [Donate on Gitcoin](https://gitcoin.co/grants/5779/buildship) if you like this mint button widget ❤️‍🔥
-
-## Lazy mint on Webflow
+# Mint button for Webflow/Wix/Wordpress
 
 <img src="public/images/screenshot.png" width="300" />
+
+Add a mint button to your website without coding skills required.
+
+## ⚡ Quick start 
+
+Use our new app to set up your button embed:  
+https://embed.buildship.xyz
+
+### Features
+👉 No-code mint button for Webflow, Wix, WordPress with instructions  
+👉 Supports custom contract methods (mint, maxSupply, etc.)   
+👉 Supports non-verified contracts  
+👉 Pay to remove watermark  
+👉 Supports other chains (Polygon, Optimism, Arbitrum, etc.)  
+👉 Easy to use
 
 ## Video guide
 [![Mint button video guide](https://img.youtube.com/vi/4MMylTzzwAg/sddefault.jpg)](http://www.youtube.com/watch?v=4MMylTzzwAg)
 
-## Starting out
+## Text guide
 
 This widget allows minting NFTs on your website. 
 
 To start, you need an Ethereum NFT contract. [Create it via Buildship app](https://app.buildship.xyz), or test with an [example contract](https://github.com/buildship-dev/webflow-nft-components#example-for-testing).
 
-**ERC721Community** contract by [buildship.xyz](https://buildship.xyz) is used by **150+** NFT communities with **5M$+** in total volume.
+**ERC721Community** contract by [buildship.xyz](https://buildship.xyz) is used by **400+** NFT drops with **5M$+** primary sales earned for creators.
 It uses ERC721A, allowing for **50-100% lower** minting gas fees, costs **~10-20$ in gas to deploy**, bullet-proof security and extensions like allow lists, mint passes, etc.
 [Create your contract now](https://app.buildship.xyz)
 
-## How to use?
+## How to use it with Webflow?
+
+> ⚡ Instructions for Wix/Wordpress/HTML & easy setup are available on [embed.buildship.xyz](https://embed.buildship.xyz)
+
 1. Open Webflow website editor
 2. Create a new [Embedded HTML code](https://university.webflow.com/lesson/custom-code-embed) block (at least **Basic** site plan required)
 3. Copy & paste this code in Webflow Embed block
@@ -36,14 +48,10 @@ It uses ERC721A, allowing for **50-100% lower** minting gas fees, costs **~10-20
 <script src="https://nftcomponents.vercel.app/static/js/main.js"></script>
 <link href="https://nftcomponents.vercel.app/static/css/main.css" rel="stylesheet">
 ```
-4. If you **have your Ethereum NFT contract**
-
-   ✅ insert your contract address in `CONTRACT_ADDRESS` field 
-   
-   ✅ set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Goerli Testnet`.
-
-   ✅ make sure it fits requirements from [Custom smart contract requirements](#custom-smart-contract-requirements)
-   
+4. If you **have your Ethereum NFT contract**  
+   ✅ Insert your contract address in `CONTRACT_ADDRESS` field  
+   ✅ Set `IS_TESTNET` to `false` or `true` depending on which network is the contract on: `Ethereum Mainnet` or `Goerli Testnet`  
+   ✅ Make sure it fits requirements from [Custom smart contract requirements](#custom-smart-contract-requirements)  
 
 If you **don't have a contract**, [create it via Buildship app](https://app.buildship.xyz)
 
@@ -203,12 +211,12 @@ If that instruction was too complicated, check out our [free clonable NFT websit
 - [x] Fix issues with WalletConnect on mobile
 - [x] Support for Coinbase Wallet
 - [x] Guide for Wix
-- [ ] Guide for Wordpress
+- [x] Guide for Wordpress
 - [ ] Guide for Squarespace
 - [ ] Native support for Ledger
 - [ ] Support for Magic Wallet
 - [ ] Support for gasless mints
-- [ ] Support for buying with credit card: MoonPay / CrossMint
+- [x] Support for buying with credit card: MoonPay / CrossMint
 - [ ] Migrate to RainbowKit or ConnectKit
 - [ ] Migrate to ethers.js
 - [ ] Refactor code
