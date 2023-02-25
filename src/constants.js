@@ -226,6 +226,18 @@ export const NETWORKS = {
         },
         testnetID: 41,
         blockExplorerURL: "https://testnet.teloscan.io"
+    },
+	250: {
+        name: "Fantom Opera",
+        chain: "fantom",
+        rpcURL: "https://rpcapi.fantom.network",
+        currency: {
+            name: "FTM",
+            symbol: "FTM",
+            decimals: 18,
+        },
+        testnetID: 41,
+        blockExplorerURL: "https://ftmscan.com/"
     }
 }
 
