@@ -31,7 +31,7 @@ const getMintTx = ({ numberOfTokens }) => {
     const methodNameVariants = ['mint', 'publicMint', 'mintNFTs', 'mintPublic', 'mintSale']
     const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
     if (!name) {
-        alert("Buildship widget does not know how to mint from your contract. Contact https://buildship.xyz in Discord to resolve this.")
+        alert("Buildship widget does not know at all how to mint from your contract. Contact https://buildship.xyz in Discord to resolve this.")
         return undefined
     }
     return NFTContract.methods[findMethodByName(name)](numberOfTokens);
