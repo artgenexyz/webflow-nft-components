@@ -51,39 +51,60 @@ const getMintPriceConstant = () => {
     }
     return undefined
 }
-
+    const getMintPriceFromConfig = async () => {
+    const config = await NFTContract.methods.config().call();
+    return config.mintPrice;
+};
 export const getMintPrice = async () => {
-    const customMintPriceMethod = getMethodWithCustomName('price')
+    const customMintPriceMethod = getMethodWithCustomName('price');
     if (customMintPriceMethod) {
-        return customMintPriceMethod().call()
+        return customMintPriceMethod().call();
     }
 
-    const mintPriceConstant = getMintPriceConstant()
+    const mintPriceConstant = getMintPriceConstant();
     if (mintPriceConstant !== undefined) {
-        console.log("Using constant mint price specified in DEFAULTS")
-        return mintPriceConstant
+        console.log("Using constant mint price specified in DEFAULTS");
+        return mintPriceConstant;
     }
 
-    const matches = Object.keys(NFTContract.methods).filter(key =>
-        !key.includes("()") && (key.toLowerCase().includes('price') || key.toLowerCase().includes('cost'))
-    )
+    // Use the custom function to get the mint price from the contract's config
+    const mintPriceFromConfig = await getMintPriceFromConfig();
+    if (mintPriceFromConfig) {
+        console.log("Using custom mint price from config");
+        return mintPriceFromConfig;
+    }
+
+    const matches = Object.keys(NFTContract.methods).filter((key) =>
+        !key.includes("()") &&
+        (key.toLowerCase().includes("price") || key.toLowerCase().includes("cost"))
+    );
     switch (matches.length) {
-        // Use auto-detection only when sure
-        // Otherwise this code might accidentally use presale price instead of public minting price
         case 1:
-            console.log("Using price method auto-detection")
-            return NFTContract.methods[matches[0]]().call()
+            console.log("Using price method auto-detection");
+            return NFTContract.methods[matches[0]]().call();
         default:
-            console.log("Using hardcoded price detection")
-            const methodNameVariants = ['price', 'cost', 'public_sale_price', 'getPrice', 'salePrice']
-            const name = methodNameVariants.find(n => findMethodByName(n) !== undefined)
+            console.log("Using hardcoded price detection");
+            const methodNameVariants = [
+                "price",
+                "cost",
+                "public_sale_price",
+                "getPrice",
+                "salePrice",
+            ];
+            const name = methodNameVariants.find(
+                (n) => findMethodByName(n) !== undefined
+            );
             if (!name) {
-                alert("Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this.")
-                return undefined
+                alert(
+                    "Buildship widget doesn't know how to fetch price from your contract. Contact https://buildship.xyz in Discord to resolve this."
+                );
+                return undefined;
             }
             return NFTContract.methods[findMethodByName(name)]().call();
     }
-}
+};
+
+
 
 export const getMintedNumber = async () => {
     if (!NFTContract)
