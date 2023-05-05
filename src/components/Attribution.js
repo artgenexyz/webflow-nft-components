@@ -8,6 +8,7 @@ export const Attribution = (props) => {
     const [attributionText, setAttributionText] = useState("Widget by Buildship")
     const [isBuildshipUser, setIsBuildshipUser] = useState(false)
     const project = useProject()
+    const shouldWaitForProject = window.PROJECT_ID && project === undefined
 
     const updateAttribution = async () => {
         try {
@@ -30,7 +31,7 @@ export const Attribution = (props) => {
         updateAttribution()
     }, [])
 
-    if (project?.widget_watermark_enabled === false) {
+    if (shouldWaitForProject || project?.widget_watermark_enabled === false) {
         return <></>
     }
 
