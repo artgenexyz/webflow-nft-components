@@ -226,6 +226,17 @@ export const NETWORKS = {
         },
         testnetID: 41,
         blockExplorerURL: "https://testnet.teloscan.io"
+    },
+    8453: {
+        name: "Base Mainnet",
+        rpcURL: "https://mainnet.base.org",
+        currency: {
+            name: "Ether",
+            symbol: "ETH",
+            decimals: 18,
+        },
+        testnetID: 84531,
+        blockExplorerURL: "https://basescan.org"
     }
 }
 
