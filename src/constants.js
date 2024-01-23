@@ -35,6 +35,7 @@ export const NETWORKS = {
         testnetID: 5,
         blockExplorerURL: "https://goerli.etherscan.io"
     },
+    // add sepolia network
     11155111: {
         name: "Sepolia",
         chain: "ethereum",
