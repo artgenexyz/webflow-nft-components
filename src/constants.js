@@ -35,11 +35,10 @@ export const NETWORKS = {
         testnetID: 5,
         blockExplorerURL: "https://goerli.etherscan.io"
     },
-    // add sepolia network
     11155111: {
         name: "Sepolia",
         chain: "ethereum",
-        rpcURL: "https://eth-sepolia.g.alchemy.com/v2/9aGDv2vtcgRQ1hVm63qymgnFlKgmmRqU",
+        rpcURL: "https://eth-sepolia.g.alchemy.com/v2/7d2a648fc6dc438686be7c480a950384",
         currency: {
             name: "Ether",
             symbol: "ETH",
