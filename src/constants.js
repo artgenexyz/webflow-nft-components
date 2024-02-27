@@ -239,6 +239,19 @@ export const NETWORKS = {
         testnetID: 41,
         blockExplorerURL: "https://testnet.teloscan.io"
     },
+    
+    369: {
+        name: "Pulsechain",
+        chain: "pulsechain",
+        rpcURL: "https://rpc.pulsechain.com",
+        currency: {
+            name: "PLS",
+            symbol: "PLS",
+            decimals: 18,
+        },
+        blockExplorerURL: "https://beacon.pulsechain.com/"
+    },
+
 }
 
 export const getBaseURL = () => {
