@@ -38,7 +38,7 @@ export const NETWORKS = {
     11155111: {
         name: "Sepolia",
         chain: "ethereum",
-        rpcURL: "https://eth-sepolia.g.alchemy.com/v2/7d2a648fc6dc438686be7c480a950384",
+        rpcURL: "https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
         currency: {
             name: "Ether",
             symbol: "ETH",
